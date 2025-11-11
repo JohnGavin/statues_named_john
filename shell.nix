@@ -5,6 +5,7 @@ pkgs.mkShell {
     R
     pandoc
     qpdf
+    rPackages.rix
     rPackages.devtools
     rPackages.roxygen2
     rPackages.testthat

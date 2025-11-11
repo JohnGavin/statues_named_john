@@ -46,77 +46,57 @@ library(lubridate)
 
 ## Data Collection
 
-Let's collect data for each of our three groups. Note: This may take several minutes as we're querying the London Remembers website.
+Let's collect real data for each of our three groups by scraping the London Remembers website.
 
-```{r collect-data, eval=FALSE}
+**Note**: This may take several minutes as we're querying the website. The results are cached in the vignette to avoid repeated requests.
+
+```{r collect-data, cache=TRUE, message=TRUE}
 # Collect memorials for men named John
-johns <- search_memorials("John", pages = 10) %>%
+message("Collecting memorials for men named John...")
+johns <- search_memorials("John", pages = 3) %>%
   mutate(category = "Men named John")
 
 # Collect memorials for women
-women_search_terms <- c("women", "woman", "female", "lady", "dame", "queen")
-women_results <- lapply(women_search_terms, function(term) {
-  search_memorials(term, pages = 5)
+# Search multiple terms to get comprehensive results
+message("Collecting memorials for women...")
+women_terms <- c("woman", "women", "queen", "lady", "dame")
+women_results <- lapply(women_terms, function(term) {
+  Sys.sleep(1) # Be polite to the server
+  search_memorials(term, pages = 2)
 })
 women <- bind_rows(women_results) %>%
   distinct(url, .keep_all = TRUE) %>%
   mutate(category = "Women")
 
 # Collect memorials for dogs
-dogs <- search_memorials("dog", pages = 3) %>%
+message("Collecting memorials for dogs...")
+dogs <- search_memorials("dog", pages = 2) %>%
   mutate(category = "Dogs")
 
 # Combine all data
 all_memorials <- bind_rows(johns, women, dogs)
 
-# Save for faster loading
-saveRDS(all_memorials, "memorial_data.rds")
+message(sprintf("Collected %d memorials total", nrow(all_memorials)))
+message(sprintf("  Johns: %d", sum(all_memorials$category == "Men named John")))
+message(sprintf("  Women: %d", sum(all_memorials$category == "Women")))
+message(sprintf("  Dogs: %d", sum(all_memorials$category == "Dogs")))
 ```
 
-For demonstration purposes, let's create some sample data:
+```{r prepare-data}
+# Clean and prepare the data for analysis
+# Note: The scraping functions return basic info
+# For more detailed analysis, we could fetch full details for each memorial
 
-```{r sample-data}
-# Sample data for demonstration
-set.seed(42)
-
-sample_memorials <- tibble(
-  title = c(
-    "John Smith Monument", "John Doe Plaque", "John Brown Statue",
-    "Florence Nightingale Statue", "Queen Victoria Memorial",
-    "Mary Seacole Bust", "Emmeline Pankhurst Statue",
-    "Greyfriars Bobby Monument", "Balto Statue", "Hachiko Memorial"
-  ),
-  type = c(
-    "Monument", "Plaque", "Statue",
-    "Statue", "Memorial", "Bust", "Statue",
-    "Monument", "Statue", "Memorial"
-  ),
-  category = c(
-    rep("Men named John", 3),
-    rep("Women", 4),
-    rep("Dogs", 3)
-  ),
-  year_erected = c(
-    1850, 1892, 1905,
-    1915, 1911, 2016, 2018,
-    1873, 1925, 1948
-  ),
-  location = c(
-    "Westminster", "City of London", "Kensington",
-    "Waterloo Place", "The Mall", "St Thomas' Hospital", "Parliament Square",
-    "Edinburgh", "Central Park", "Shibuya"
+# Show a preview of the data
+if (nrow(all_memorials) > 0) {
+  knitr::kable(
+    head(all_memorials, 10),
+    caption = "Sample of Collected Memorial Data"
   )
-) %>%
-  mutate(
-    decade = floor(year_erected / 10) * 10,
-    century = case_when(
-      year_erected < 1900 ~ "19th Century",
-      year_erected < 2000 ~ "20th Century",
-      TRUE ~ "21st Century"
-    )
-  )
-
-all_memorials <- sample_memorials
+} else {
+  message("Warning: No data collected. The website structure may have changed.")
+  message("This vignette demonstrates the analysis workflow with the available data.")
+}
 ```
 
 ## Summary Statistics
@@ -128,9 +108,7 @@ summary_table <- all_memorials %>%
   group_by(category) %>%
   summarise(
     Total = n(),
-    Earliest = min(year_erected, na.rm = TRUE),
-    Latest = max(year_erected, na.rm = TRUE),
-    `Avg Year` = round(mean(year_erected, na.rm = TRUE))
+    `Unique Memorials` = n_distinct(title, na.rm = TRUE)
   ) %>%
   arrange(desc(Total))
 
@@ -184,106 +162,104 @@ ggplot(all_memorials, aes(x = category, fill = type)) +
   scale_y_continuous(labels = scales::percent)
 ```
 
-## Temporal Analysis
+## Memorial Types Analysis
 
-### Memorials by Decade
+The basic search provides memorial type information. For detailed temporal and geographic data, individual memorials would need to be fetched using `get_memorial()`.
 
-```{r decade-table}
-decade_table <- all_memorials %>%
-  group_by(category, decade) %>%
-  summarise(count = n(), .groups = "drop") %>%
-  pivot_wider(names_from = category, values_from = count, values_fill = 0) %>%
-  arrange(decade)
+### Memorial Type Distribution
 
-knitr::kable(decade_table,
-             caption = "Memorials Erected by Decade")
-```
+```{r type-analysis}
+if ("type" %in% names(all_memorials) && nrow(all_memorials) > 0) {
+  type_counts <- all_memorials %>%
+    filter(!is.na(type), type != "") %>%
+    group_by(category, type) %>%
+    summarise(count = n(), .groups = "drop") %>%
+    arrange(category, desc(count))
 
-### Timeline Visualization
-
-```{r timeline-plot}
-ggplot(all_memorials, aes(x = year_erected, fill = category)) +
-  geom_histogram(binwidth = 10, position = "dodge", alpha = 0.7) +
-  labs(
-    title = "Timeline of Memorial Erection",
-    subtitle = "Johns vs Women vs Dogs",
-    x = "Year Erected",
-    y = "Number of Memorials",
-    fill = "Category"
-  ) +
-  theme_minimal() +
-  scale_fill_brewer(palette = "Set2")
-```
-
-### Century Comparison
-
-```{r century-plot}
-century_summary <- all_memorials %>%
-  group_by(category, century) %>%
-  summarise(count = n(), .groups = "drop")
-
-ggplot(century_summary, aes(x = century, y = count, fill = category)) +
-  geom_col(position = "dodge") +
-  labs(
-    title = "Memorials by Century",
-    x = "Century",
-    y = "Number of Memorials",
-    fill = "Category"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  if (nrow(type_counts) > 0) {
+    knitr::kable(
+      type_counts %>%
+        pivot_wider(names_from = category, values_from = count, values_fill = 0),
+      caption = "Memorial Types by Category"
+    )
+  } else {
+    message("Note: Memorial type information not available in search results")
+  }
+} else {
+  message("Note: To get detailed memorial information including dates and types,")
+  message("use get_memorial() on individual memorial URLs")
+}
 ```
 
 ## Geographic Distribution
 
-### Top Locations
+```{r location-analysis}
+if ("location" %in% names(all_memorials) && nrow(all_memorials) > 0) {
+  locations_available <- all_memorials %>%
+    filter(!is.na(location), location != "")
 
-```{r location-table}
-location_table <- all_memorials %>%
-  group_by(category, location) %>%
-  summarise(count = n(), .groups = "drop") %>%
-  group_by(category) %>%
-  slice_max(order_by = count, n = 5) %>%
-  arrange(category, desc(count))
+  if (nrow(locations_available) > 0) {
+    location_table <- locations_available %>%
+      group_by(category, location) %>%
+      summarise(count = n(), .groups = "drop") %>%
+      group_by(category) %>%
+      slice_max(order_by = count, n = 5) %>%
+      arrange(category, desc(count))
 
-knitr::kable(location_table,
-             caption = "Top 5 Locations by Category")
-```
+    knitr::kable(location_table,
+                 caption = "Top Locations by Category")
 
-### Location Diversity
+    # Location diversity
+    diversity_stats <- locations_available %>%
+      group_by(category) %>%
+      summarise(
+        `Total Memorials` = n(),
+        `Unique Locations` = n_distinct(location),
+        `Avg per Location` = round(n() / n_distinct(location), 2)
+      )
 
-```{r location-diversity}
-diversity_stats <- all_memorials %>%
-  group_by(category) %>%
-  summarise(
-    `Total Memorials` = n(),
-    `Unique Locations` = n_distinct(location),
-    `Avg per Location` = round(n() / n_distinct(location), 2)
-  )
-
-knitr::kable(diversity_stats,
-             caption = "Geographic Distribution Statistics")
+    knitr::kable(diversity_stats,
+                 caption = "Geographic Distribution Statistics")
+  } else {
+    message("Note: Location information not available in search results")
+  }
+} else {
+  message("Note: For location data, use get_memorial() to fetch detailed information")
+  message("for individual memorials")
+}
 ```
 
 ## Key Findings
 
-### Gender Disparity
+### Representation in Search Results
 
-Based on our analysis:
+Based on our analysis of search results from London Remembers:
 
-1. **Representation Gap**: The number of memorials for men named John compared to memorials for all women highlights potential gender imbalances in public commemoration.
+```{r findings-summary}
+# Calculate some key metrics
+if (nrow(all_memorials) > 0) {
+  findings <- all_memorials %>%
+    group_by(category) %>%
+    summarise(
+      count = n(),
+      percentage = round(100 * n() / nrow(all_memorials), 1)
+    )
 
-2. **Memorial Types**: We observe differences in how each group is commemorated (statues vs plaques vs monuments), which may reflect societal values and power dynamics.
+  knitr::kable(findings,
+               caption = "Distribution of Memorials by Category",
+               col.names = c("Category", "Count", "Percentage (%)"))
+}
+```
 
-3. **Temporal Trends**: The timeline shows when each group received commemoration, with potential increases in women's memorials in recent decades reflecting changing social attitudes.
+### Interpretation
 
-### The "Dog Comparison"
+1. **Search Results Context**: These numbers represent memorials that match specific search terms on London Remembers, not a comprehensive count of all memorials in London.
 
-Including dogs in this analysis serves as a provocative baseline:
+2. **Gender Disparity**: The comparison between memorials for "men named John" versus memorials for "women" (all names) provides insight into potential gender imbalances in public commemoration.
 
-- If dogs have more memorials than women, it highlights significant gender disparities
-- The types of memorials for dogs (often emotional, narrative-driven) contrast with formal political memorials
-- Dogs' memorials often celebrate loyalty and service, themes that may overlap with but differ from human commemoration
+3. **The "Dog Comparison"**: Including dogs in this analysis serves as a provocative baseline to highlight commemoration patterns. If dogs have comparable or more memorials than women, it emphasizes the historical underrepresentation of women in public spaces.
+
+4. **Data Limitations**: The actual website structure may differ from our scraping expectations. For comprehensive analysis, each memorial's detailed page would need to be fetched individually using `get_memorial()`.
 
 ### Recommendations
 
