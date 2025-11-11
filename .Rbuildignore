@@ -1,0 +1,10 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.DS_Store$
+^\.git$
+^\.gitignore$
+^\.github$
+^data-raw$
+^\.claude$
+^prompt\.md$
+^shell\.nix$
