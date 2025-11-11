@@ -4,6 +4,7 @@ pkgs.mkShell {
   buildInputs = with pkgs; [
     R
     pandoc
+    qpdf
     rPackages.devtools
     rPackages.roxygen2
     rPackages.testthat
