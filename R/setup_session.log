@@ -1,0 +1,87 @@
+
+R version 4.5.1 (2025-06-13) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin24.6.0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(httr)
+> 
+> # Get GitHub token
+> github_token <- system("gh auth token", intern = TRUE)
+> owner <- "JohnGavin"
+> repo <- "statues_named_john"
+> url <- sprintf("https://api.github.com/repos/%s/%s/pages", owner, repo)
+> 
+> # Enable GitHub Pages
+> cat("Enabling GitHub Pages from gh-pages branch...\n")
+Enabling GitHub Pages from gh-pages branch...
+> response <- POST(
++   url,
++   add_headers(
++     Authorization = paste("Bearer", github_token),
++     Accept = "application/vnd.github+json",
++     "X-GitHub-Api-Version" = "2022-11-28"
++   ),
++   body = list(
++     source = list(
++       branch = "gh-pages",
++       path = "/"
++     )
++   ),
++   encode = "json"
++ )
+> 
+> cat(sprintf("Status: %d\n", status_code(response)))
+Status: 201
+> if (status_code(response) %in% c(200, 201, 204)) {
++   cat("✓ GitHub Pages enabled!\n")
++   result <- content(response)
++   if (!is.null(result$html_url)) {
++     cat(sprintf("URL: %s\n", result$html_url))
++   }
++ } else {
++   cat("Response content:\n")
++   print(content(response))
++ }
+✓ GitHub Pages enabled!
+URL: https://johngavin.github.io/statues_named_john/
+> 
+> sessionInfo()
+R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin24.6.0
+Running under: macOS Sequoia 15.7.1
+
+Matrix products: default
+BLAS:   /nix/store/jammm5gz621n7dkzfzc1c43gs6xv9a10-blas-3/lib/libblas.dylib 
+LAPACK: /nix/store/30ypx3jnyq4r1z4nv742j1csfflsd66v-openblas-0.3.30/lib/libopenblasp-r0.3.30.dylib;  LAPACK version 3.12.0
+
+locale:
+[1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
+
+time zone: Europe/Belfast
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] httr_1.4.7
+
+loaded via a namespace (and not attached):
+ [1] R6_2.6.1          gert_2.1.5        magrittr_2.0.3    glue_1.8.0       
+ [5] lifecycle_1.0.4   cli_3.6.5         askpass_1.2.1     openssl_2.3.3    
+ [9] vctrs_0.6.5       compiler_4.5.1    purrr_1.1.0       sys_3.4.3        
+[13] credentials_2.0.2 curl_6.4.0        jsonlite_2.0.0    rlang_1.1.6      
+[17] fs_1.6.6          usethis_3.1.0    
+> 
