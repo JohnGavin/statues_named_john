@@ -3,7 +3,7 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   memorial-analysis: memorial-analysis.html
-last_built: 2025-11-11T12:11Z
+last_built: 2025-11-11T15:45Z
 urls:
   reference: https://johngavin.github.io/statues_named_john/reference
   article: https://johngavin.github.io/statues_named_john/articles
