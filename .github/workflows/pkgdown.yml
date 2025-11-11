@@ -39,14 +39,11 @@ jobs:
       - name: Build nix environment
         run: nix-shell --run "echo 'Nix environment ready'"
 
+      - name: Install package
+        run: nix-shell --run "Rscript -e 'devtools::install(upgrade = \"never\")'"
+
       - name: Build pkgdown site
-        run: |
-          nix-shell --run "Rscript -e '
-          if (!requireNamespace(\"pkgdown\", quietly = TRUE)) {
-            install.packages(\"pkgdown\")
-          }
-          pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
-          '"
+        run: nix-shell --run "Rscript -e 'pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)'"
 
       - name: Deploy to GitHub pages
         if: github.event_name != 'pull_request'

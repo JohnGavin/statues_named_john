@@ -1,0 +1,24 @@
+url: https://johngavin.github.io/statues_named_john/
+
+template:
+  bootstrap: 5
+
+navbar:
+  structure:
+    left:  [home, reference, articles]
+    right: [github]
+  components:
+    home:
+      text: Home
+      href: index.html
+    reference:
+      text: Reference
+      href: reference/index.html
+    articles:
+      text: Articles
+      menu:
+        - text: Memorial Analysis
+          href: articles/memorial-analysis.html
+    github:
+      icon: fab-github fa-lg
+      href: https://github.com/JohnGavin/statues_named_john
