@@ -8,3 +8,5 @@
 ^\.claude$
 ^prompt\.md$
 ^shell\.nix$
+^doc$
+^Meta$

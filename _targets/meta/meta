@@ -1,0 +1,18 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+base_url|object|2ec63cd090e5ffde
+clean_text|function|ab5567b71b6b784a
+fetch_page|function|111942bbdb4837b8
+get_memorials_latest|function|a659e7b613a0e9e3
+search_memorials|function|aa7593e3ffdc64e0
+get_subjects_by_category|function|58d3f31f6f8d67e3
+get_memorial|function|e2f196ef77bb4488
+get_subject|function|620addbe8e989a55
+get_subjects_by_gender|function|e10080abc3555f20
+.Random.seed|object|bfe78f3e762e2a89
+johns_raw|stem|fd8f7159640eaa15|c5d2cb3bf92ee50f|2c530c1562a7fbd1|-1460322737||t20403.6496867294s|s116b|116|rds|local|vector|||0.58||
+dogs_raw|stem|fd8f7159640eaa15|f2b2aeff6b99c033|2c530c1562a7fbd1|-1933022053||t20403.6496913263s|s116b|116|rds|local|vector|||0.384||
+women_terms|stem|6501deda3a7718d2|cdad260871ad2c99|2c530c1562a7fbd1|-1095594584||t20403.649691584s|s77b|77|rds|local|vector|||0.001||
+johns|stem|a6e0e269094c505b|7a66672b2c119e94|a628f1471d9fbba5|958994266||t20403.6496916829s|s126b|126|rds|local|vector|||0.004||
+dogs|stem|a6e0e269094c505b|316842e433258f2c|f454dbd3cd3e2d1a|-449196160||t20403.6496917426s|s126b|126|rds|local|vector|||0||
+women_raw_list|stem|a2fca4e3a9856c1e|fa8656d682265e21|d4ea1643740815da|1006478999||t20403.6497701885s|s138b|138|rds|local|vector|||6.773||
+women|stem||a73378b9f56f1e62|029a60487e254dd3|-910958602||t20403.6497706165s||0|rds|local|vector|||0.024||Must use existing variables. ✖ `url` not found in `.data`.

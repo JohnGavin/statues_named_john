@@ -24,7 +24,9 @@ rix(
     "tidyr",
     "scales",
     "covr",
-    "pkgdown"
+    "pkgdown",
+    "targets",
+    "tarchetypes"
   ),
   system_pkgs = c("pandoc", "qpdf"),
   git_pkgs = NULL,

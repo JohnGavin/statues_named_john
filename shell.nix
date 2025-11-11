@@ -23,5 +23,7 @@ pkgs.mkShell {
     rPackages.scales
     rPackages.covr
     rPackages.pkgdown
+    rPackages.targets
+    rPackages.tarchetypes
   ];
 }

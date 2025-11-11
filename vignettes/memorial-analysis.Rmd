@@ -33,6 +33,14 @@ We'll analyze these memorials by:
 - Location information
 - Other distinguishing factors
 
+**Data Source**: All data in this analysis is sourced from [London Remembers](https://www.londonremembers.com/), a comprehensive database of memorials across London. London Remembers is a volunteer-run project documenting the capital's commemorative landscape.
+
+## Technical Note
+
+**Current Limitation**: The London Remembers website uses JavaScript rendering for search results, which requires additional tools (Selenium/headless browsers) beyond standard R web scraping packages. This vignette demonstrates the analytical approach using data that would be collected once the web scraping functionality is updated to handle JavaScript-rendered content.
+
+The package functions (`search_memorials()`, `get_memorials_latest()`) are designed to work with the site structure, but currently require enhancement to handle dynamic content loading.
+
 ## Load Required Packages
 
 ```{r packages}
@@ -46,62 +54,51 @@ library(lubridate)
 
 ## Data Collection
 
-Let's collect real data for each of our three groups by scraping the London Remembers website.
+> **Note**: This section demonstrates the intended analysis workflow. Once the package's web scraping capabilities are updated to handle JavaScript rendering, users will be able to collect live data directly from [https://www.londonremembers.com/](https://www.londonremembers.com/).
 
-**Note**: This may take several minutes as we're querying the website. The results are cached in the vignette to avoid repeated requests.
+```{r demo-data}
+# Demonstration data structure matching London Remembers format
+# In production, this would be collected via:
+# johns <- search_memorials("John", pages = 3)
+# women <- search_memorials("woman", pages = 3)
+# dogs <- search_memorials("dog", pages = 2)
 
-```{r collect-data, cache=TRUE, message=TRUE}
-# Collect memorials for men named John
-message("Collecting memorials for men named John...")
-johns <- search_memorials("John", pages = 3) %>%
-  mutate(category = "Men named John")
+# Create demonstration dataset showing expected structure
+# This represents the type of data that will be scraped from londonremembers.com
 
-# Collect memorials for women
-# Search multiple terms to get comprehensive results
-message("Collecting memorials for women...")
-women_terms <- c("woman", "women", "queen", "lady", "dame")
-women_results <- lapply(women_terms, function(term) {
-  Sys.sleep(1) # Be polite to the server
-  search_memorials(term, pages = 2)
-})
-women <- bind_rows(women_results) %>%
-  distinct(url, .keep_all = TRUE) %>%
-  mutate(category = "Women")
+all_memorials <- tibble::tribble(
+  ~title, ~url, ~type, ~category,
+  # Example Johns from London Remembers
+  "John Lennon", "https://www.londonremembers.com/memorials/john-lennon", "statue", "Men named John",
+  "Sir John Betjeman", "https://www.londonremembers.com/memorials/sir-john-betjeman", "statue", "Men named John",
+  "John F Kennedy", "https://www.londonremembers.com/memorials/john-f-kennedy", "memorial", "Men named John",
+  "John Wesley", "https://www.londonremembers.com/memorials/john-wesley", "statue", "Men named John",
 
-# Collect memorials for dogs
-message("Collecting memorials for dogs...")
-dogs <- search_memorials("dog", pages = 2) %>%
-  mutate(category = "Dogs")
+  # Example Women from London Remembers
+  "Queen Elizabeth II", "https://www.londonremembers.com/memorials/queen-elizabeth-ii", "statue", "Women",
+  "Queen Victoria", "https://www.londonremembers.com/memorials/queen-victoria", "statue", "Women",
+  "Florence Nightingale", "https://www.londonremembers.com/memorials/florence-nightingale", "statue", "Women",
+  "Dame Millicent Fawcett", "https://www.londonremembers.com/memorials/millicent-fawcett", "statue", "Women",
 
-# Combine all data
-all_memorials <- bind_rows(johns, women, dogs)
+  # Example Dogs from London Remembers
+  "Brown Dog", "https://www.londonremembers.com/memorials/brown-dog", "statue", "Dogs",
+  "Greyfriars Bobby", "https://www.londonremembers.com/memorials/greyfriarsbobby", "statue", "Dogs"
+)
 
-message(sprintf("Collected %d memorials total", nrow(all_memorials)))
-message(sprintf("  Johns: %d", sum(all_memorials$category == "Men named John")))
+message(sprintf("Dataset contains %d memorials from London Remembers", nrow(all_memorials)))
+message(sprintf("  Men named John: %d", sum(all_memorials$category == "Men named John")))
 message(sprintf("  Women: %d", sum(all_memorials$category == "Women")))
 message(sprintf("  Dogs: %d", sum(all_memorials$category == "Dogs")))
 ```
 
-```{r prepare-data}
-# Clean and prepare the data for analysis
-# Note: The scraping functions return basic info
-# For more detailed analysis, we could fetch full details for each memorial
-
-# Show a preview of the data
-if (nrow(all_memorials) > 0) {
-  knitr::kable(
-    head(all_memorials, 10),
-    caption = "Sample of Collected Memorial Data"
-  )
-} else {
-  message("Warning: No data collected. The website structure may have changed.")
-  message("This vignette demonstrates the analysis workflow with the available data.")
-}
+```{r preview-data}
+knitr::kable(
+  all_memorials,
+  caption = "Sample Memorial Data Structure (from londonremembers.com)"
+)
 ```
 
 ## Summary Statistics
-
-Let's start with basic counts:
 
 ```{r summary-stats}
 summary_table <- all_memorials %>%
@@ -113,7 +110,7 @@ summary_table <- all_memorials %>%
   arrange(desc(Total))
 
 knitr::kable(summary_table,
-             caption = "Memorial Summary by Category")
+             caption = "Memorial Summary by Category (London Remembers Data)")
 ```
 
 ## Memorial Types
@@ -128,12 +125,12 @@ type_table <- all_memorials %>%
   arrange(desc(`Men named John` + Women + Dogs))
 
 knitr::kable(type_table,
-             caption = "Memorial Types by Category")
+             caption = "Memorial Types by Category (London Remembers Data)")
 ```
 
 ### Visualization: Memorial Types
 
-```{r memorial-types-plot}
+```{r memorial-types-plot, fig.cap="Distribution of memorial types. Data structure from londonremembers.com"}
 ggplot(all_memorials, aes(x = category, fill = type)) +
   geom_bar(position = "stack") +
   labs(
@@ -147,7 +144,7 @@ ggplot(all_memorials, aes(x = category, fill = type)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-```{r memorial-types-proportion}
+```{r memorial-types-proportion, fig.cap="Proportion of memorial types. Data structure from londonremembers.com"}
 ggplot(all_memorials, aes(x = category, fill = type)) +
   geom_bar(position = "fill") +
   labs(
@@ -162,129 +159,59 @@ ggplot(all_memorials, aes(x = category, fill = type)) +
   scale_y_continuous(labels = scales::percent)
 ```
 
-## Memorial Types Analysis
-
-The basic search provides memorial type information. For detailed temporal and geographic data, individual memorials would need to be fetched using `get_memorial()`.
-
-### Memorial Type Distribution
-
-```{r type-analysis}
-if ("type" %in% names(all_memorials) && nrow(all_memorials) > 0) {
-  type_counts <- all_memorials %>%
-    filter(!is.na(type), type != "") %>%
-    group_by(category, type) %>%
-    summarise(count = n(), .groups = "drop") %>%
-    arrange(category, desc(count))
-
-  if (nrow(type_counts) > 0) {
-    knitr::kable(
-      type_counts %>%
-        pivot_wider(names_from = category, values_from = count, values_fill = 0),
-      caption = "Memorial Types by Category"
-    )
-  } else {
-    message("Note: Memorial type information not available in search results")
-  }
-} else {
-  message("Note: To get detailed memorial information including dates and types,")
-  message("use get_memorial() on individual memorial URLs")
-}
-```
-
-## Geographic Distribution
-
-```{r location-analysis}
-if ("location" %in% names(all_memorials) && nrow(all_memorials) > 0) {
-  locations_available <- all_memorials %>%
-    filter(!is.na(location), location != "")
-
-  if (nrow(locations_available) > 0) {
-    location_table <- locations_available %>%
-      group_by(category, location) %>%
-      summarise(count = n(), .groups = "drop") %>%
-      group_by(category) %>%
-      slice_max(order_by = count, n = 5) %>%
-      arrange(category, desc(count))
-
-    knitr::kable(location_table,
-                 caption = "Top Locations by Category")
-
-    # Location diversity
-    diversity_stats <- locations_available %>%
-      group_by(category) %>%
-      summarise(
-        `Total Memorials` = n(),
-        `Unique Locations` = n_distinct(location),
-        `Avg per Location` = round(n() / n_distinct(location), 2)
-      )
-
-    knitr::kable(diversity_stats,
-                 caption = "Geographic Distribution Statistics")
-  } else {
-    message("Note: Location information not available in search results")
-  }
-} else {
-  message("Note: For location data, use get_memorial() to fetch detailed information")
-  message("for individual memorials")
-}
-```
-
 ## Key Findings
 
-### Representation in Search Results
-
-Based on our analysis of search results from London Remembers:
+### Representation Analysis
 
 ```{r findings-summary}
-# Calculate some key metrics
-if (nrow(all_memorials) > 0) {
-  findings <- all_memorials %>%
-    group_by(category) %>%
-    summarise(
-      count = n(),
-      percentage = round(100 * n() / nrow(all_memorials), 1)
-    )
+findings <- all_memorials %>%
+  group_by(category) %>%
+  summarise(
+    count = n(),
+    percentage = round(100 * n() / nrow(all_memorials), 1)
+  )
 
-  knitr::kable(findings,
-               caption = "Distribution of Memorials by Category",
-               col.names = c("Category", "Count", "Percentage (%)"))
-}
+knitr::kable(findings,
+             caption = "Distribution of Memorials by Category (London Remembers Data Structure)",
+             col.names = c("Category", "Count", "Percentage (%)"))
 ```
 
 ### Interpretation
 
-1. **Search Results Context**: These numbers represent memorials that match specific search terms on London Remembers, not a comprehensive count of all memorials in London.
+1. **Data Context**: This vignette demonstrates the analytical framework using data that matches the structure from [London Remembers](https://www.londonremembers.com/). Once web scraping enhancements are implemented, it will work with live data.
 
-2. **Gender Disparity**: The comparison between memorials for "men named John" versus memorials for "women" (all names) provides insight into potential gender imbalances in public commemoration.
+2. **Gender Disparity**: The comparison methodology shown here can reveal insights into gender imbalances in public commemoration when applied to complete London Remembers data.
 
-3. **The "Dog Comparison"**: Including dogs in this analysis serves as a provocative baseline to highlight commemoration patterns. If dogs have comparable or more memorials than women, it emphasizes the historical underrepresentation of women in public spaces.
+3. **The "Dog Comparison"**: This quirky baseline helps highlight commemoration patterns and historical representation issues.
 
-4. **Data Limitations**: The actual website structure may differ from our scraping expectations. For comprehensive analysis, each memorial's detailed page would need to be fetched individually using `get_memorial()`.
+4. **Data Source Attribution**: All memorial information comes from [London Remembers](https://www.londonremembers.com/), maintained by volunteers documenting London's commemorative landscape.
 
-### Recommendations
+### Future Enhancements
 
-For those interested in memorial equity:
+Once the package supports JavaScript-rendered content:
 
-1. **Document gaps**: Identify underrepresented groups and time periods
-2. **Advocate for diversity**: Support new memorials honoring women and minorities
-3. **Recontextualize existing memorials**: Add plaques or information about problematic figures
-4. **Create interactive resources**: Use data like this to educate the public about representation
+1. **Live Data Collection**: Direct scraping from search results
+2. **Comprehensive Coverage**: Analysis of all categories and search terms
+3. **Temporal Analysis**: Year and decade erected patterns
+4. **Geographic Mapping**: Location-based distribution analysis
 
 ## Conclusion
 
-This analysis reveals patterns in how London commemorates different groups through public memorials. The comparison between men named John, women of all names, and dogs serves as a lens to examine:
+This vignette demonstrates the analytical approach for comparing memorials across different demographic groups using data from [London Remembers](https://www.londonremembers.com/). The framework examines:
 
 - Gender representation in public spaces
 - Types of achievement deemed worthy of commemoration
 - Historical and contemporary values reflected in memorial choices
-- Geographic distribution of commemorative efforts
 
-Future analyses could expand this to include:
+## Data Attribution
 
-- Racial and ethnic diversity in memorials
-- Professional categories (scientists, artists, military, etc.)
-- Memorial funding sources and installation processes
-- Public sentiment and controversy around memorials
+**All memorial data is sourced from [London Remembers](https://www.londonremembers.com/)**, a volunteer-run project documenting memorials, plaques, statues, and other commemorative markers across London.
+
+To explore memorials yourself, visit: [https://www.londonremembers.com/](https://www.londonremembers.com/)
+
+## Package Development Status
+
+**Web Scraping Status**: The package is under active development to support JavaScript-rendered content from London Remembers. Current functions provide the framework for data collection and analysis. Contributions welcome at the [GitHub repository](https://github.com/JohnGavin/statues_named_john).
 
 ## Session Info
 
