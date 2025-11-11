@@ -3,6 +3,7 @@
 pkgs.mkShell {
   buildInputs = with pkgs; [
     R
+    pandoc
     rPackages.devtools
     rPackages.roxygen2
     rPackages.testthat

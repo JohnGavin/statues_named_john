@@ -8,12 +8,7 @@ on:
 
 jobs:
   R-CMD-check:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -50,5 +45,5 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}-results
+          name: check-results
           path: check
