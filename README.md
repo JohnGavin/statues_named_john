@@ -1,11 +1,17 @@
 # londonremembers
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/yourusername/statues_named_john/workflows/R-CMD-check/badge.svg)](https://github.com/yourusername/statues_named_john/actions)
-[![codecov](https://codecov.io/gh/yourusername/statues_named_john/branch/main/graph/badge.svg)](https://codecov.io/gh/yourusername/statues_named_john)
+[![R-CMD-check](https://github.com/JohnGavin/statues_named_john/workflows/R-CMD-check/badge.svg)](https://github.com/JohnGavin/statues_named_john/actions)
+[![codecov](https://codecov.io/gh/JohnGavin/statues_named_john/branch/main/graph/badge.svg)](https://codecov.io/gh/JohnGavin/statues_named_john)
 <!-- badges: end -->
 
 An R package for accessing and analyzing memorial data from [London Remembers](https://www.londonremembers.com/).
+
+## Data Source
+
+**All data is sourced from [London Remembers](https://www.londonremembers.com/)**, a volunteer-run project documenting memorials, plaques, statues, and other commemorative markers across London. This package provides programmatic access to their publicly available data for research and analysis purposes.
+
+Visit [https://www.londonremembers.com/](https://www.londonremembers.com/) to explore their website directly.
 
 ## Installation
 
@@ -13,7 +19,7 @@ You can install the development version from GitHub:
 
 ```r
 # install.packages("devtools")
-devtools::install_github("yourusername/londonremembers")
+devtools::install_github("JohnGavin/statues_named_john")
 ```
 
 ## Features
