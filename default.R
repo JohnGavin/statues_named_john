@@ -6,7 +6,7 @@ library(rix)
 
 # Generate default.nix for the project
 rix(
-  r_ver = "latest",
+  r_ver = "latest-upstream",
   r_pkgs = c(
     "devtools",
     "roxygen2",
@@ -26,11 +26,13 @@ rix(
     "covr",
     "pkgdown",
     "targets",
-    "tarchetypes"
+    "tarchetypes",
+    "sf",
+    "arrow"
   ),
   system_pkgs = c("pandoc", "qpdf"),
   git_pkgs = NULL,
-  ide = "other",
+  ide = "none",
   project_path = ".",
   overwrite = TRUE,
   print = TRUE
