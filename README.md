@@ -1,17 +1,25 @@
-# londonremembers
+# londonremembers: Multi-Source Analysis of London Statues
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/JohnGavin/statues_named_john/workflows/R-CMD-check/badge.svg)](https://github.com/JohnGavin/statues_named_john/actions)
 [![codecov](https://codecov.io/gh/JohnGavin/statues_named_john/branch/main/graph/badge.svg)](https://codecov.io/gh/JohnGavin/statues_named_john)
 <!-- badges: end -->
 
-An R package for accessing and analyzing memorial data from [London Remembers](https://www.londonremembers.com/).
+The `londonremembers` R package provides a robust, transparent, and reproducible framework for acquiring, analyzing, and interactively mapping public statues and memorials in London. Moving beyond a single data source, this package integrates information from multiple authoritative APIs (Wikidata, OpenStreetMap, and Greater London Historic Environment Record) to create a comprehensive, deduplicated dataset. Its core purpose is to enable in-depth analysis of London's commemorative landscape, facilitate the validation of public claims (e.g., regarding gender representation), and offer interactive data exploration.
 
-## Data Source
+## Data Sources
 
-**All data is sourced from [London Remembers](https://www.londonremembers.com/)**, a volunteer-run project documenting memorials, plaques, statues, and other commemorative markers across London. This package provides programmatic access to their publicly available data for research and analysis purposes.
+This package leverages a robust multi-source data acquisition strategy to build a comprehensive dataset of London's statues and memorials. This approach ensures broader coverage, higher data quality, and improved reproducibility compared to single-source methods.
 
-Visit [https://www.londonremembers.com/](https://www.londonremembers.com/) to explore their website directly.
+**Primary Data Sources:**
+
+-   **Wikidata**: Structured linked open data, queried via its SPARQL endpoint. Provides rich metadata on subjects, creators, and precise geographic coordinates.
+-   **OpenStreetMap (OSM)**: Community-contributed geographic data, accessed via the Overpass API. Excellent for detailed location information and various memorial tags.
+-   **Greater London Historic Environment Record (GLHER)**: Professional heritage data, accessed via CSV exports. Offers authoritative records with high data quality.
+
+**Note on `londonremembers.com`:** While initially a source of interest, direct programmatic access (e.g., web scraping) to `londonremembers.com` proved unfeasible due to its JavaScript-rendered content and lack of a public API. This project thus pivots to the above API-driven sources to ensure reliability and reproducibility.
+
+This multi-source strategy allows for spatial deduplication and intelligent merging of records, creating a unified and enriched dataset for analysis.
 
 ## Installation
 
@@ -22,34 +30,87 @@ You can install the development version from GitHub:
 devtools::install_github("JohnGavin/statues_named_john")
 ```
 
+**Note on Nix Environment:**
+This project is developed within a Nix environment to ensure full reproducibility and consistent package management. It is highly recommended to use the provided Nix configuration (`default.nix`) to set up your development environment. This will ensure all necessary R packages (e.g., `WikidataQueryServiceR`, `osmdata`, `sf`, `leaflet`) and system dependencies are correctly installed. Refer to the `default.nix` and `QUICK_START_GUIDE.md` for details on setting up and using the Nix shell.
+
 ## Features
 
-- Scrape memorial data from London Remembers website
-- Access memorials by type, category, and location
-- Search for specific subjects and memorials
-- Analyze patterns in London's commemorative landscape
+The `londonremembers` package offers a comprehensive suite of functionalities for exploring London's commemorative landscape:
+
+-   **Multi-Source Data Retrieval**: Seamlessly acquire statue and memorial data from Wikidata, OpenStreetMap, and GLHER APIs.
+-   **Data Standardization & Deduplication**: Standardize diverse data formats into a common schema and intelligently deduplicate records based on geographic proximity using spatial algorithms.
+-   **Interactive Mapping**: Generate rich interactive Leaflet maps displaying statue locations with detailed pop-ups (name, subject, year, material, sculptor, image, and source links) and marker clustering for optimal visualization.
+-   **Gender Analysis**: Analyze the representation of genders among commemorated subjects, enabling critical validation of public claims (e.g., "more statues of men named John than women").
+-   **Reproducible Workflow**: Built with reproducibility in mind, leveraging caching, `targets` pipelines, and a transparent methodology.
 
 ## Usage
 
+The `londonremembers` package simplifies the process of acquiring, processing, and analyzing statue data. Below are basic examples to get started. For a comprehensive guide, refer to the project vignette.
+
 ```r
 library(londonremembers)
+library(dplyr)
+library(ggplot2)
+library(leaflet) # For viewing the map
 
-# Get latest memorials
-memorials <- get_memorials_latest(pages = 2)
+# 1. Retrieve data from multiple sources (with caching)
+#    These functions query the respective APIs
+wikidata_data <- get_statues_wikidata(location = "Q84", cache_path = "data-raw/wikidata_cache.rds")
+osm_data <- get_statues_osm(bbox = c(-0.510375, 51.28676, 0.334015, 51.691874), cache_path = "data-raw/osm_cache.rds")
+glher_data <- get_statues_glher(cache_path = "data-raw/glher_cache.rds")
 
-# Search for specific subjects
-johns <- search_memorials("John")
+# 2. Standardize data to a common schema
+wikidata_std <- standardize_statue_data(wikidata_data, "wikidata")
+osm_std <- standardize_statue_data(osm_data, "osm")
+glher_std <- standardize_statue_data(glher_data, "glher")
 
-# Get subjects by category
-subjects <- get_subjects_by_category("Literature")
+# 3. Combine and deduplicate the data
+all_statues <- combine_statue_sources(
+  list(wikidata = wikidata_std, osm = osm_std, glher = glher_std),
+  distance_threshold = 50 # meters
+)
+
+message("Total unique statues identified: ", nrow(all_statues))
+# Example: Total unique statues identified: 250
+
+# 4. Perform gender analysis
+gender_results <- analyze_by_gender(all_statues)
+print(gender_results$summary)
+# Example output:
+#   inferred_gender     n percent
+# 1            Male   180    72.0
+# 2          Female    50    20.0
+# 3         Unknown    15     6.0
+# 4          Animal     5     2.0
+
+# 5. Validate claims (e.g., "more Johns than women")
+johns_vs_women <- compare_johns_vs_women(all_statues)
+message(johns_vs_women$message)
+# Example: Found 20 statues named John (8.0%) vs 50 women statues (20.0%).
+message("Claim 'more Johns than women' validated (False if Johns <= Women): ", johns_vs_women$claim_validated)
+# Example: Claim 'more Johns than women' validated (False if Johns <= Women): FALSE
+
+# 6. Create an interactive map
+statue_map <- map_statues(
+  all_statues,
+  popup_fields = c("name", "subject", "year_installed", "material"),
+  color_by = "source",
+  cluster = TRUE
+)
+statue_map # Display the map in RStudio Viewer or browser
+# htmlwidgets::saveWidget(statue_map, "london_statues_map.html") # To save to HTML file
 ```
 
 ## Vignettes
 
-See the vignette for a comparative analysis of memorials:
+For a comprehensive walkthrough of the data acquisition, processing, analysis, and interactive mapping, please refer to the project's main vignette. It provides detailed explanations and examples of the package's functionalities.
+
 ```r
 vignette("memorial-analysis", package = "londonremembers")
 ```
+
+You can also view the deployed vignette directly on GitHub Pages:
+[https://johngavin.github.io/statues_named_john/articles/memorial-analysis.html](https://johngavin.github.io/statues_named_john/articles/memorial-analysis.html)
 
 ## License
 
