@@ -34,7 +34,7 @@ test_that("Data processing pipeline works", {
   # Check classifications
   johns <- result %>% dplyr::filter(subject_category == "Men named John")
   women <- result %>% dplyr::filter(subject_category == "Women")
-  dogs <- result %>% dplyr::filter(subject_category == "Dog")
+  dogs <- result %>% dplyr::filter(subject_category == "Dogs")
   
   expect_true(nrow(johns) >= 2) # John Smith + Another John
   expect_true(nrow(women) >= 2) # Victoria + Unknown Woman

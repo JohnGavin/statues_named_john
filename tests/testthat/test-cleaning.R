@@ -18,6 +18,7 @@ test_that("is_man_named_john identifies Johns correctly", {
 test_that("classify_subject categorizes correctly", {
   expect_equal(classify_subject("John Smith", "male"), "Men named John")
   expect_equal(classify_subject("Victoria", "female"), "Women")
-  expect_equal(classify_subject("Fido", "unknown", "Dog statue"), "Dog")
+  expect_equal(classify_subject("Fido", "unknown", "Dog statue"), "Dogs")
+  expect_equal(classify_subject("Statue of three dogs", "unknown"), "Dogs")
   expect_equal(classify_subject("Unknown Soldier", "male"), "Other")
 })

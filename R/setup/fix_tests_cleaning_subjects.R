@@ -6,8 +6,9 @@
 # usethis::pr_init("fix-tests-cleaning-subjects")
 
 # 2. Fix R/cleaning.R (classify_subject)
-#    - Changed return "Dogs" -> "Dog"
-#    - Updated test-cleaning-integration.R to match "Dog"
+#    - Refined to use "\bdogs?\b" regex for robustness
+#    - Standardized category to "Dogs" (plural)
+#    - Updated test-cleaning.R and test-cleaning-integration.R matches
 
 # 3. Fix R/subjects.R (get_subjects_by_category)
 #    - Updated selector to ".subject.card" and "h2 a"
@@ -16,6 +17,4 @@
 # gert::git_merge("fix-issue-16-scraping-selectors")
 
 # 5. Verification
-# devtools::test() -> 0 FAIL, 42 PASS
-# devtools::document()
-# devtools::check()
+# devtools::test() -> 0 FAIL, 43 PASS
