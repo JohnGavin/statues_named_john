@@ -1,0 +1,107 @@
+---
+title: "Comparing London Memorials: Johns, Women, and Dogs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Comparing London Memorials: Johns, Women, and Dogs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## Introduction
+
+This vignette compares and contrasts memorials in London honoring three distinct groups:
+
+1. **Men named John** - to examine how common male figures are commemorated
+2. **Women** (of any name) - to assess gender representation in public memorials
+3. **Dogs** (any gender) - as a quirky baseline to highlight commemoration patterns
+
+**Data Sources**: 
+* **Wikidata**: Structured data for statues and public art in London.
+* **OpenStreetMap**: Crowdsourced data for memorials and statues.
+
+## Load Data
+
+We use the `targets` package to manage the data pipeline.
+
+```{r packages}
+tryCatch(
+  library(londonremembers),
+  error = function(e) {
+    message("Package not installed, loading from source")
+    devtools::load_all()
+  }
+)
+library(dplyr)
+library(ggplot2)
+library(sf)
+library(targets)
+```
+
+```{r load-data}
+# Load data from targets pipeline
+all_memorials <- targets::tar_read(all_memorials)
+summary_table <- targets::tar_read(summary_table)
+findings <- targets::tar_read(findings)
+category_plot <- targets::tar_read(category_plot)
+memorial_map_plot <- targets::tar_read(memorial_map_plot)
+```
+
+## Data Overview
+
+```{r summary-stats}
+knitr::kable(summary_table,
+             caption = "Memorial Summary by Category")
+```
+
+## Representation Analysis
+
+```{r visualization}
+category_plot
+```
+
+### Key Findings
+
+```{r findings-summary}
+knitr::kable(findings,
+             caption = "Distribution of Memorials by Category",
+             col.names = c("Category", "Count", "Percentage (%)"))
+```
+
+## Geographic Distribution
+
+We can map the location of these memorials to see spatial patterns.
+
+```{r map, fig.cap="Map of Memorials in London by Category"}
+memorial_map_plot
+```
+
+## Comparison with External Studies
+
+The campaign [Statues for Equality](https://statuesforequality.com/pages/london) claims that:
+* "The percentage of women’s statues in the UK that aren’t mythical or royal is approximately 3%"
+* "More statues of men named John dotted around the country than of women!"
+
+Our analysis of London-specific data suggests:
+
+* **Men named John**: `r findings$count[findings$subject_category == "Men named John"]` (`r findings$percentage[findings$subject_category == "Men named John"]`%)
+* **Women**: `r findings$count[findings$subject_category == "Women"]` (`r findings$percentage[findings$subject_category == "Women"]`%)
+* **Dogs**: `r findings$count[findings$subject_category == "Dogs"]` (`r findings$percentage[findings$subject_category == "Dogs"]`%)
+
+*(Note: Percentages are relative to the total dataset of scraped/queried memorials, including "Other" categories).*
+
+## Session Info
+
+```{r session-info}
+sessionInfo()
+```

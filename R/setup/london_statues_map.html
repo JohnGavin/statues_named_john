@@ -1,0 +1,415 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>London Statues - Wikidata</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    #map {
+      position: absolute;
+      top: 60px;
+      bottom: 0;
+      width: 100%;
+    }
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    .header .stats {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    .popup-content h3 {
+      margin: 0 0 10px 0;
+      color: #667eea;
+    }
+    .popup-content p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+    .popup-content strong {
+      color: #555;
+    }
+    .popup-content a {
+      color: #667eea;
+      text-decoration: none;
+    }
+    .popup-content a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🗿 London Statues from Wikidata</h1>
+    <div class="stats">
+      <span id="statue-count">0</span> statues |
+      Data: <a href="https://www.wikidata.org" target="_blank" style="color: white;">Wikidata</a>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <script>
+    // Initialize map centered on London
+    var map = L.map("map").setView([51.5074, -0.1278], 11);
+
+    // Add OpenStreetMap tile layer
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Statue data from R
+    var statues = [
+  {
+    "name": "Our Lady of Westminster",
+    "subject": "Unknown subject",
+    "lat": 51.4958,
+    "lon": -0.1391,
+    "material": "Unknown material",
+    "creator": "Unknown creator",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/Our_Lady_of_Westminster",
+    "wikidata": "http://www.wikidata.org/entity/Q3344702"
+  },
+  {
+    "name": "Machine Gun Corps Memorial",
+    "subject": "sword",
+    "lat": 51.5032,
+    "lon": -0.1508,
+    "material": "bronze",
+    "creator": "Francis Derwent Wood",
+    "date": "1925-01-01T00:00:00Z",
+    "wikipedia": "https://en.wikipedia.org/wiki/Machine_Gun_Corps_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q6723658"
+  },
+  {
+    "name": "Machine Gun Corps Memorial",
+    "subject": "wreath",
+    "lat": 51.5032,
+    "lon": -0.1508,
+    "material": "bronze",
+    "creator": "Francis Derwent Wood",
+    "date": "1925-01-01T00:00:00Z",
+    "wikipedia": "https://en.wikipedia.org/wiki/Machine_Gun_Corps_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q6723658"
+  },
+  {
+    "name": "Machine Gun Corps Memorial",
+    "subject": "sword",
+    "lat": 51.5032,
+    "lon": -0.1508,
+    "material": "marble",
+    "creator": "Francis Derwent Wood",
+    "date": "1925-01-01T00:00:00Z",
+    "wikipedia": "https://en.wikipedia.org/wiki/Machine_Gun_Corps_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q6723658"
+  },
+  {
+    "name": "Machine Gun Corps Memorial",
+    "subject": "wreath",
+    "lat": 51.5032,
+    "lon": -0.1508,
+    "material": "marble",
+    "creator": "Francis Derwent Wood",
+    "date": "1925-01-01T00:00:00Z",
+    "wikipedia": "https://en.wikipedia.org/wiki/Machine_Gun_Corps_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q6723658"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "Queen Elizabeth, The Queen Mother",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "bronze",
+    "creator": "Philip Jackson",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "royal coat of arms of the United Kingdom",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "bronze",
+    "creator": "Philip Jackson",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "George VI",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "bronze",
+    "creator": "Philip Jackson",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "Queen Elizabeth, The Queen Mother",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "Portland limestone",
+    "creator": "Philip Jackson",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "royal coat of arms of the United Kingdom",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "Portland limestone",
+    "creator": "Philip Jackson",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "George VI",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "Portland limestone",
+    "creator": "Philip Jackson",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "Queen Elizabeth, The Queen Mother",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "bronze",
+    "creator": "Louis de Soissons",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "royal coat of arms of the United Kingdom",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "bronze",
+    "creator": "Louis de Soissons",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "George VI",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "bronze",
+    "creator": "Louis de Soissons",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "Queen Elizabeth, The Queen Mother",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "Portland limestone",
+    "creator": "Louis de Soissons",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "royal coat of arms of the United Kingdom",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "Portland limestone",
+    "creator": "Louis de Soissons",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "George VI",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "Portland limestone",
+    "creator": "Louis de Soissons",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "Queen Elizabeth, The Queen Mother",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "bronze",
+    "creator": "William McMillan",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "royal coat of arms of the United Kingdom",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "bronze",
+    "creator": "William McMillan",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "George VI",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "bronze",
+    "creator": "William McMillan",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "Queen Elizabeth, The Queen Mother",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "Portland limestone",
+    "creator": "William McMillan",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "royal coat of arms of the United Kingdom",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "Portland limestone",
+    "creator": "William McMillan",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "George VI and Queen Elizabeth Memorial",
+    "subject": "George VI",
+    "lat": 51.5051,
+    "lon": -0.1337,
+    "material": "Portland limestone",
+    "creator": "William McMillan",
+    "date": "Unknown date",
+    "wikipedia": "https://en.wikipedia.org/wiki/King_George_VI_and_Queen_Elizabeth_Memorial",
+    "wikidata": "http://www.wikidata.org/entity/Q18577910"
+  },
+  {
+    "name": "Gorilla",
+    "subject": "Guy the Gorilla",
+    "lat": 51.4188,
+    "lon": -0.0646,
+    "material": "marble",
+    "creator": "David Wynne",
+    "date": "1961-01-01T00:00:00Z",
+    "wikipedia": "https://en.wikipedia.org/wiki/Gorilla_(sculpture)",
+    "wikidata": "http://www.wikidata.org/entity/Q24034741"
+  },
+  {
+    "name": "Statue of Johnny Haynes",
+    "subject": "Johnny Haynes",
+    "lat": 51.4747,
+    "lon": -0.2204,
+    "material": "Unknown material",
+    "creator": "Douglas Jennings",
+    "date": "2008-01-01T00:00:00Z",
+    "wikipedia": "",
+    "wikidata": "http://www.wikidata.org/entity/Q122839834"
+  },
+  {
+    "name": "Figurehead",
+    "subject": "Unknown subject",
+    "lat": 51.4869,
+    "lon": -0.2267,
+    "material": "Unknown material",
+    "creator": "Rick Kirby",
+    "date": "2014-01-01T00:00:00Z",
+    "wikipedia": "",
+    "wikidata": "http://www.wikidata.org/entity/Q122839854"
+  }
+];
+
+    // Update count
+    document.getElementById("statue-count").textContent = statues.length;
+
+    // Add markers for each statue
+    statues.forEach(function(statue) {
+      // Create popup content
+      var popupContent = `
+        <div class="popup-content">
+          <h3>${statue.name}</h3>
+          <p><strong>Subject:</strong> ${statue.subject}</p>
+          <p><strong>Material:</strong> ${statue.material}</p>
+          <p><strong>Creator:</strong> ${statue.creator}</p>
+          <p><strong>Date:</strong> ${statue.date}</p>
+          ${statue.wikipedia ? `<p><strong>Wikipedia:</strong> <a href="${statue.wikipedia}" target="_blank">View article</a></p>` : ''}
+          <p><strong>Wikidata:</strong> <a href="${statue.wikidata}" target="_blank">View entry</a></p>
+        </div>
+      `;
+
+      // Create marker with popup
+      L.marker([statue.lat, statue.lon])
+        .bindPopup(popupContent, { maxWidth: 300 })
+        .bindTooltip(statue.name, { direction: "top", offset: [0, -10] })
+        .addTo(map);
+    });
+
+    console.log("Loaded", statues.length, "statues");
+  </script>
+</body>
+</html>
+

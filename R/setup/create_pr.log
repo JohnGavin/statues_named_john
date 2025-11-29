@@ -1,0 +1,43 @@
+Linking to libgit2 v1.9.1, ssh support: YES
+Global config: /Users/johngavin/.gitconfig
+Default user: John Gavin <john.b.gavin@gmail.com>
+=== Creating Pull Request ===
+Date: 2025-11-11 21:24:47.063102
+Current branch: update-vignette-comparison
+Commit: c2f003d632a6dec18a91c639a4d1c54cce286d96
+
+--- Creating PR ---
+✓ PR #5 created successfully
+  Title: Add data overview and Statues for Equality comparison to vignette
+  URL: https://github.com/JohnGavin/statues_named_john/pull/5
+  State: open
+
+PR URL:
+https://github.com/JohnGavin/statues_named_john/pull/5 
+R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin24.6.0
+Running under: macOS Sequoia 15.7.1
+
+Matrix products: default
+BLAS:   /nix/store/jammm5gz621n7dkzfzc1c43gs6xv9a10-blas-3/lib/libblas.dylib 
+LAPACK: /nix/store/30ypx3jnyq4r1z4nv742j1csfflsd66v-openblas-0.3.30/lib/libopenblasp-r0.3.30.dylib;  LAPACK version 3.12.0
+
+locale:
+[1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
+
+time zone: Europe/Belfast
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] gert_2.1.5 gh_1.5.0  
+
+loaded via a namespace (and not attached):
+ [1] R6_2.6.1          magrittr_2.0.3    rappdirs_0.3.3    glue_1.8.0       
+ [5] gitcreds_0.1.2    lifecycle_1.0.4   cli_3.6.5         askpass_1.2.1    
+ [9] openssl_2.3.3     vctrs_0.6.5       compiler_4.5.1    tools_4.5.1      
+[13] purrr_1.1.0       sys_3.4.3         credentials_2.0.2 curl_6.4.0       
+[17] httr2_1.2.1       rlang_1.1.6       jsonlite_2.0.0    fs_1.6.6         
+[21] usethis_3.1.0    

@@ -16,3 +16,13 @@ johns|stem|a6e0e269094c505b|7a66672b2c119e94|a628f1471d9fbba5|958994266||t20403.
 dogs|stem|a6e0e269094c505b|316842e433258f2c|f454dbd3cd3e2d1a|-449196160||t20403.6496917426s|s126b|126|rds|local|vector|||0||
 women_raw_list|stem|a2fca4e3a9856c1e|fa8656d682265e21|d4ea1643740815da|1006478999||t20403.6497701885s|s138b|138|rds|local|vector|||6.773||
 women|stem||a73378b9f56f1e62|029a60487e254dd3|-910958602||t20403.6497706165s||0|rds|local|vector|||0.024||Must use existing variables. ✖ `url` not found in `.data`.
+osm_raw|stem|1ac09ae30ad99c85|f7d9ecdec12ed9a3|2c530c1562a7fbd1|1724282779||t20421.4881141606s|s7396b|7396|parquet|local|vector|||2.063||
+wikidata_raw|stem|26a6a5ca36918c31|e561214a31b91e8f|2c530c1562a7fbd1|-1969361436||t20421.4881197073s|s4381b|4381|parquet|local|vector|||0.467||
+all_memorials|stem|c9fa5c5024fd15cc|e2bd977279e7b666|6bbd46d4eb34cdb7|1729866638||t20421.4881205825s|s7766b|7766|parquet|local|vector|||0.04||
+summary_table|stem|533e721e77f29de2|89fe78eaa83e5264|753791a9f4094c0a|-1890126374||t20421.4882916704s|s190b|190|rds|local|vector|||0.009||
+findings|stem|96f24dbbdccc5017|09b9bd5553d985e0|753791a9f4094c0a|644882975||t20421.4882918511s|s198b|198|rds|local|vector|||0.003||
+category_plot|stem|ed7f2c50fd091b0b|31083bcf3a7efbab|753791a9f4094c0a|-977205175||t20421.4882935019s|s245030b|245030|rds|local|vector|||0.03||
+update.packages|function|30d2377eab38636a
+install.packages|function|e3b0a9d56d54eeba
+remove.packages|function|e5e5ba52f888863b
+memorial_map_plot|stem|164f32af81027bda|58c63b340dfa5ad2|753791a9f4094c0a|1866069921||t20421.4950464891s|s301111b|301111|rds|local|vector|||0.051||
