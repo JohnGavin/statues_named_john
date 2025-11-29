@@ -84,11 +84,11 @@ classify_subject <- function(name, gender, subjects_list = NULL) {
   # Check for animals
   if (!is.null(subjects_list)) {
     subjects_str <- tolower(paste(subjects_list, collapse = " "))
-    if (grepl("dog", subjects_str)) return("Dogs")
+    if (grepl("dog", subjects_str)) return("Dog")
     if (grepl("animal", subjects_str)) return("Other") # Could be specific animal
   }
   
-  if (grepl("\\bdog\\b", name_lower)) return("Dogs")
+  if (grepl("\\bdog\\b", name_lower)) return("Dog")
   
   # Check for John
   if (is_man_named_john(name, gender)) return("Men named John")
