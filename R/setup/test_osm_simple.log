@@ -1,0 +1,17 @@
+
+Attaching package: ‘xml2’
+
+The following object is masked from ‘package:httr2’:
+
+    url_parse
+
+=== Testing OpenStreetMap Overpass API with Generic HTTP Packages ===
+Date: 2025-11-12
+
+--- Executing Overpass Query ---
+Querying OpenStreetMap for London statues...
+Bbox: 51.28676,-0.510375,51.691874,0.334015
+
+✓ Query successful!
+  Retrieved 2496 features
+✗ Error: replacement has 185 rows, data has 2496

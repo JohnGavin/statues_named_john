@@ -1,0 +1,314 @@
+these 32 derivations will be built:
+  /nix/store/7qq3flm55h4qm29xb040as1prkfaqkv4-r-later-1.4.2.drv
+  /nix/store/bpzhdsab3k5bxmrg92kwllz5zw0z5gac-r-promises-1.3.3.drv
+  /nix/store/28p2ysfy0a666sd3nsprg6cs84jh5193-r-httpuv-1.6.16.drv
+  /nix/store/2qg44wxwrx3x2qa8x5a4b2ahvdwdwk7q-r-rversions-2.1.2.drv
+  /nix/store/2sy9qn0ngk3lq6krixf4rjmbzscid21g-r-openssl-2.3.3.drv
+  /nix/store/4xnd3c9q2y3zbhq9wlqwc195hfxdibrl-r-shiny-1.11.1.drv
+  /nix/store/ckpa2snsgrdh7cvjz2y9c6bbs5hyhjid-r-igraph-2.1.4.drv
+  /nix/store/857pm8l1ij0wvlqmd7ca7b52fyiialh9-r-targets-1.11.3.drv
+  /nix/store/8amj502rdxshda3lp1ayyqgnx0ldlzvc-r-tarchetypes-0.13.1.drv
+  /nix/store/h43wji5z39adsksdm99hgbzfpff64sj5-r-httr2-1.2.1.drv
+  /nix/store/xdg7q5sd9pv34rnjf57wlz4pnf0gsas0-r-systemfonts-1.2.3.drv
+  /nix/store/xb1vsyb3nr1dghxmdjiyk458fmw88v55-r-textshaping-1.0.1.drv
+  /nix/store/vjd5xf5snq9ing8c438c4lkd9yppkni3-r-ragg-1.4.0.drv
+  /nix/store/8nrrhsch7zljzwa7pxj184wy5cz7qkgy-r-pkgdown-2.1.3.drv
+  /nix/store/nckhfx016n3d36fj9i55s6p3c1qvnc58-r-credentials-2.0.2.drv
+  /nix/store/m35r0abp6b6bqgpxggkdqb39kwlvr9bp-r-gert-2.1.5.drv
+  /nix/store/qzh2xizwp8mgrc7wnrx456n64x2bqiw4-r-gh-1.5.0.drv
+  /nix/store/a2hl8z9gsr0jg6imiqzfzmrk5lw41fhm-r-usethis-3.1.0.drv
+  /nix/store/a6ap28hw8hhfqkzm3d3xiikysfrsdh0b-r-tidyr-1.3.1.drv
+  /nix/store/ac1vclkcv4bbb94ra918nsifsaq4wkgc-r-rcmdcheck-1.4.0.drv
+  /nix/store/cw8ll44g679w4svg2mjz2a2pz0ivkibd-r-htmlwidgets-1.6.4.drv
+  /nix/store/dsymb9s5skxgl4k7gx8l53pifvajcfqy-r-testthat-3.2.3.drv
+  /nix/store/g0rgsmxrlxcvamrdq9085qam1ijrdahx-r-rix-0.16.0.drv
+  /nix/store/iannk5p9qx0d3mihfbpq2603pn1jxmxr-r-ggplot2-3.5.2.drv
+  /nix/store/kci632aybcy5238a5mbkaachr4mm6cb1-r-selectr-0.4-2.drv
+  /nix/store/yywyvv4ii2jp8ryhs7mm2i5g2wfm9m9c-r-httr-1.4.7.drv
+  /nix/store/ja1z2y51xq3h17yr5m6kypnq12d9splh-r-rvest-1.0.4.drv
+  /nix/store/knpr4f1z6f0chr0zw7d3wgss6m8xfs56-r-covr-3.6.4.drv
+  /nix/store/pjmw6ra43i8azqglrrmz4qzy42qm2i3g-r-profvis-0.4.0.drv
+  /nix/store/xnfwqhfgn8dp1s69lk2hddh0sr6c1pyf-r-miniUI-0.1.2.drv
+  /nix/store/xp520ddlfi9wla9q1pd1lramqcmmzgs4-r-urlchecker-1.0.1.drv
+  /nix/store/lq8ix1bj85cn34p96y9z64f0p0nvg5id-r-devtools-2.4.5.drv
+waiting for lock on '/nix/store/v8k3lfqbf5nmjc596c0k7x31vrx6gbc7-r-ggplot2-3.5.2'...
+waiting for lock on '/nix/store/lsxgjyzrdp0561f59zx0d69fks14yr1g-r-rix-0.16.0'...
+waiting for lock on '/nix/store/al0hzxkmsq67dzz2vbi728b5a4zlbp74-r-testthat-3.2.3'...
+waiting for lock on '/nix/store/mfc32rnmj058yb29jwib1ysj2h9qjkn1-r-tidyr-1.3.1'...
+waiting for lock on '/nix/store/ziic6v8mqwgl3jwldq2isf7j6vdv5wns-r-igraph-2.1.4'...
+waiting for lock on '/nix/store/jnz9jg3dxdkpyz7zbx4y9lpw7s0q15sp-r-openssl-2.3.3'...
+waiting for lock on '/nix/store/l7wc36h1gg41481l76hzskv0nzra97fr-r-rcmdcheck-1.4.0'...
+waiting for lock on '/nix/store/n9g91zipbvc6z1r1rvns35b798h2d7gw-r-rversions-2.1.2'...
+waiting for lock on '/nix/store/b4iaqyi9fpy6l9p67z3gvhbf886s1rkb-r-selectr-0.4-2'...
+waiting for lock on '/nix/store/mgx1pvk3f3bmq6y67wn6pyqig566r97m-r-urlchecker-1.0.1'...
+waiting for lock on '/nix/store/y0g60nl0ym2k1yjpx6g7fnpcf6s511kg-r-htmlwidgets-1.6.4'...
+waiting for lock on '/nix/store/pm2rxvqcbdzxc2xwcpsr8sncjd95wwv7-r-systemfonts-1.2.3'...
+waiting for lock on '/nix/store/ixl6wfz4qh50vaw14yvv38877z2y6029-r-later-1.4.2'...
+waiting for lock on '/nix/store/bngw6ghywqvjmh8c5wc9pszwica6kafs-r-credentials-2.0.2'...
+building '/nix/store/yywyvv4ii2jp8ryhs7mm2i5g2wfm9m9c-r-httr-1.4.7.drv'...
+building '/nix/store/h43wji5z39adsksdm99hgbzfpff64sj5-r-httr2-1.2.1.drv'...
+building '/nix/store/pjmw6ra43i8azqglrrmz4qzy42qm2i3g-r-profvis-0.4.0.drv'...
+Running phase: unpackPhase
+unpacking source archive /nix/store/37ld1z078162b4qhzjm9b8bavf5wdn3d-httr_1.4.7.tar.gz
+source root is httr
+setting SOURCE_DATE_EPOCH to timestamp 1692090002 of file "httr/MD5"
+Running phase: patchPhase
+Running phase: updateAutotoolsGnuConfigScriptsPhase
+Running phase: configurePhase
+Running phase: buildPhase
+Running phase: checkPhase
+Running phase: installPhase
+* installing *source* package ‘httr’ ...
+** this is package ‘httr’ version ‘1.4.7’
+** package ‘httr’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+Running phase: unpackPhase
+unpacking source archive /nix/store/5n1qrhw4ydzbrsp8wjwzwfvg5nq61yal-httr2_1.2.1.tar.gz
+** demo
+source root is httr2
+** inst
+** byte-compile and prepare package for lazy loading
+setting SOURCE_DATE_EPOCH to timestamp 1753159255 of file "httr2/MD5"
+Running phase: patchPhase
+Running phase: updateAutotoolsGnuConfigScriptsPhase
+Running phase: configurePhase
+patching script interpreter paths in configure
+find: 'configure': No such file or directory
+Running phase: buildPhase
+Running phase: checkPhase
+Running phase: installPhase
+* installing *source* package ‘httr2’ ...
+** this is package ‘httr2’ version ‘1.2.1’
+** package ‘httr2’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+Running phase: unpackPhase
+unpacking source archive /nix/store/w8j3fzhn1wqyd8j9vr05768bsx02k2i4-profvis_0.4.0.tar.gz
+** inst
+** byte-compile and prepare package for lazy loading
+source root is profvis
+setting SOURCE_DATE_EPOCH to timestamp 1726833010 of file "profvis/MD5"
+Running phase: patchPhase
+Running phase: updateAutotoolsGnuConfigScriptsPhase
+Running phase: configurePhase
+Running phase: buildPhase
+Running phase: checkPhase
+Running phase: installPhase
+* installing *source* package ‘profvis’ ...
+waiting for lock on '/nix/store/px6n1qprgrhk6yzj4mmczijxg0kbnhdk-r-gert-2.1.5'...
+waiting for lock on '/nix/store/ymfvr9s85zg3d6z334yxzh5hfqrxw103-r-promises-1.3.3'...
+waiting for lock on '/nix/store/8djaw0wb2dad9xnyng55m9s6msi1ynvh-r-textshaping-1.0.1'...
+** this is package ‘profvis’ version ‘0.4.0’
+** package ‘profvis’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C compiler: ‘clang version 21.1.2’
+using SDK: ‘NA’‘’
+/nix/store/xbi504848gn164lwzv2x2rclwvjxw7w1-clang-wrapper-21.1.2/bin/cc -std=gnu23 -I"/nix/store/a78c0614mziglvfwkgpf2ci99v5mhw5f-R-4.5.1/lib/R/include" -DNDEBUG   -isystem /nix/store/245wgmjlkq2swfkb138xh1jvb41ag8mh-libcxx-19.1.2+apple-sdk-15.5/include/c++/v1    -fPIC  -g -O2  -c pause.c -o pause.o
+/nix/store/xbi504848gn164lwzv2x2rclwvjxw7w1-clang-wrapper-21.1.2/bin/cc -std=gnu23 -I"/nix/store/a78c0614mziglvfwkgpf2ci99v5mhw5f-R-4.5.1/lib/R/include" -DNDEBUG   -isystem /nix/store/245wgmjlkq2swfkb138xh1jvb41ag8mh-libcxx-19.1.2+apple-sdk-15.5/include/c++/v1    -fPIC  -g -O2  -c profvis-init.c -o profvis-init.o
+In file included from profvis-init.c:1:
+In file included from /nix/store/a78c0614mziglvfwkgpf2ci99v5mhw5f-R-4.5.1/lib/R/include/Rinternals.h:44:
+/nix/store/a78c0614mziglvfwkgpf2ci99v5mhw5f-R-4.5.1/lib/R/include/R_ext/Boolean.h:62:36: warning: unknown warning group '-Wfixed-enum-extension', ignored [-Wunknown-warning-option]
+   62 | #  pragma clang diagnostic ignored "-Wfixed-enum-extension"
+      |                                    ^
+In file included from pause.c:1:
+In file included from /nix/store/a78c0614mziglvfwkgpf2ci99v5mhw5f-R-4.5.1/lib/R/include/R.h:70:
+/nix/store/a78c0614mziglvfwkgpf2ci99v5mhw5f-R-4.5.1/lib/R/include/R_ext/Boolean.h:62:36: warning: unknown warning group '-Wfixed-enum-extension', ignored [-Wunknown-warning-option]
+   62 | #  pragma clang diagnostic ignored "-Wfixed-enum-extension"
+      |                                    ^
+1 warning generated.
+1 warning generated.
+/nix/store/xbi504848gn164lwzv2x2rclwvjxw7w1-clang-wrapper-21.1.2/bin/cc -std=gnu23 -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -L/nix/store/a78c0614mziglvfwkgpf2ci99v5mhw5f-R-4.5.1/lib/R/lib -L/nix/store/245wgmjlkq2swfkb138xh1jvb41ag8mh-libcxx-19.1.2+apple-sdk-15.5/lib -o profvis.so pause.o profvis-init.o -L/nix/store/a78c0614mziglvfwkgpf2ci99v5mhw5f-R-4.5.1/lib/R/lib -lR
+installing to /nix/store/4z8hl7f8zz9ar324835gyayajwkbcvdv-r-profvis-0.4.0/library/00LOCK-profvis/00new/profvis/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** help
+*** installing help indices
+** testing if installed package keeps a record of temporary installation path
+* DONE (profvis)
+Running phase: fixupPhase
+checking for references to /private/tmp/nix-build-r-profvis-0.4.0.drv-0/ in /nix/store/4z8hl7f8zz9ar324835gyayajwkbcvdv-r-profvis-0.4.0...
+** building package indices
+patching script interpreter paths in /nix/store/4z8hl7f8zz9ar324835gyayajwkbcvdv-r-profvis-0.4.0
+rewriting symlink /nix/store/4z8hl7f8zz9ar324835gyayajwkbcvdv-r-profvis-0.4.0/nix-support/propagated-user-env-packages to be relative to /nix/store/4z8hl7f8zz9ar324835gyayajwkbcvdv-r-profvis-0.4.0
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (httr)
+Running phase: fixupPhase
+checking for references to /private/tmp/nix-build-r-httr-1.4.7.drv-0/ in /nix/store/c2g87igmy9xxcyh68gwv02zj8gqjp7rh-r-httr-1.4.7...
+patching script interpreter paths in /nix/store/c2g87igmy9xxcyh68gwv02zj8gqjp7rh-r-httr-1.4.7
+rewriting symlink /nix/store/c2g87igmy9xxcyh68gwv02zj8gqjp7rh-r-httr-1.4.7/nix-support/propagated-user-env-packages to be relative to /nix/store/c2g87igmy9xxcyh68gwv02zj8gqjp7rh-r-httr-1.4.7
+building '/nix/store/knpr4f1z6f0chr0zw7d3wgss6m8xfs56-r-covr-3.6.4.drv'...
+Running phase: unpackPhase
+unpacking source archive /nix/store/iyyv103qxqq52fgagzcxr8gwaxx04kjl-covr_3.6.4.tar.gz
+source root is covr
+setting SOURCE_DATE_EPOCH to timestamp 1699517406 of file "covr/MD5"
+Running phase: patchPhase
+Running phase: updateAutotoolsGnuConfigScriptsPhase
+Running phase: configurePhase
+Running phase: buildPhase
+Running phase: checkPhase
+Running phase: installPhase
+* installing *source* package ‘covr’ ...
+** this is package ‘covr’ version ‘3.6.4’
+** package ‘covr’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+using C compiler: ‘clang version 21.1.2’
+building '/nix/store/ja1z2y51xq3h17yr5m6kypnq12d9splh-r-rvest-1.0.4.drv'...
+using SDK: ‘NA’‘’
+/nix/store/xbi504848gn164lwzv2x2rclwvjxw7w1-clang-wrapper-21.1.2/bin/cc -std=gnu23 -I"/nix/store/a78c0614mziglvfwkgpf2ci99v5mhw5f-R-4.5.1/lib/R/include" -DNDEBUG   -isystem /nix/store/245wgmjlkq2swfkb138xh1jvb41ag8mh-libcxx-19.1.2+apple-sdk-15.5/include/c++/v1    -fPIC  -g -O2  -c reassign.c -o reassign.o
+In file included from reassign.c:2:
+In file included from /nix/store/a78c0614mziglvfwkgpf2ci99v5mhw5f-R-4.5.1/lib/R/include/R.h:70:
+/nix/store/a78c0614mziglvfwkgpf2ci99v5mhw5f-R-4.5.1/lib/R/include/R_ext/Boolean.h:62:36: warning: unknown warning group '-Wfixed-enum-extension', ignored [-Wunknown-warning-option]
+   62 | #  pragma clang diagnostic ignored "-Wfixed-enum-extension"
+      |                                    ^
+1 warning generated.
+/nix/store/xbi504848gn164lwzv2x2rclwvjxw7w1-clang-wrapper-21.1.2/bin/cc -std=gnu23 -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -L/nix/store/a78c0614mziglvfwkgpf2ci99v5mhw5f-R-4.5.1/lib/R/lib -L/nix/store/245wgmjlkq2swfkb138xh1jvb41ag8mh-libcxx-19.1.2+apple-sdk-15.5/lib -o covr.so reassign.o -L/nix/store/a78c0614mziglvfwkgpf2ci99v5mhw5f-R-4.5.1/lib/R/lib -lR
+installing to /nix/store/x6yypsry18km7y2la49053krv344lllk-r-covr-3.6.4/library/00LOCK-covr/00new/covr/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+Running phase: unpackPhase
+unpacking source archive /nix/store/cgh0kiw2j0wy54l52yd03qsawkhgi4lv-rvest_1.0.4.tar.gz
+source root is rvest
+setting SOURCE_DATE_EPOCH to timestamp 1707768602 of file "rvest/MD5"
+Running phase: patchPhase
+** help
+Running phase: updateAutotoolsGnuConfigScriptsPhase
+Running phase: configurePhase
+Running phase: buildPhase
+Running phase: checkPhase
+Running phase: installPhase
+*** installing help indices
+* installing *source* package ‘rvest’ ...
+** this is package ‘rvest’ version ‘1.0.4’
+** package ‘rvest’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** demo
+** inst
+** byte-compile and prepare package for lazy loading
+*** copying figures
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** help
+** testing if installed package can be loaded from final location
+*** installing help indices
+*** copying figures
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package keeps a record of temporary installation path
+* DONE (httr2)
+Running phase: fixupPhase
+checking for references to /private/tmp/nix-build-r-httr2-1.2.1.drv-0/ in /nix/store/pyz2vlsn2dh8yl7szgvi8hrhcc3plrha-r-httr2-1.2.1...
+patching script interpreter paths in /nix/store/pyz2vlsn2dh8yl7szgvi8hrhcc3plrha-r-httr2-1.2.1
+waiting for lock on '/nix/store/9byw8zh9yim789gkmm1v74xy5kdi4nrd-r-httpuv-1.6.16'...
+rewriting symlink /nix/store/pyz2vlsn2dh8yl7szgvi8hrhcc3plrha-r-httr2-1.2.1/nix-support/propagated-user-env-packages to be relative to /nix/store/pyz2vlsn2dh8yl7szgvi8hrhcc3plrha-r-httr2-1.2.1
+building '/nix/store/qzh2xizwp8mgrc7wnrx456n64x2bqiw4-r-gh-1.5.0.drv'...
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** testing if installed package keeps a record of temporary installation path
+* DONE (covr)
+Running phase: fixupPhase
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+Running phase: unpackPhase
+unpacking source archive /nix/store/3v9n83fj308znjvz14l496c2342afg5h-gh_1.5.0.tar.gz
+checking for references to /private/tmp/nix-build-r-covr-3.6.4.drv-0/ in /nix/store/x6yypsry18km7y2la49053krv344lllk-r-covr-3.6.4...
+source root is gh
+setting SOURCE_DATE_EPOCH to timestamp 1748265002 of file "gh/MD5"
+patching script interpreter paths in /nix/store/x6yypsry18km7y2la49053krv344lllk-r-covr-3.6.4
+Running phase: patchPhase
+Running phase: updateAutotoolsGnuConfigScriptsPhase
+rewriting symlink /nix/store/x6yypsry18km7y2la49053krv344lllk-r-covr-3.6.4/nix-support/propagated-user-env-packages to be relative to /nix/store/x6yypsry18km7y2la49053krv344lllk-r-covr-3.6.4
+Running phase: configurePhase
+Running phase: buildPhase
+Running phase: checkPhase
+Running phase: installPhase
+* installing *source* package ‘gh’ ...
+** this is package ‘gh’ version ‘1.5.0’
+** package ‘gh’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (rvest)
+Running phase: fixupPhase
+checking for references to /private/tmp/nix-build-r-rvest-1.0.4.drv-0/ in /nix/store/yfl5m1knd7q9waa79q2sjm6l87a5k3wv-r-rvest-1.0.4...
+patching script interpreter paths in /nix/store/yfl5m1knd7q9waa79q2sjm6l87a5k3wv-r-rvest-1.0.4
+rewriting symlink /nix/store/yfl5m1knd7q9waa79q2sjm6l87a5k3wv-r-rvest-1.0.4/nix-support/propagated-user-env-packages to be relative to /nix/store/yfl5m1knd7q9waa79q2sjm6l87a5k3wv-r-rvest-1.0.4
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (gh)
+Running phase: fixupPhase
+checking for references to /private/tmp/nix-build-r-gh-1.5.0.drv-0/ in /nix/store/bqixsx0kbj6ffk09fd5p1412a14ci45y-r-gh-1.5.0...
+patching script interpreter paths in /nix/store/bqixsx0kbj6ffk09fd5p1412a14ci45y-r-gh-1.5.0
+waiting for lock on '/nix/store/8sa70xqidw41ah7mjc6qckv01bf2zvpj-r-ragg-1.4.0'...
+rewriting symlink /nix/store/bqixsx0kbj6ffk09fd5p1412a14ci45y-r-gh-1.5.0/nix-support/propagated-user-env-packages to be relative to /nix/store/bqixsx0kbj6ffk09fd5p1412a14ci45y-r-gh-1.5.0
+building '/nix/store/a2hl8z9gsr0jg6imiqzfzmrk5lw41fhm-r-usethis-3.1.0.drv'...
+Running phase: unpackPhase
+unpacking source archive /nix/store/fyphj3slgafh5fgyxpzqvz8qvvna3ylh-usethis_3.1.0.tar.gz
+source root is usethis
+setting SOURCE_DATE_EPOCH to timestamp 1732616402 of file "usethis/MD5"
+Running phase: patchPhase
+Running phase: updateAutotoolsGnuConfigScriptsPhase
+Running phase: configurePhase
+Running phase: buildPhase
+Running phase: checkPhase
+Running phase: installPhase
+* installing *source* package ‘usethis’ ...
+** this is package ‘usethis’ version ‘3.1.0’
+** package ‘usethis’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (usethis)
+Running phase: fixupPhase
+checking for references to /private/tmp/nix-build-r-usethis-3.1.0.drv-0/ in /nix/store/xr0bdzbrpl5668cqk9baifqgysv9y270-r-usethis-3.1.0...
+patching script interpreter paths in /nix/store/xr0bdzbrpl5668cqk9baifqgysv9y270-r-usethis-3.1.0
+rewriting symlink /nix/store/xr0bdzbrpl5668cqk9baifqgysv9y270-r-usethis-3.1.0/nix-support/propagated-user-env-packages to be relative to /nix/store/xr0bdzbrpl5668cqk9baifqgysv9y270-r-usethis-3.1.0
+waiting for lock on '/nix/store/r7pv6jnk678vrrqk6qhmqynln7ap1ph9-r-targets-1.11.3'...
+waiting for lock on '/nix/store/h64dgn9gpfg86mmjdidpz5y25v1f35bw-r-pkgdown-2.1.3'...
+waiting for lock on '/nix/store/kkg69lrcvmwc3kd7h68062q2hd113kkb-r-shiny-1.11.1'...
+waiting for lock on '/nix/store/rk7b5nd07zbmkhs4gbds8p76vr1a9frv-r-tarchetypes-0.13.1'...
+waiting for lock on '/nix/store/h2lbs7qxqg1vjj8sd6r7r08i01z5kh0f-r-miniUI-0.1.2'...
+waiting for lock on '/nix/store/ayz600qr657f1hlhhzkq4yhyya2bpdrk-r-devtools-2.4.5'...
+Error in install.packages(c("WikidataQueryServiceR", "osmdata", "sf",  : 
+  You are currently in an R session running from Nix.
+Don't install packages using install.packages(),
+add them to the default.nix file instead.
+Execution halted
