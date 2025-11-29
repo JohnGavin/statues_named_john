@@ -30,7 +30,7 @@ rix(
     "sf",
     "arrow"
   ),
-  system_pkgs = c("pandoc", "qpdf"),
+  system_pkgs = c("pandoc", "qpdf", "libomp"),
   git_pkgs = NULL,
   ide = "none",
   project_path = ".",
