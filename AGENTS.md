@@ -47,3 +47,12 @@ wiki page on that topic or theme on the GH repo or to a FAQs wiki page and raise
 
 *   **Post-Merge Check**: After merging a PR, monitor the `pkgdown` workflow on the main branch.
 *   **Verification Loop**: Check the website URL (e.g., `https://username.github.io/repo/`) every minute (timeout 5 mins) to confirm the update has been deployed successfully.
+
+## 7. Package Dependency Verification
+
+*   **Upon DESCRIPTION Update**: Whenever the `DESCRIPTION` file is updated (e.g., adding new `Imports` or `Suggests`), you MUST immediately verify that all listed packages are available in the current Nix shell environment.
+*   **Verification Command**: Run the following command to attempt loading all dependencies:
+    ```bash
+    Rscript -e 'd <- read.dcf("DESCRIPTION"); pkgs <- unique(trimws(unlist(strsplit(c(if("Imports" %in% colnames(d)) d[,"Imports"] else NULL, if("Suggests" %in% colnames(d)) d[,"Suggests"] else NULL, if("Depends" %in% colnames(d)) d[,"Depends"] else NULL), ",")))); pkgs <- gsub("\\s*\\(.*\\)", "", pkgs); pkgs <- pkgs[pkgs != "R"]; missing <- pkgs[!sapply(pkgs, function(p) requireNamespace(p, quietly = TRUE))]; if(length(missing) > 0) { cat("Missing packages:", paste(missing, collapse = ", "), "\n"); quit(status = 1) } else { cat("All dependencies available.\n") }'
+    ```
+*   **Action on Failure**: If the verification fails (packages missing), do NOT proceed with implementation. Instead, **ask the user for advice** on how to update the Nix environment (e.g., updating `default.R` and regenerating `default.nix`).
