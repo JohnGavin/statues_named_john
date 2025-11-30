@@ -27,8 +27,10 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
       - name: Build and Push Project R Package to Cachix
+        env:
+          CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
         run: |
-          nix-shell --run "
+          nix-shell --keep CACHIX_AUTH_TOKEN --run "
             set -e
             echo 'Building project R package as Nix derivation...'
             nix-build package.nix
