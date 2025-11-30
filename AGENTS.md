@@ -23,6 +23,17 @@
 
 *   **Cachix**: The project uses a specific Cachix cache (`johngavin`) for storing package build artifacts.
 *   **Workflows**: Ensure GitHub Actions workflows (like `R-CMD-check.yml`) are configured to push to `johngavin` and pull from `rstats-on-nix`.
+*   **Cache Priority**: To ensure the fastest binary cache search, `rstats-on-nix` MUST be prioritized over the project-specific cache (`johngavin`).
+    *   **Configuration Rule**: Set `name: rstats-on-nix` and `extraPullNames: johngavin` (or other project cache) in `cachix-action`. This ensures `rstats-on-nix` is checked first.
+    *   **Example YAML**:
+        ```yaml
+        - name: Setup Cachix
+          uses: cachix/cachix-action@v15
+          with:
+            name: rstats-on-nix          # Primary cache (checked first)
+            extraPullNames: johngavin    # Secondary cache (checked next)
+            authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+        ```
 
 ## 4. Documentation Management
 
