@@ -32,6 +32,8 @@ by merging files and merging duplicated topics to produce fewer more detailed md
 Summarise the themes, topics and contents by similarity, and 
 suggest which parts  might be better migrated to a 
 wiki page on that topic or theme on the GH repo or to a FAQs wiki page and raise a GH issue for any outstanding issues/todo/features.
+*   **Wiki FAQs**: Create and maintain a "FAQs" page on the GitHub Wiki documenting tasks logged in `./R/setup/`. Each entry should summarize the task and provide a direct link to the corresponding R script in the repository (e.g., link `R/setup/task_name.R` for `task_name`).
+*   **README Maintenance**: The top-level `README.md` should be generated from `inst/qmd/README.qmd`. Any content updates should be made in the `.qmd` file and then rendered to `README.md` using Quarto (e.g., `quarto render inst/qmd/README.qmd --to gfm --output README.md`).
 
 ## 5. Version Control & GitHub Workflow
 
