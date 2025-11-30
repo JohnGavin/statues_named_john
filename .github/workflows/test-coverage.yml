@@ -33,7 +33,7 @@ jobs:
         run: |
           nix-shell --run "
             set -e
-            Rscript -e 'covr::codecov(
+            R_LIBS_SITE=\"$(Rscript -e 'cat(.libPaths()[1])')\" Rscript -e 'covr::codecov(
               quiet = FALSE,
               clean = FALSE,
               token = \"${{ secrets.CODECOV_TOKEN }}\"

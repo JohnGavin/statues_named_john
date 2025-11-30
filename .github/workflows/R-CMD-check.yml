@@ -44,10 +44,7 @@ jobs:
           nix-shell ./default.nix --run "
             set -e
             echo 'Nix environment ready'
-            echo '--- Content of default.nix in CI ---'
-            cat ./default.nix
-            echo '--- End of default.nix content ---'
-            Rscript R/setup/ci_verification.R
+            R_LIBS_SITE=\"$(Rscript -e 'cat(.libPaths()[1])')\" Rscript R/setup/ci_verification.R
           "
 
       - name: Upload check results
