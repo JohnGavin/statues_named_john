@@ -1,18 +1,13 @@
 # R/setup/fix_nix_env_final.R
 library(gert)
 
-message("Updating DESCRIPTION RoxygenNote...")
-desc <- readLines("DESCRIPTION")
-desc <- gsub("RoxygenNote: 7.3.3", "RoxygenNote: 7.3.2", desc)
-writeLines(desc, "DESCRIPTION")
-
 message("Staging files...")
-gert::git_add(c("default.R", "default.nix", "DESCRIPTION"))
+gert::git_add(c("default.R", "default.nix"))
 
 message("Committing...")
 st <- gert::git_status()
-if (any(st$file %in% c("default.R", "default.nix", "DESCRIPTION"))) {
-  gert::git_commit("chore: Update Nix env to latest-upstream and downgrade RoxygenNote to match")
+if (any(st$file %in% c("default.R", "default.nix"))) {
+  gert::git_commit("chore: Pin Nix env to fixed hash to ensure reproducibility")
   message("Pushing...")
   gert::git_push(verbose = TRUE)
 } else {
