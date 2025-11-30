@@ -40,3 +40,8 @@ wiki page on that topic or theme on the GH repo or to a FAQs wiki page and raise
     *   Use `gh` for GitHub API interactions (issues, PRs, releases).
     *   Use `usethis` for project setup and workflow automation (PR helpers).
 *   **Log Operations**: All Git/GitHub operations performed via these R packages MUST be logged into reproducible R scripts within the `R/setup/` directory (e.g., `R/setup/create_pr_feature_x.R`). This ensures that the workflow is documented and can be audited or reproduced.
+
+## 6. Website Verification
+
+*   **Post-Merge Check**: After merging a PR, monitor the `pkgdown` workflow on the main branch.
+*   **Verification Loop**: Check the website URL (e.g., `https://username.github.io/repo/`) every minute (timeout 5 mins) to confirm the update has been deployed successfully.
