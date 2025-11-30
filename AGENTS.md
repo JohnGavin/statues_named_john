@@ -67,3 +67,7 @@ wiki page on that topic or theme on the GH repo or to a FAQs wiki page and raise
     Rscript -e 'd <- read.dcf("DESCRIPTION"); pkgs <- unique(trimws(unlist(strsplit(c(if("Imports" %in% colnames(d)) d[,"Imports"] else NULL, if("Suggests" %in% colnames(d)) d[,"Suggests"] else NULL, if("Depends" %in% colnames(d)) d[,"Depends"] else NULL), ",")))); pkgs <- gsub("\\s*\\(.*\\)", "", pkgs); pkgs <- pkgs[pkgs != "R"]; missing <- pkgs[!sapply(pkgs, function(p) requireNamespace(p, quietly = TRUE))]; if(length(missing) > 0) { cat("Missing packages:", paste(missing, collapse = ", "), "\n"); quit(status = 1) } else { cat("All dependencies available.\n") }'
     ```
 *   **Action on Failure**: If the verification fails (packages missing), do NOT proceed with implementation. Instead, **ask the user for advice** on how to update the Nix environment (e.g., updating `default.R` and regenerating `default.nix`).
+
+## 8. Nix Environment Standards
+
+*   **Fixed Versions**: When defining the Nix environment (e.g., in `default.R` via `rix`), **NEVER** use dynamic version specifiers like `"latest-upstream"`. Always use a fixed date (e.g., `"2025-11-25"`) or a specific commit hash. This ensures the environment remains identical over time, preventing future breakages due to package updates.
