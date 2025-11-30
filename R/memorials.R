@@ -39,7 +39,7 @@ get_memorials_latest <- function(pages = 1) {
     }
 
     # Extract memorial items
-    items <- rvest::html_elements(html, ".memorial-item, .item")
+    items <- rvest::html_elements(html, ".memorial.card")
 
     if (length(items) == 0) {
       warning(sprintf("No memorial items found on page %d", page))
@@ -48,7 +48,7 @@ get_memorials_latest <- function(pages = 1) {
 
     page_data <- purrr::map_dfr(items, function(item) {
       # Extract title and URL
-      title_elem <- rvest::html_element(item, "h3 a, h2 a, .title a, a.memorial-link")
+      title_elem <- rvest::html_element(item, "h2 a")
       title <- clean_text(rvest::html_text2(title_elem))
       url <- rvest::html_attr(title_elem, "href")
 
@@ -61,7 +61,7 @@ get_memorials_latest <- function(pages = 1) {
       subjects <- clean_text(rvest::html_text2(subjects_elem))
 
       # Extract location
-      location_elem <- rvest::html_element(item, ".location, .address")
+      location_elem <- rvest::html_element(item, "h3")
       location <- clean_text(rvest::html_text2(location_elem))
 
       tibble::tibble(
@@ -169,7 +169,7 @@ search_memorials <- function(query, pages = 1) {
     }
 
     # Extract search results
-    items <- rvest::html_elements(html, ".search-result, .result-item, .memorial-item")
+    items <- rvest::html_elements(html, ".memorial.card")
 
     if (length(items) == 0) {
       message(sprintf("No results found on page %d", page))
@@ -177,7 +177,7 @@ search_memorials <- function(query, pages = 1) {
     }
 
     page_data <- purrr::map_dfr(items, function(item) {
-      title_elem <- rvest::html_element(item, "h3 a, h2 a, a")
+      title_elem <- rvest::html_element(item, "h2 a")
       title <- clean_text(rvest::html_text2(title_elem))
       url <- rvest::html_attr(title_elem, "href")
 

@@ -23,3 +23,25 @@
 
 *   **Cachix**: The project uses a specific Cachix cache (`johngavin`) for storing package build artifacts.
 *   **Workflows**: Ensure GitHub Actions workflows (like `R-CMD-check.yml`) are configured to push to `johngavin` and pull from `rstats-on-nix`.
+
+## 4. Documentation Management
+
+When tidying up towards the end of each session, 
+consider reducing the number of '*.md' files in ./R/setup/ 
+by merging files and merging duplicated topics to produce fewer more detailed md files. 
+Summarise the themes, topics and contents by similarity, and 
+suggest which parts  might be better migrated to a 
+wiki page on that topic or theme on the GH repo or to a FAQs wiki page and raise a GH issue for any outstanding issues/todo/features.
+
+## 5. Version Control & GitHub Workflow
+
+*   **R Packages over CLI**: ALWAYS prefer using R packages (`gert`, `gh`, `usethis`) for Git and GitHub operations instead of command-line tools (`git`, `gh`).
+    *   Use `gert` for git operations (commit, push, branch, etc.).
+    *   Use `gh` for GitHub API interactions (issues, PRs, releases).
+    *   Use `usethis` for project setup and workflow automation (PR helpers).
+*   **Log Operations**: All Git/GitHub operations performed via these R packages MUST be logged into reproducible R scripts within the `R/setup/` directory (e.g., `R/setup/create_pr_feature_x.R`). This ensures that the workflow is documented and can be audited or reproduced.
+
+## 6. Website Verification
+
+*   **Post-Merge Check**: After merging a PR, monitor the `pkgdown` workflow on the main branch.
+*   **Verification Loop**: Check the website URL (e.g., `https://username.github.io/repo/`) every minute (timeout 5 mins) to confirm the update has been deployed successfully.

@@ -35,7 +35,7 @@ get_subjects_by_category <- function(category, pages = 1) {
       next
     }
 
-    items <- rvest::html_elements(html, ".subject-item, .item")
+    items <- rvest::html_elements(html, ".subject.card")
 
     if (length(items) == 0) {
       message(sprintf("No subjects found on page %d", page))
@@ -43,7 +43,7 @@ get_subjects_by_category <- function(category, pages = 1) {
     }
 
     page_data <- purrr::map_dfr(items, function(item) {
-      title_elem <- rvest::html_element(item, "h3 a, h2 a, a")
+      title_elem <- rvest::html_element(item, "h2 a")
       name <- clean_text(rvest::html_text2(title_elem))
       url <- rvest::html_attr(title_elem, "href")
 

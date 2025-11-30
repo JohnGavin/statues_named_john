@@ -20,7 +20,12 @@ Imports:
     stringr,
     tibble,
     sf,
-    R.utils
+    R.utils,
+    WikidataQueryServiceR,
+    osmdata,
+    leaflet,
+    jsonlite,
+    httr2
 Suggests:
     testthat (>= 3.0.0),
     knitr,
@@ -31,8 +36,8 @@ Suggests:
     scales,
     targets,
     tarchetypes,
-    httr2,
-    arrow
+    arrow,
+    rprojroot
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://github.com/yourusername/londonremembers
