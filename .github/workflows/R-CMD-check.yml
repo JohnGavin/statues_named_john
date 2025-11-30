@@ -27,21 +27,19 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
       - name: Build and Test R Package
-        shell: nix-shell --run bash -c "{0}" # Use a persistent Nix shell for all R commands
         run: |
-          echo "Nix environment ready"
-
-          echo "Generating documentation..."
-          Rscript -e 'roxygen2::roxygenise()'
-
-          echo "Running R CMD check..."
-          Rscript -e 'devtools::check(error_on = "warning")'
-
-          echo "Running tests..."
-          Rscript -e 'devtools::test()'
-
-          echo "Building package..."
-          R CMD build .
+          nix-shell --run "
+            set -e
+            echo 'Nix environment ready'
+            echo 'Generating documentation...'
+            Rscript -e 'roxygen2::roxygenise()'
+            echo 'Running R CMD check...'
+            Rscript -e 'devtools::check(error_on = \"warning\")'
+            echo 'Running tests...'
+            Rscript -e 'devtools::test()'
+            echo 'Building package...'
+            R CMD build .
+          "
 
       - name: Upload check results
         if: failure()
