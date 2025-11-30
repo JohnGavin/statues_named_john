@@ -3,11 +3,12 @@
 # It is meant to be run *within* a Nix shell where necessary packages are available.
 
 # 0. Load necessary R packages
-library(devtools)
 library(roxygen2)
 library(testthat)
 library(targets)
 library(methods) # For generic functions like `check()`
+library(pkgload) # For load_all()
+library(rcmdcheck) # For rcmdcheck()
 
 # Helper function to run R code and check for errors
 run_r_code <- function(expr, error_message = "R code failed.") {
@@ -46,9 +47,9 @@ if(length(missing) > 0) {
 }
 
 # Load the local package for subsequent checks
-cat("\n--- Loading local package (devtools::load_all()) ---
+cat("\n--- Loading local package (pkgload::load_all()) ---
 ")
-run_r_code(devtools::load_all(), "❌ devtools::load_all() failed.")
+run_r_code(pkgload::load_all(), "❌ pkgload::load_all() failed.")
 
 # 2. Generate documentation
 cat("\n--- 2. Generating documentation (roxygen2::roxygenise()) ---
@@ -56,14 +57,14 @@ cat("\n--- 2. Generating documentation (roxygen2::roxygenise()) ---
 run_r_code(roxygen2::roxygenise(), "❌ roxygen2::roxygenise() failed.")
 
 # 3. Run unit tests
-cat("\n--- 3. Running unit tests (devtools::test()) ---
+cat("\n--- 3. Running unit tests (testthat::test_local()) ---
 ")
-run_r_code(devtools::test(), "❌ devtools::test() failed.")
+run_r_code(testthat::test_local(stop_on_failure = TRUE), "❌ testthat::test_local() failed.")
 
 # 4. Run R CMD check
-cat("\n--- 4. Running R CMD check (devtools::check()) ---
+cat("\n--- 4. Running R CMD check (rcmdcheck::rcmdcheck()) ---
 ")
-run_r_code(devtools::check(error_on = "note", build_args = c("--no-build-vignettes", "--no-manual")), "❌ devtools::check() found errors, warnings, or notes.")
+run_r_code(rcmdcheck::rcmdcheck(error_on = "note", args = c("--no-build-vignettes", "--no-manual")), "❌ rcmdcheck::rcmdcheck() found errors, warnings, or notes.")
 
 # 5. Build targets pipeline locally (optional, can be done in a separate CI job if needed)
 # For now, we'll just check if it can be loaded.

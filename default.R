@@ -77,10 +77,8 @@ library(rix)
 #print(latest)
 
 rix(
-  date = "2025-11-10", # latest, # "2025-11-03",
-  # r_ver = "71f14cf4ab060eb861de5b09f83540fee466e1d2",
+  date = "2025-11-24",
   r_pkgs = c(
-    "devtools",
     "roxygen2",
     "testthat",
     "knitr",
@@ -105,15 +103,18 @@ rix(
     "osmdata",
     "leaflet",
     "jsonlite",
+    "readr", # Added from DESCRIPTION
     "httr2",
     "gert",
     "gh",
     "usethis",
     "R.utils",
     "rprojroot",
-    "quarto"
+    "quarto",
+    "pkgload", # New dependency for ci_verification.R
+    "rcmdcheck" # New dependency for ci_verification.R
   ),
-  system_pkgs = unique(c("pandoc", "qpdf")),
+  system_pkgs = NULL,
   git_pkgs = NULL,
   ide = "none",
   project_path = ".",

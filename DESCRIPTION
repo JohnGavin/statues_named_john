@@ -37,7 +37,9 @@ Suggests:
     tarchetypes,
     arrow,
     rprojroot,
-    quarto
+    quarto,
+    pkgload,
+    rcmdcheck
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://github.com/yourusername/londonremembers
