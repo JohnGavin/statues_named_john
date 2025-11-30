@@ -10,3 +10,16 @@
 ^shell\.nix$
 ^doc$
 ^Meta$
+^_pkgdown.yml$
+^_targets$
+^_targets.R$
+^AGENTS.md$
+^default.nix$
+^default.R$
+^package.nix$
+^PLAN_how.md$
+^PLAN_what.md$
+^prompt_statues.md$
+^\.config/
+^vignettes/
+^\$HOME

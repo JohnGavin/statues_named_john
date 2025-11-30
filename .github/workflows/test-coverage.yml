@@ -33,16 +33,11 @@ jobs:
         run: |
           nix-shell --run "
             set -e
-            Rscript -e '
-              if (!requireNamespace(\"covr\", quietly = TRUE)) {
-                install.packages(\"covr\")
-              }
-              covr::codecov(
-                quiet = FALSE,
-                clean = FALSE,
-                token = \"${{ secrets.CODECOV_TOKEN }}\"
-              )
-            '
+            Rscript -e 'covr::codecov(
+              quiet = FALSE,
+              clean = FALSE,
+              token = \"${{ secrets.CODECOV_TOKEN }}\"
+            )'
           "
 
       - name: Upload coverage reports to Codecov
