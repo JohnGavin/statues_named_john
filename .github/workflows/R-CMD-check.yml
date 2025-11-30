@@ -41,10 +41,13 @@ jobs:
 
       - name: Build and Test R Package
         run: |
-          nix-shell --run "
+          nix-shell ./default.nix --run "
             set -e
             echo 'Nix environment ready'
-          Rscript R/setup/ci_verification.R
+            echo '--- Content of default.nix in CI ---'
+            cat ./default.nix
+            echo '--- End of default.nix content ---'
+            Rscript R/setup/ci_verification.R
           "
 
       - name: Upload check results
