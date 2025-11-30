@@ -38,7 +38,8 @@ rix(
     "gh",
     "usethis",
     "R.utils",
-    "rprojroot"
+    "rprojroot",
+    "quarto"
   ),
   system_pkgs = c("pandoc", "qpdf", "libomp"),
   git_pkgs = NULL,
