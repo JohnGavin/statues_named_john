@@ -32,3 +32,11 @@ by merging files and merging duplicated topics to produce fewer more detailed md
 Summarise the themes, topics and contents by similarity, and 
 suggest which parts  might be better migrated to a 
 wiki page on that topic or theme on the GH repo or to a FAQs wiki page and raise a GH issue for any outstanding issues/todo/features.
+
+## 5. Version Control & GitHub Workflow
+
+*   **R Packages over CLI**: ALWAYS prefer using R packages (`gert`, `gh`, `usethis`) for Git and GitHub operations instead of command-line tools (`git`, `gh`).
+    *   Use `gert` for git operations (commit, push, branch, etc.).
+    *   Use `gh` for GitHub API interactions (issues, PRs, releases).
+    *   Use `usethis` for project setup and workflow automation (PR helpers).
+*   **Log Operations**: All Git/GitHub operations performed via these R packages MUST be logged into reproducible R scripts within the `R/setup/` directory (e.g., `R/setup/create_pr_feature_x.R`). This ensures that the workflow is documented and can be audited or reproduced.
