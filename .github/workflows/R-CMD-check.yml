@@ -26,20 +26,22 @@ jobs:
           extraPullNames: rstats-on-nix
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
-      - name: Build nix environment
-        run: nix-shell --run "echo 'Nix environment built successfully'"
+      - name: Build and Test R Package
+        shell: nix-shell --run bash -c "{0}" # Use a persistent Nix shell for all R commands
+        run: |
+          echo "Nix environment ready"
 
-      - name: Generate documentation
-        run: nix-shell --run "Rscript -e 'roxygen2::roxygenise()'"
+          echo "Generating documentation..."
+          Rscript -e 'roxygen2::roxygenise()'
 
-      - name: Run R CMD check
-        run: nix-shell --run "Rscript -e 'devtools::check(error_on = \"warning\")'"
+          echo "Running R CMD check..."
+          Rscript -e 'devtools::check(error_on = "warning")'
 
-      - name: Run tests
-        run: nix-shell --run "Rscript -e 'devtools::test()'"
+          echo "Running tests..."
+          Rscript -e 'devtools::test()'
 
-      - name: Build package
-        run: nix-shell --run "R CMD build ."
+          echo "Building package..."
+          R CMD build .
 
       - name: Upload check results
         if: failure()
