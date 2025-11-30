@@ -26,6 +26,17 @@ jobs:
           extraPullNames: johngavin
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
+      - name: Build and Push Project R Package to Cachix
+        run: |
+          nix-shell --run "
+            set -e
+            echo 'Building project R package as Nix derivation...'
+            nix-build package.nix
+            result_path=$(readlink -f result)
+            echo 'Pushing $result_path to johngavin cache...'
+            cachix push johngavin '$result_path'
+          "
+
       - name: Build and Test R Package
         run: |
           nix-shell --run "
