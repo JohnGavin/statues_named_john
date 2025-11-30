@@ -1,6 +1,3 @@
-library(testthat)
-devtools::load_all()
-
 test_that("Data processing pipeline works", {
   # Mock data for Wikidata
   mock_wiki <- tibble::tibble(
