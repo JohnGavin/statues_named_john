@@ -6,7 +6,7 @@ library(rix)
 
 # Generate default.nix for the project
 rix(
-  r_ver = "latest-upstream",
+  r_ver = "71f14cf4ab060eb861de5b09f83540fee466e1d2",
   r_pkgs = c(
     "devtools",
     "roxygen2",

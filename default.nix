@@ -41,11 +41,12 @@
 #  > project_path = ".",
 #  >      overwrite = TRUE,
 #  > print = TRUE)
-# It uses upstream nixpkgs' revision 71f14cf4ab060eb861de5b09f83540fee466e1d2 for reproducibility purposes
-# which will install R version latest-upstream.
+# It uses the `rstats-on-nix` fork of `nixpkgs` which provides improved
+# compatibility with older R versions and R packages for Linux/WSL and
+# Apple Silicon computers.
 # Report any issues to https://github.com/ropensci/rix
 let
- pkgs = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/71f14cf4ab060eb861de5b09f83540fee466e1d2.tar.gz") {};
+ pkgs = import (fetchTarball "https://github.com/rstats-on-nix/nixpkgs/archive/71f14cf4ab060eb861de5b09f83540fee466e1d2.tar.gz") {};
  
   rpkgs = builtins.attrValues {
     inherit (pkgs.rPackages) 
