@@ -27,7 +27,7 @@ pkgs_raw <- unique(trimws(unlist(strsplit(c(
   if("Suggests" %in% colnames(d)) d[,"Suggests"] else NULL, 
   if("Depends" %in% colnames(d)) d[,"Depends"] else NULL
 ), ","))))
-pkgs <- gsub("\s*\(.*\)", "", pkgs_raw)
+  pkgs <- gsub("\\s*\\(.*\\)", "", pkgs_raw); 
 pkgs <- pkgs[pkgs != "R"]
 
 missing <- c();
