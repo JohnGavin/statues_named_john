@@ -23,3 +23,12 @@
 
 *   **Cachix**: The project uses a specific Cachix cache (`johngavin`) for storing package build artifacts.
 *   **Workflows**: Ensure GitHub Actions workflows (like `R-CMD-check.yml`) are configured to push to `johngavin` and pull from `rstats-on-nix`.
+
+## 4. Documentation Management
+
+When tidying up towards the end of each session, 
+consider reducing the number of '*.md' files in ./R/setup/ 
+by merging files and merging duplicated topics to produce fewer more detailed md files. 
+Summarise the themes, topics and contents by similarity, and 
+suggest which parts  might be better migrated to a 
+wiki page on that topic or theme on the GH repo or to a FAQs wiki page and raise a GH issue for any outstanding issues/todo/features.
