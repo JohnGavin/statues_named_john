@@ -26,7 +26,7 @@ analyze_by_gender <- function(statue_data, gender_mapping = NULL) {
   # Attempt to classify gender from subject names
   classified <- statue_data %>%
     dplyr::mutate(
-      inferred_gender = classify_gender(subject, gender_mapping)
+      inferred_gender = classify_gender_from_subject(subject, gender_mapping)
     )
 
   # Overall summary
@@ -61,7 +61,7 @@ analyze_by_gender <- function(statue_data, gender_mapping = NULL) {
 }
 
 # Helper function: Classify gender
-classify_gender <- function(subjects, gender_mapping = NULL) {
+classify_gender_from_subject <- function(subjects, gender_mapping = NULL) {
   if (!is.null(gender_mapping)) {
     return(gender_mapping[subjects])
   }

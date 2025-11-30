@@ -1,81 +1,82 @@
 # R/tar_plans/memorial_analysis_plan.R
 
 memorial_analysis_plan <- list(
-  # Fetch data from APIs
-  tar_target(
-    wikidata_raw,
-    fetch_wikidata_statues()
-  ),
-  
-  tar_target(
-    osm_raw,
-    fetch_osm_statues()
-  ),
+  # Fetch data
+  tar_target(wikidata_raw, get_statues_wikidata()),
+  tar_target(osm_raw, get_statues_osm()),
 
-  # Clean and Combine
+  # Standardize
+  tar_target(wikidata_std, standardize_statue_data(wikidata_raw, "wikidata")),
+  tar_target(osm_std, standardize_statue_data(osm_raw, "osm")),
+
+  # Combine
   tar_target(
     all_memorials,
-    join_and_clean_data(wikidata_raw, osm_raw)
+    combine_statue_sources(
+      list(wikidata = wikidata_std, osm = osm_std), 
+      distance_threshold = 50
+    )
   ),
 
-  # Summary statistics
+  # Analysis
+  tar_target(
+    gender_analysis,
+    analyze_by_gender(all_memorials),
+    format = "rds"
+  ),
+  
+  tar_target(
+    johns_comparison,
+    compare_johns_vs_women(all_memorials),
+    format = "rds"
+  ),
+
   tar_target(
     summary_table,
-    all_memorials %>%
-      group_by(subject_category) %>%
-      summarise(
-        Total = n(),
-        `Unique Memorials` = n_distinct(title, na.rm = TRUE)
-      ) %>%
-      arrange(desc(Total)),
-    format = "rds"
+    gender_analysis$summary
   ),
-  
-  # Distribution table
+
   tar_target(
     findings,
-    all_memorials %>%
-      group_by(subject_category) %>%
-      summarise(
-        count = n(),
-        percentage = round(100 * n() / nrow(all_memorials), 1)
-      ),
-    format = "rds"
+    gender_analysis$summary %>%
+      dplyr::rename(Category = inferred_gender, Count = n, Percentage = percent)
   ),
-  
-  # Visualizations
+
+  # Plots
   tar_target(
     category_plot,
-    ggplot(all_memorials, aes(x = subject_category, fill = subject_category)) +
-      geom_bar() +
+    ggplot(gender_analysis$summary, aes(x = inferred_gender, y = n, fill = inferred_gender)) +
+      geom_col() +
+      geom_text(aes(label = sprintf("%d (%.1f%%)", n, percent)), vjust = -0.5) +
       labs(
-        title = "Memorials in London by Category",
-        subtitle = "Comparing Johns, Women, and Dogs",
-        x = "Category",
+        title = "Gender Representation in London Statues",
+        x = "Gender",
         y = "Count"
       ) +
       theme_minimal(),
     format = "rds"
   ),
 
+  # Map (Static ggplot for vignette PDF/HTML)
   tar_target(
     memorial_map_plot,
     {
-      memorials_sf <- all_memorials %>%
+      data_sf <- all_memorials %>%
         dplyr::filter(!is.na(lat), !is.na(lon)) %>%
         sf::st_as_sf(coords = c("lon", "lat"), crs = 4326)
-      
+        
       ggplot() +
-        geom_sf(data = memorials_sf, aes(color = subject_category), size = 2, alpha = 0.7) +
-        scale_color_viridis_d() +
-        labs(
-          title = "Memorials in London",
-          subtitle = "Spatial distribution of Johns, Women, and Dogs",
-          color = "Category"
-        ) +
-        theme_minimal() +
-        theme(legend.position = "bottom")
+        geom_sf(data = data_sf, aes(color = source), size = 2, alpha = 0.7) +
+        labs(title = "Memorials in London by Source") +
+        theme_minimal()
     },
+    format = "rds"
+  ),
+  
+  # Interactive Map (Leaflet widget)
+  tar_target(
+    memorial_interactive_map,
+    map_statues(all_memorials, cluster = TRUE),
     format = "rds"
   )
 )

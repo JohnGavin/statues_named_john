@@ -99,7 +99,7 @@ find_duplicate_groups <- function(distance_matrix, threshold) {
     if (visited[i]) next
 
     # Find all points within threshold of point i
-    nearby <- which(distance_matrix[i, ] <= threshold)
+    nearby <- which(as.numeric(distance_matrix[i, ]) <= threshold)
 
     if (length(nearby) > 1) {
       groups[[group_id]] <- nearby

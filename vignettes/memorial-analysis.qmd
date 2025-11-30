@@ -35,33 +35,46 @@ This vignette compares and contrasts memorials in London honoring three distinct
 We use the `targets` package to manage the data pipeline.
 
 ```{r packages}
-tryCatch(
-  library(londonremembers),
-  error = function(e) {
-    message("Package not installed, loading from source")
-    devtools::load_all()
-  }
-)
+library(londonremembers)
 library(dplyr)
 library(ggplot2)
 library(sf)
 library(targets)
+library(leaflet)
 ```
 
 ```{r load-data}
 # Load data from targets pipeline
-all_memorials <- targets::tar_read(all_memorials)
-summary_table <- targets::tar_read(summary_table)
-findings <- targets::tar_read(findings)
-category_plot <- targets::tar_read(category_plot)
-memorial_map_plot <- targets::tar_read(memorial_map_plot)
+# We assume targets::tar_make() has been run previously
+if (dir.exists(file.path(rprojroot::find_root(rprojroot::is_r_package), "_targets"))) {
+  # Set path to project root
+  tar_config_set(store = file.path(rprojroot::find_root(rprojroot::is_r_package), "_targets"))
+  
+  all_memorials <- targets::tar_read(all_memorials)
+  summary_table <- targets::tar_read(summary_table)
+  findings <- targets::tar_read(findings)
+  category_plot <- targets::tar_read(category_plot)
+  memorial_map_plot <- targets::tar_read(memorial_map_plot)
+  johns_comparison <- targets::tar_read(johns_comparison)
+  memorial_interactive_map <- targets::tar_read(memorial_interactive_map)
+} else {
+  message("Targets pipeline store not found. Please run targets::tar_make() to generate data.")
+  # Create dummy data for rendering if pipeline not run
+  all_memorials <- data.frame()
+  summary_table <- data.frame()
+  findings <- data.frame()
+  category_plot <- ggplot()
+  memorial_map_plot <- ggplot()
+  johns_comparison <- list(message = "Pipeline not run", claim_validated = FALSE, john_statues = 0, john_percent = 0, woman_statues = 0, woman_percent = 0)
+  memorial_interactive_map <- leaflet()
+}
 ```
 
 ## Data Overview
 
 ```{r summary-stats}
 knitr::kable(summary_table,
-             caption = "Memorial Summary by Category")
+             caption = "Gender Representation Summary")
 ```
 
 ## Representation Analysis
@@ -70,20 +83,22 @@ knitr::kable(summary_table,
 category_plot
 ```
 
-### Key Findings
-
-```{r findings-summary}
-knitr::kable(findings,
-             caption = "Distribution of Memorials by Category",
-             col.names = c("Category", "Count", "Percentage (%)"))
-```
-
 ## Geographic Distribution
 
 We can map the location of these memorials to see spatial patterns.
 
-```{r map, fig.cap="Map of Memorials in London by Category"}
+### Static Map (Source Distribution)
+
+```{r map, fig.cap="Map of Memorials in London by Source"}
 memorial_map_plot
+```
+
+### Interactive Map
+
+Explore the memorials interactively. Click clusters to zoom in, and click markers to see details.
+
+```{r interactive-map}
+memorial_interactive_map
 ```
 
 ## Comparison with External Studies
@@ -92,13 +107,16 @@ The campaign [Statues for Equality](https://statuesforequality.com/pages/london)
 * "The percentage of women’s statues in the UK that aren’t mythical or royal is approximately 3%"
 * "More statues of men named John dotted around the country than of women!"
 
-Our analysis of London-specific data suggests:
+Our analysis of London-specific data finds:
 
-* **Men named John**: `r findings$count[findings$subject_category == "Men named John"]` (`r findings$percentage[findings$subject_category == "Men named John"]`%)
-* **Women**: `r findings$count[findings$subject_category == "Women"]` (`r findings$percentage[findings$subject_category == "Women"]`%)
-* **Dogs**: `r findings$count[findings$subject_category == "Dogs"]` (`r findings$percentage[findings$subject_category == "Dogs"]`%)
+* **`r johns_comparison$message`**
 
-*(Note: Percentages are relative to the total dataset of scraped/queried memorials, including "Other" categories).*
+**Validation**: The claim that there are "more statues of men named John than of women" is **`r if(johns_comparison$claim_validated) "supported" else "refuted"`** by our current London dataset.
+
+* **Men named John**: `r johns_comparison$john_statues` (`r johns_comparison$john_percent`%)
+* **Women**: `r johns_comparison$woman_statues` (`r johns_comparison$woman_percent`%)
+
+*(Note: Percentages are relative to the total dataset of queried memorials).*
 
 ## Session Info
 
