@@ -18,6 +18,10 @@ core purpose is to enable in-depth analysis of London’s commemorative
 landscape, facilitate the validation of public claims (e.g., regarding
 gender representation), and offer interactive data exploration.
 
+> In England’s grand capital, dear, More Johns than dames, it appears.
+> For each woman of might, A John’s in plain sight, Confirming our
+> gendered-statue fears.
+
 ## Data Sources
 
 This package leverages a robust multi-source data acquisition strategy
