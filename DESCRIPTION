@@ -36,7 +36,8 @@ Suggests:
     scales,
     targets,
     tarchetypes,
-    arrow
+    arrow,
+    rprojroot
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://github.com/yourusername/londonremembers
