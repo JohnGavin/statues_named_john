@@ -14,7 +14,8 @@ knitr::opts_chunk$set(
   fig.width = 7,
   fig.height = 5,
   warning = FALSE,
-  message = FALSE
+  message = FALSE,
+  echo = FALSE
 )
 ```
 
@@ -29,6 +30,12 @@ This vignette compares and contrasts memorials in London honoring three distinct
 **Data Sources**: 
 * **Wikidata**: Structured data for statues and public art in London.
 * **OpenStreetMap**: Crowdsourced data for memorials and statues.
+
+> A count of the bronzes revealed,
+> That John's common form was unsealed.
+> While feminine grace,
+> Held a much smaller place,
+> A sad truth the numbers unpeeled.
 
 ## Load Data
 
