@@ -30,17 +30,16 @@ jobs:
         run: nix-shell --run "echo 'Nix environment ready'"
 
       - name: Test coverage
+        shell: nix-shell --run bash -c "{0}"
         run: |
-          nix-shell --run "Rscript -e '
-          if (!requireNamespace(\"covr\", quietly = TRUE)) {
-            install.packages(\"covr\")
+          if (!requireNamespace("covr", quietly = TRUE)) {
+            install.packages("covr")
           }
           covr::codecov(
             quiet = FALSE,
             clean = FALSE,
-            token = \"${{ secrets.CODECOV_TOKEN }}\"
-          )'
-          "
+            token = "${{ secrets.CODECOV_TOKEN }}"
+          )
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4

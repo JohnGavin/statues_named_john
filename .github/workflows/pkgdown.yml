@@ -36,11 +36,11 @@ jobs:
           extraPullNames: rstats-on-nix
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
-      - name: Build nix environment
-        run: nix-shell --run "echo 'Nix environment ready'"
-
-      - name: Build pkgdown site
-        run: nix-shell --run "Rscript -e 'pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)'"
+      - name: Build and Deploy pkgdown site
+        shell: nix-shell --run bash -c "{0}" # Use a persistent Nix shell
+        run: |
+          echo "Nix environment ready"
+          Rscript -e 'pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)'
 
       - name: Deploy to GitHub pages
         if: github.event_name != 'pull_request'
