@@ -117,6 +117,15 @@ vignette("memorial-analysis", package = "londonremembers")
 You can also view the deployed vignette directly on GitHub Pages:
 [https://johngavin.github.io/statues_named_john/articles/memorial-analysis.html](https://johngavin.github.io/statues_named_john/articles/memorial-analysis.html)
 
+## Developer Documentation
+
+For detailed information on the project's architecture, research, and internal guidelines, please refer to the following documents located in the `R/setup/` directory:
+
+*   [**Project Overview**](R/setup/PROJECT_OVERVIEW.md): Comprehensive guide to the project plan and implementation details.
+*   [**Data Sources Research**](R/setup/DATA_SOURCES_RESEARCH.md): In-depth evaluation of data sources (Wikidata, OSM, GLHER, Art UK).
+*   [**Agent Guidelines**](R/setup/AGENT_GUIDELINES.md): Internal workflow standards and reproducibility requirements.
+*   **GitHub Wiki**: Check the [repository Wiki](https://github.com/JohnGavin/statues_named_john/wiki) for FAQs and technical journals.
+
 ## License
 
 MIT
