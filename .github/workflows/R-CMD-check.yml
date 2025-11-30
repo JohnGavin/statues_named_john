@@ -22,8 +22,8 @@ jobs:
       - name: Setup Cachix
         uses: cachix/cachix-action@v15
         with:
-          name: johngavin
-          extraPullNames: rstats-on-nix
+          name: rstats-on-nix
+          extraPullNames: johngavin
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
       - name: Build and Test R Package
