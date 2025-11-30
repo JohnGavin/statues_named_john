@@ -28,7 +28,17 @@ rix(
     "targets",
     "tarchetypes",
     "sf",
-    "arrow"
+    "arrow",
+    "WikidataQueryServiceR",
+    "osmdata",
+    "leaflet",
+    "jsonlite",
+    "httr2",
+    "gert",
+    "gh",
+    "usethis",
+    "R.utils",
+    "rprojroot"
   ),
   system_pkgs = c("pandoc", "qpdf", "libomp"),
   git_pkgs = NULL,
