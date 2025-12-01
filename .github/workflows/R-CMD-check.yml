@@ -43,8 +43,10 @@ jobs:
         run: |
           nix-build default.nix -A shell -o ci-shell --cores 8 --quiet
 
-      - name: Run R Verification
+      - name: Debug R Environment
         run: |
+          nix-shell --run "env | grep R_"
+          nix-shell --run "Rscript -e 'print(.libPaths()); print(installed.packages()[,1])'"
           nix-shell ./default.nix --run "
             set -e
             echo 'Nix environment ready'
