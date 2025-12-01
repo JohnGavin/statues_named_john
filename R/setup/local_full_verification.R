@@ -88,6 +88,7 @@ run_system_command("nix-build package.nix", error_message = "❌ Failed to build
 result_path <- system("readlink -f result", intern = TRUE) # Get the absolute path of the built derivation
 
 # Push the built derivation to Cachix
+cat(paste("CACHIX_AUTH_TOKEN (first 5 chars):", substr(Sys.getenv("CACHIX_AUTH_TOKEN"), 1, 5), "\n"))
 run_system_command(paste("cachix push johngavin", shQuote(result_path)), 
                    error_message = paste("❌ Failed to push", result_path, "to Cachix."))
 

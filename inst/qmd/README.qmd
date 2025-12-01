@@ -125,12 +125,12 @@ You can also view the deployed vignette directly on GitHub Pages:
 
 ## Developer Documentation
 
-For detailed information on the project's architecture, research, and internal guidelines, please refer to the following documents located in the `R/setup/` directory:
+For detailed information on the project's architecture, research, and internal guidelines, please refer to the following documents:
 
 *   [**Project Overview**](R/setup/PROJECT_OVERVIEW.md): Comprehensive guide to the project plan and implementation details.
-*   [**Data Sources Research**](R/setup/DATA_SOURCES_RESEARCH.md): In-depth evaluation of data sources (Wikidata, OSM, GLHER, Art UK).
-*   [**Agent Guidelines**](R/setup/AGENT_GUIDELINES.md): Internal workflow standards and reproducibility requirements.
-*   **GitHub Wiki**: Check the [repository Wiki](https://github.com/JohnGavin/statues_named_john/wiki) for FAQs and technical journals.
+*   [**Agent Guidelines**](AGENTS.md): Internal workflow standards and reproducibility requirements.
+*   [**Quick Start Guide**](R/setup/QUICK_START_GUIDE.md): Step-by-step guide for setting up and running the project pipeline.
+*   [**GitHub Wiki**](https://github.com/JohnGavin/statues_named_john/wiki): Check the repository Wiki for FAQs, technical journals, and package evaluations.
 
 ## License
 

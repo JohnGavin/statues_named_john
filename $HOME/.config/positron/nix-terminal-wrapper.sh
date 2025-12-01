@@ -9,7 +9,7 @@ printf '%s
 # This is also a shell command, equivalent to the source builtin
 # Recommended fix for default.R (line ~204)
 # This command is the CRITICAL step that sets PATH, man pages, and other environment variables.
-true && source /nix/store/6xi8mzpanl34jqql7bc043fkrck2c5ls-nix-shell/etc/profile.d/nix-shell.sh
+true && source /nix/store/qryfby7sb4ikv5a28x992qyhfd93sa36-nix-shell/etc/profile.d/nix-shell.sh
 
 # 2. Run environment activation hooks (if defined by Nix)
 if declare -f __start_nix_shell_environment > /dev/null; then
@@ -18,7 +18,7 @@ fi
 
 # 3. Fix R Console Libraries: Ensure R finds the Nix-built packages.
 # The R_LIB_PATH variable must still be escaped to prevent outer shell expansion here.
-# DISABLED: This path does not exist - NIX_SHELL_PATH is the shell script, not a directory
+# DISABLED: This path doesn't exist - NIX_SHELL_PATH is the shell script, not a directory
 # R_LIBS_USER should already be set by the Nix environment
 
 # 4. Final confirmation before launch

@@ -8,7 +8,6 @@ get_subjects_by_category|function|58d3f31f6f8d67e3
 get_memorial|function|e2f196ef77bb4488
 get_subject|function|620addbe8e989a55
 get_subjects_by_gender|function|e10080abc3555f20
-.Random.seed|object|bfe78f3e762e2a89
 johns_raw|stem|fd8f7159640eaa15|c5d2cb3bf92ee50f|2c530c1562a7fbd1|-1460322737||t20403.6496867294s|s116b|116|rds|local|vector|||0.58||
 dogs_raw|stem|fd8f7159640eaa15|f2b2aeff6b99c033|2c530c1562a7fbd1|-1933022053||t20403.6496913263s|s116b|116|rds|local|vector|||0.384||
 women_terms|stem|6501deda3a7718d2|cdad260871ad2c99|2c530c1562a7fbd1|-1095594584||t20403.649691584s|s77b|77|rds|local|vector|||0.001||
@@ -16,13 +15,19 @@ johns|stem|a6e0e269094c505b|7a66672b2c119e94|a628f1471d9fbba5|958994266||t20403.
 dogs|stem|a6e0e269094c505b|316842e433258f2c|f454dbd3cd3e2d1a|-449196160||t20403.6496917426s|s126b|126|rds|local|vector|||0||
 women_raw_list|stem|a2fca4e3a9856c1e|fa8656d682265e21|d4ea1643740815da|1006478999||t20403.6497701885s|s138b|138|rds|local|vector|||6.773||
 women|stem||a73378b9f56f1e62|029a60487e254dd3|-910958602||t20403.6497706165s||0|rds|local|vector|||0.024||Must use existing variables. ✖ `url` not found in `.data`.
-osm_raw|stem|1ac09ae30ad99c85|f7d9ecdec12ed9a3|2c530c1562a7fbd1|1724282779||t20421.4881141606s|s7396b|7396|parquet|local|vector|||2.063||
-wikidata_raw|stem|26a6a5ca36918c31|e561214a31b91e8f|2c530c1562a7fbd1|-1969361436||t20421.4881197073s|s4381b|4381|parquet|local|vector|||0.467||
-all_memorials|stem|c9fa5c5024fd15cc|e2bd977279e7b666|6bbd46d4eb34cdb7|1729866638||t20421.4881205825s|s7766b|7766|parquet|local|vector|||0.04||
-summary_table|stem|533e721e77f29de2|89fe78eaa83e5264|753791a9f4094c0a|-1890126374||t20421.4882916704s|s190b|190|rds|local|vector|||0.009||
-findings|stem|96f24dbbdccc5017|09b9bd5553d985e0|753791a9f4094c0a|644882975||t20421.4882918511s|s198b|198|rds|local|vector|||0.003||
-category_plot|stem|ed7f2c50fd091b0b|31083bcf3a7efbab|753791a9f4094c0a|-977205175||t20421.4882935019s|s245030b|245030|rds|local|vector|||0.03||
+osm_raw|stem|b79bdf700c0a8e24|f1765a5bed51e7fb|2c530c1562a7fbd1|1724282779||t20422.6586742236s|s138945b|138945|parquet|local|vector|||21.432||
+wikidata_raw|stem|bf2ed7b870c1400e|70d05b42b462b6f4|2c530c1562a7fbd1|-1969361436||t20422.6586823921s|s5409b|5409|parquet|local|vector|||0.692||
+osm_std|stem|4efa31a4b93f4926|ca39ce8567fc5eb7|8752e20b331a49de|1955182145||t20422.6586829579s|s173218b|173218|parquet|local|vector|||0.009||
+wikidata_std|stem|601f6ccfa3b79b91|644fd81909f43052|cf771b5054895a9a|836736429||t20422.6586831306s|s6609b|6609|parquet|local|vector|||0.006||
+all_memorials|stem|911faf8101be82f3|561e1006004ba526|adaa93877579b970|1729866638||t20422.6591185989s|s137560b|137560|parquet|local|vector|||9.698||
+memorial_interactive_map|stem|a5c0b1a9acbf3a21|fa146368ea2d6512|6945206ec4544328|-269169706||t20422.6594845327s|s386179b|386179|rds|local|vector|||0.532||
+gender_analysis|stem|83510fe4c06adcd0|d3e4b0f84377a073|6945206ec4544328|1856577162||t20422.6604265991s|s93481b|93481|rds|local|vector|||0.023||
+johns_comparison|stem|54c2e2a880ee5308|95b80fc145377e7f|6945206ec4544328|-1045227736||t20422.660427041s|s213b|213|rds|local|vector|||0.015||
+memorial_map_plot|stem|5da6c96caddbadb5|66667320e36d9e4e|6945206ec4544328|1866069921||t20422.660429207s|s942948b|942948|rds|local|vector|||0.033||
+summary_table|stem|75bc43611920ece6|7e98facf38967347|86fbe4e5dfbaa44c|-1890126374||t20422.660429515s|s1094b|1094|parquet|local|vector|||0||
+findings|stem|a22567f3db7f6502|54c7126afbd7c443|86fbe4e5dfbaa44c|644882975||t20422.6604296567s|s1106b|1106|parquet|local|vector|||0.002||
+category_plot|stem|8c261bcc24908390|aff0c6b85111a39d|86fbe4e5dfbaa44c|-977205175||t20422.6604308161s|s332757b|332757|rds|local|vector|||0.019||
+.Random.seed|object|f578b448075477ba
 update.packages|function|30d2377eab38636a
 install.packages|function|e3b0a9d56d54eeba
 remove.packages|function|e5e5ba52f888863b
-memorial_map_plot|stem|164f32af81027bda|58c63b340dfa5ad2|753791a9f4094c0a|1866069921||t20421.4950464891s|s301111b|301111|rds|local|vector|||0.051||

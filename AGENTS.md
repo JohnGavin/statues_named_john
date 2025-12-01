@@ -64,10 +64,54 @@ wiki page on that topic or theme on the GH repo or to a FAQs wiki page and raise
 *   **Upon DESCRIPTION Update**: Whenever the `DESCRIPTION` file is updated (e.g., adding new `Imports` or `Suggests`), you MUST immediately verify that all listed packages are available in the current Nix shell environment.
 *   **Verification Command**: Run the following command to attempt loading all dependencies:
     ```bash
-    Rscript -e 'd <- read.dcf("DESCRIPTION"); pkgs <- unique(trimws(unlist(strsplit(c(if("Imports" %in% colnames(d)) d[,"Imports"] else NULL, if("Suggests" %in% colnames(d)) d[,"Suggests"] else NULL, if("Depends" %in% colnames(d)) d[,"Depends"] else NULL), ",")))); pkgs <- gsub("\\s*\\(.*\\)", "", pkgs); pkgs <- pkgs[pkgs != "R"]; missing <- pkgs[!sapply(pkgs, function(p) requireNamespace(p, quietly = TRUE))]; if(length(missing) > 0) { cat("Missing packages:", paste(missing, collapse = ", "), "\n"); quit(status = 1) } else { cat("All dependencies available.\n") }'
+    Rscript -e 'd <- read.dcf("DESCRIPTION"); pkgs <- unique(trimws(unlist(strsplit(c(if("Imports" %in% colnames(d)) d[,"Imports"] else NULL, if("Suggests" %in% colnames(d)) d[,"Suggests"] else NULL, if("Depends" %in% colnames(d)) d[,"Depends"] else NULL), ",")))); pkgs <- gsub("\s*\(.*\)", "", pkgs); pkgs <- pkgs[pkgs != "R"]; missing <- pkgs[!sapply(pkgs, function(p) requireNamespace(p, quietly = TRUE))]; if(length(missing) > 0) { cat("Missing packages:", paste(missing, collapse = ", "), "\n"); quit(status = 1) } else { cat("All dependencies available.\n") }'
     ```
 *   **Action on Failure**: If the verification fails (packages missing), do NOT proceed with implementation. Instead, **ask the user for advice** on how to update the Nix environment (e.g., updating `default.R` and regenerating `default.nix`).
 
 ## 8. Nix Environment Standards
 
 *   **Fixed Versions**: When defining the Nix environment (e.g., in `default.R` via `rix`), **NEVER** use dynamic version specifiers like `"latest-upstream"`. Always use a fixed date (e.g., `"2025-11-25"`) or a specific commit hash. This ensures the environment remains identical over time, preventing future breakages due to package updates.
+
+## 9. Reproducible R Session Management: Persistent Nix Shell Requirement
+
+**Effective Date:** 2025-11-11
+
+The primary objective for all R development workflows within Nix/rix environments is **true reproducibility**. This is achieved by enforcing the use of a **single persistent nix-shell** for executing all R commands across all projects.
+
+### 9.1 Starting and Using the Persistent Nix Shell
+
+*   Always verify you are in a nix shell. All necessary commands and R packages should be available.
+*   **Execute All Commands Within:** ALL subsequent R commands and related operations for that project must be executed within this single shell instance. This includes:
+    *   Running R scripts (`Rscript`).
+    *   Interactive R sessions (`R`).
+    *   Package development commands (`devtools::check()`, `devtools::test()`, `devtools::document()`).
+    *   Website building (`pkgdown::build_site()`).
+    *   Git/GitHub operations using R packages (`gert`, `gh`, `usethis`).
+    *   `targets` pipeline execution.
+    *   Any other R-related operations.
+
+### 9.2 Why This Is Critical
+
+Adhering to this principle ensures:
+*   **Consistent Package Versions**: All operations benefit from a single, consistent set of package versions defined by the Nix environment.
+*   **Shared R Session State**: Enables continuity of work and shared objects/data within the R session.
+*   **Faster Execution**: Avoids repeated, time-consuming initialization of new Nix environments for individual commands.
+*   **True Reproducibility**: Guarantees that the environment remains identical throughout the session, which is fundamental for reproducible research and development.
+*   **Avoids Pitfalls**: New shell instances break reproducibility, as each may have a different state or slightly different package configurations.
+
+### 9.3 Examples
+
+*   **❌ WRONG Approach (Do NOT Do This)**: Launching new `nix-shell` instances for individual commands breaks reproducibility.
+    ```bash
+    # Creates new environment each time - breaks reproducibility
+    nix-shell --run "Rscript script1.R"
+    nix-shell --run "Rscript script2.R"
+    nix-shell --run "Rscript script3.R"
+    ```
+*   **✅ CORRECT Approach (Always Do This)**: Execute all commands within the single persistent shell.
+    ```bash
+    # Then execute all commands in that shell:
+    Rscript script1.R
+    Rscript script2.R
+    Rscript script3.R
+    ```

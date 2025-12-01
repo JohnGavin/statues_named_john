@@ -1,0 +1,20 @@
+# R/setup/commit_full_local_verification_fixes.R
+library(gert)
+
+message("Staging files...")
+gert::git_add(".Rbuildignore")
+gert::git_add(".gitignore")
+gert::git_add(".github/workflows/R-CMD-check.yml")
+gert::git_add(".github/workflows/test-coverage.yml")
+gert::git_add("DESCRIPTION")
+gert::git_add("default.R")
+gert::git_add("default.nix")
+gert::git_add("tests/testthat/test-cleaning-integration.R")
+gert::git_add("R/globals.R")
+gert::git_add("R/setup/local_full_verification.R")
+gert::git_add("package.nix")
+
+message("Committing...")
+gert::git_commit("feat: R CMD check clean and local verification script")
+message("Pushing...")
+gert::git_push(verbose = TRUE)
