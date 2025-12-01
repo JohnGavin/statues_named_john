@@ -35,7 +35,7 @@ jobs:
 
       - name: Test coverage
         run: |
-          nix-shell --run "
+          nix-shell default.nix --run "
             set -e
             echo 'Nix environment ready'
             Rscript -e 'covr::codecov(
