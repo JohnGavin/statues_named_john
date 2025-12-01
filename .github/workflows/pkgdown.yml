@@ -40,12 +40,19 @@ jobs:
       - name: Install package and dependencies to local library
         run: |
           mkdir -p $HOME/R_libs
-          # Install bslib from source into local lib to avoid read-only permissions in Nix store
-          # We use download.packages + R CMD INSTALL to bypass Nix's install.packages block
-          nix-shell default.nix --run "Rscript -e 'download.packages(\"bslib\", destdir=\".\", repos=\"https://cloud.r-project.org\", type=\"source\")'"
-          nix-shell default.nix --run "R CMD INSTALL --library=$HOME/R_libs bslib_*.tar.gz"
           
-          # Install the package itself to the local library
+          # 1. Download bslib and pkgdown sources
+          nix-shell default.nix --run "Rscript -e 'download.packages(c(\"bslib\", \"pkgdown\"), destdir=\".\", repos=\"https://cloud.r-project.org\", type=\"source\")'"
+          
+          # Debug: Check what was downloaded
+          ls -l *.tar.gz
+          
+          # 2. Install them to local lib using R CMD INSTALL (bypassing Nix blocks)
+          # We install bslib first, then pkgdown
+          nix-shell default.nix --run "R CMD INSTALL --library=$HOME/R_libs bslib_*.tar.gz"
+          nix-shell default.nix --run "R CMD INSTALL --library=$HOME/R_libs pkgdown_*.tar.gz"
+          
+          # 3. Install the project package itself
           nix-shell default.nix --run "R CMD INSTALL --library=$HOME/R_libs ."
 
       - name: Build and Deploy pkgdown site
