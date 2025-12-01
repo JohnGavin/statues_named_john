@@ -37,19 +37,27 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           skipPush: true
 
-      - name: Install package to local library
+      - name: Install package and dependencies to local library
         run: |
           mkdir -p $HOME/R_libs
-          # Install package to a user-writable location to ensure pkgdown can access/load it correctly
-          # and to avoid any potential read-only issues with the source in Nix store context
+          # Install bslib from source/CRAN into local lib to avoid read-only permissions in Nix store
+          # This is critical for Quarto/pkgdown copying operations
+          nix-shell default.nix --run "Rscript -e 'install.packages(\"bslib\", lib=\"$HOME/R_libs\", repos=\"https://cloud.r-project.org\")'"
+          
+          # Install the package itself to the local library
           nix-shell default.nix --run "R CMD INSTALL --library=$HOME/R_libs ."
 
       - name: Build and Deploy pkgdown site
         run: |
           export R_LIBS_USER=$HOME/R_libs
           nix-shell default.nix --keep R_LIBS_USER --run "Rscript -e '
+            # Set library paths to prioritize local user lib (with writable bslib)
             Sys.setenv(R_LIBS = Sys.getenv(\"R_LIBS_USER\"))
             .libPaths(c(Sys.getenv(\"R_LIBS_USER\"), .libPaths()))
+            
+            # Verify bslib location
+            message(\"bslib location: \", find.package(\"bslib\"))
+            
             # Clean any existing site first
             if (dir.exists(\"docs\")) {
               pkgdown::clean_site()
