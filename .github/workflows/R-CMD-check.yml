@@ -32,12 +32,12 @@ jobs:
           CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
         run: |
           # Build the environment first to ensure dependencies are cached
-          nix-build default.nix --quiet
+          nix-build default.nix -A shell --quiet
           
           # Push only the project package and its direct dependencies
           # This filters the massive list of all system deps
-          nix-store -qR --include-outputs $(nix-instantiate default.nix) |
-            grep -E 'statues_named_john|londonremembers|package.nix' |
+          nix-store -qR --include-outputs $(nix-instantiate default.nix -A shell) | \
+            grep -E 'statues_named_john|londonremembers|package.nix' | \
             cachix push johngavin
 
       - name: Build Nix Shell

@@ -37,17 +37,25 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           skipPush: true
 
+      - name: Install package to local library
+        run: |
+          mkdir -p $HOME/R_libs
+          # Install package to a user-writable location to ensure pkgdown can access/load it correctly
+          # and to avoid any potential read-only issues with the source in Nix store context
+          nix-shell default.nix --run "R CMD INSTALL --library=$HOME/R_libs ."
+
       - name: Build and Deploy pkgdown site
         run: |
-          nix-shell default.nix --run "Rscript -e '
+          export R_LIBS_USER=$HOME/R_libs
+          nix-shell default.nix --keep R_LIBS_USER --run "Rscript -e '
             # Clean any existing site first
             if (dir.exists(\"docs\")) {
               pkgdown::clean_site()
             }
             
-            # Build pkgdown site components
-            # We build components explicitly to have better control and matching randomwalk pattern
-            pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)
+            # Build pkgdown site
+            # install = FALSE because we just installed it manually
+            pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
           '"
 
       - name: Deploy to GitHub pages

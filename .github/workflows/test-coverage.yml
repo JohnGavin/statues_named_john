@@ -39,7 +39,7 @@ jobs:
             Rscript -e 'covr::codecov(
               quiet = FALSE,
               clean = FALSE,
-              token = \"${{ secrets.CODECOV_TOKEN }}\"
+              token = "${{ secrets.CODECOV_TOKEN }}"
             )'
           "
 
