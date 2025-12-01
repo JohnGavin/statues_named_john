@@ -15,6 +15,7 @@ run_r_code <- function(expr, error_message = "R code failed.") {
   cat(paste("Running:", deparse(substitute(expr)), "\n"))
   result <- try(eval(substitute(expr)), silent = TRUE)
   if (inherits(result, "try-error")) {
+    cat(result) # Print the error message
     stop(error_message, call. = FALSE)
   }
 }
