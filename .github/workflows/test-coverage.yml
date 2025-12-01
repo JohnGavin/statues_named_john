@@ -29,23 +29,16 @@ jobs:
       - name: Build nix environment
         run: nix-shell --run "echo 'Nix environment ready'"
 
-      - name: Build and Pin Nix Shell
+      - name: Build Nix Shell
         run: |
-          GC_ROOT_PATH=/nix/var/nix/gcroots/per-user/$USER/$(basename ${{ github.repository }})-ci-test-coverage-shell
-          mkdir -p $(dirname $GC_ROOT_PATH) # Ensure parent directory exists
-          nix-build default.nix -A shell -o "$GC_ROOT_PATH" --cores 8 --quiet
-          if [ $? -ne 0 ]; then
-              echo "ERROR: nix-build failed."
-              exit 1
-          fi
-          echo "GC Root created at $GC_ROOT_PATH"
+          nix-build default.nix -A shell -o ci-shell --cores 8 --quiet
 
       - name: Test coverage
         run: |
           nix-shell --run "
             set -e
-            echo 'Nix environment ready with GC root'
-            R_LIBS_SITE=\"$(Rscript -e 'cat(.libPaths()[1])')\" Rscript -e 'covr::codecov(
+            echo 'Nix environment ready'
+            Rscript -e 'covr::codecov(
               quiet = FALSE,
               clean = FALSE,
               token = \"${{ secrets.CODECOV_TOKEN }}\"
