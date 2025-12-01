@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Nix
-        uses: cachix/install-nix-action@v27
+        uses: cachix/install-nix-action@v31
         with:
           nix_path: nixpkgs=channel:nixos-unstable
 
@@ -35,14 +35,20 @@ jobs:
           name: rstats-on-nix
           extraPullNames: johngavin
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          skipPush: true
 
       - name: Build and Deploy pkgdown site
         run: |
-          nix-shell default.nix --run "
-            set -e
-            echo 'Nix environment ready'
-            Rscript -e 'pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)'
-          "
+          nix-shell default.nix --run "Rscript -e '
+            # Clean any existing site first
+            if (dir.exists(\"docs\")) {
+              pkgdown::clean_site()
+            }
+            
+            # Build pkgdown site components
+            # We build components explicitly to have better control and matching randomwalk pattern
+            pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)
+          '"
 
       - name: Deploy to GitHub pages
         if: github.event_name != 'pull_request'
