@@ -4,16 +4,18 @@ memorial_analysis_plan <- list(
   # Fetch data
   tar_target(wikidata_raw, get_statues_wikidata()),
   tar_target(osm_raw, get_statues_osm()),
+  tar_target(glher_raw, get_statues_glher()),
 
   # Standardize
   tar_target(wikidata_std, standardize_statue_data(wikidata_raw, "wikidata")),
   tar_target(osm_std, standardize_statue_data(osm_raw, "osm")),
+  tar_target(glher_std, standardize_statue_data(glher_raw, "glher")),
 
   # Combine
   tar_target(
     all_memorials,
     combine_statue_sources(
-      list(wikidata = wikidata_std, osm = osm_std), 
+      list(wikidata = wikidata_std, osm = osm_std, glher = glher_std), 
       distance_threshold = 50
     )
   ),

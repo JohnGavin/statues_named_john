@@ -1,5 +1,5 @@
 # package.nix
-{ pkgs ? import (fetchTarball "https://github.com/rstats-on-nix/nixpkgs/archive/71f14cf4ab060eb861de5b09f83540fee466e1d2.tar.gz") {} }: # Using the same hash as default.nix
+{ pkgs ? import (fetchTarball "https://github.com/rstats-on-nix/nixpkgs/archive/2025-11-24.tar.gz") {} }: # Using the same hash as default.nix
 
 pkgs.rPackages.buildRPackage {
   name = "londonremembers";

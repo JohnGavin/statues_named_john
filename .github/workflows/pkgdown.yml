@@ -38,10 +38,10 @@ jobs:
 
       - name: Build and Deploy pkgdown site
         run: |
-          nix-shell --run "
+          nix-shell default.nix --run "
             set -e
             echo 'Nix environment ready'
-            R_LIBS_SITE="$(Rscript -e 'cat(.libPaths()[1])')" Rscript -e 'pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)'
+            Rscript -e 'pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)'
           "
 
       - name: Deploy to GitHub pages
