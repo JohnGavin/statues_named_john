@@ -7,7 +7,7 @@ library(tarchetypes)
 
 # Load package from source (for development)
 if (file.exists("DESCRIPTION")) {
-  suppressMessages(devtools::load_all())
+  suppressMessages(pkgload::load_all())
 }
 
 # Set options
