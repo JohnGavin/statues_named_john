@@ -40,9 +40,10 @@ jobs:
       - name: Install package and dependencies to local library
         run: |
           mkdir -p $HOME/R_libs
-          # Install bslib from source/CRAN into local lib to avoid read-only permissions in Nix store
-          # This is critical for Quarto/pkgdown copying operations
-          nix-shell default.nix --run "Rscript -e 'install.packages(\"bslib\", lib=\"$HOME/R_libs\", repos=\"https://cloud.r-project.org\")'"
+          # Install bslib from source into local lib to avoid read-only permissions in Nix store
+          # We use download.packages + R CMD INSTALL to bypass Nix's install.packages block
+          nix-shell default.nix --run "Rscript -e 'download.packages(\"bslib\", destdir=\".\", repos=\"https://cloud.r-project.org\", type=\"source\")'"
+          nix-shell default.nix --run "R CMD INSTALL --library=$HOME/R_libs bslib_*.tar.gz"
           
           # Install the package itself to the local library
           nix-shell default.nix --run "R CMD INSTALL --library=$HOME/R_libs ."
