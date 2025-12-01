@@ -51,13 +51,11 @@ jobs:
       - name: Build and Deploy pkgdown site
         run: |
           export R_LIBS_USER=$HOME/R_libs
-          nix-shell default.nix --keep R_LIBS_USER --run "Rscript -e '
-            # Set library paths to prioritize local user lib (with writable bslib)
-            Sys.setenv(R_LIBS = Sys.getenv(\"R_LIBS_USER\"))
-            .libPaths(c(Sys.getenv(\"R_LIBS_USER\"), .libPaths()))
-            
-            # Verify bslib location
-            message(\"bslib location: \", find.package(\"bslib\"))
+          # Force R to look in local lib first by setting R_LIBS
+          export R_LIBS=$R_LIBS_USER
+          nix-shell default.nix --keep R_LIBS_USER --keep R_LIBS --run "Rscript -e '
+            message(\"Lib paths: \", paste(.libPaths(), collapse=\", \"))
+            if (requireNamespace(\"bslib\", quietly=TRUE)) message(\"bslib location: \", find.package(\"bslib\"))
             
             # Clean any existing site first
             if (dir.exists(\"docs\")) {
