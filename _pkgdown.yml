@@ -2,8 +2,8 @@ url: https://johngavin.github.io/statues_named_john/
 
 template:
   bootstrap: 5
-  bslib:
-    enabled: false  # Disable bslib to avoid Nix store permission issues
+  # bslib causes permissions issues with Nix store
+  # Workaround: Delete docs/ directory before building (see workflow)
 
 navbar:
   structure:

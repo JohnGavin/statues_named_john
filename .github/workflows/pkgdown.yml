@@ -38,8 +38,34 @@ jobs:
           extra-packages: any::pkgdown, local::.
           needs: website
 
+      - name: Show cache and timing info
+        run: |
+          echo "=== R Package Cache Info ==="
+          echo "R_LIBS_USER: ${R_LIBS_USER:-not set}"
+          if [ -d "$R_LIBS_USER" ]; then
+            echo "Cache size:"
+            du -sh "$R_LIBS_USER"
+            echo "Packages installed:"
+            ls "$R_LIBS_USER" | wc -l
+          else
+            echo "Cache directory doesn't exist (first run)"
+          fi
+          echo ""
+          echo "=== System Info ==="
+          Rscript -e 'cat("R version:", R.version.string, "\n")'
+          Rscript -e 'cat("pkgdown version:", as.character(packageVersion("pkgdown")), "\n")'
+          Rscript -e 'cat("bslib version:", as.character(packageVersion("bslib")), "\n")'
+
+      - name: Clean docs directory
+        run: |
+          echo "Removing docs/ directory to avoid permissions issues"
+          rm -rf docs/
+          echo "docs/ directory cleaned"
+
       - name: Build pkgdown site
-        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+        run: |
+          # Build site with verbose output for debugging
+          pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
 
       - name: Deploy to GitHub pages

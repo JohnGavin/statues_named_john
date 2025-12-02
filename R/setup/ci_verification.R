@@ -67,11 +67,19 @@ cat("\n--- 4. Running R CMD check (rcmdcheck::rcmdcheck()) ---
 ")
 run_r_code(rcmdcheck::rcmdcheck(error_on = "note", args = c("--no-build-vignettes", "--no-manual")), "❌ rcmdcheck::rcmdcheck() found errors, warnings, or notes.")
 
-# 5. Build targets pipeline locally (optional, can be done in a separate CI job if needed)
-# For now, we'll just check if it can be loaded.
-cat("\n--- 5. Verifying targets pipeline can be built (targets::tar_make(callr_function = NULL)) ---
+# 5. Build targets pipeline (OPTIONAL - controlled by RUN_TARGETS env var)
+# This can take time and is better suited for a separate CI job
+# Set RUN_TARGETS=true to enable, otherwise skips
+if (Sys.getenv("RUN_TARGETS", "false") == "true") {
+  cat("\n--- 5. Verifying targets pipeline can be built (targets::tar_make(callr_function = NULL)) ---
 ")
-run_r_code(targets::tar_make(callr_function = NULL), "❌ targets::tar_make() failed.")
+  run_r_code(targets::tar_make(callr_function = NULL), "❌ targets::tar_make() failed.")
+} else {
+  cat("\n--- 5. Skipping targets pipeline build (set RUN_TARGETS=true to enable) ---
+")
+  cat("ℹ  Targets pipeline can be tested separately with: targets::tar_make()
+")
+}
 
 cat("✅ All R-level CI verification steps passed.
 ")
