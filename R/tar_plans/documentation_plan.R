@@ -23,12 +23,18 @@ documentation_plan <- list(
 
       # Render vignette with Quarto
       # This runs OUTSIDE pkgdown, so Nix + Quarto + bslib work fine
+      # Note: Quarto outputs to same directory as input, then we move it
       quarto::quarto_render(
         input = "vignettes/memorial-analysis.qmd",
         output_file = "memorial-analysis.html",
-        output_dir = "inst/doc",
         quiet = FALSE,
-        execute_dir = "project"  # Execute in project root where targets are available
+        execute_dir = getwd()  # Execute in project root where targets are available
+      )
+
+      # Move rendered HTML to inst/doc/
+      file.rename(
+        from = "vignettes/memorial-analysis.html",
+        to = "inst/doc/memorial-analysis.html"
       )
 
       # Return path to generated HTML

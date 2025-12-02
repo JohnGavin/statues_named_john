@@ -42,7 +42,8 @@ This vignette compares and contrasts memorials in London honoring three distinct
 We use the `targets` package to manage the data pipeline.
 
 ```{r packages}
-library(londonremembers)
+# Note: londonremembers not loaded - vignette uses pre-computed targets objects
+# devtools::load_all()  # Uncomment if package functions are needed
 library(dplyr)
 library(ggplot2)
 library(sf)
