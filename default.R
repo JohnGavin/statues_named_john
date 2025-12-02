@@ -8,7 +8,7 @@ library(rix)
 #print(latest)
 
 rix(
-  date = "2025-11-24",
+  date = "2025-11-10",  # Updated from 2025-11-24 to try earlier snapshot for macOS stability
   r_pkgs = c(
     "roxygen2",
     "testthat",

@@ -2,6 +2,8 @@ url: https://johngavin.github.io/statues_named_john/
 
 template:
   bootstrap: 5
+  bslib:
+    enabled: false  # Disable bslib to avoid Nix store permission issues
 
 navbar:
   structure:

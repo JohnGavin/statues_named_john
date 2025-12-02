@@ -37,40 +37,16 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           skipPush: true
 
-      - name: Install package and dependencies to local library
-        run: |
-          mkdir -p $HOME/R_libs
-          
-          # 1. Download bslib and pkgdown sources
-          nix-shell default.nix --run "Rscript -e 'download.packages(c(\"bslib\", \"pkgdown\"), destdir=\".\", repos=\"https://cloud.r-project.org\", type=\"source\")'"
-          
-          # Debug: Check what was downloaded
-          ls -l *.tar.gz
-          
-          # 2. Install them to local lib using R CMD INSTALL (bypassing Nix blocks)
-          # We install bslib first, then pkgdown
-          nix-shell default.nix --run "R CMD INSTALL --library=$HOME/R_libs bslib_*.tar.gz"
-          nix-shell default.nix --run "R CMD INSTALL --library=$HOME/R_libs pkgdown_*.tar.gz"
-          
-          # 3. Install the project package itself
-          nix-shell default.nix --run "R CMD INSTALL --library=$HOME/R_libs ."
-
       - name: Build and Deploy pkgdown site
         run: |
-          export R_LIBS_USER=$HOME/R_libs
-          # Force R to look in local lib first by setting R_LIBS
-          export R_LIBS=$R_LIBS_USER
-          nix-shell default.nix --keep R_LIBS_USER --keep R_LIBS --run "Rscript -e '
-            message(\"Lib paths: \", paste(.libPaths(), collapse=\", \"))
-            if (requireNamespace(\"bslib\", quietly=TRUE)) message(\"bslib location: \", find.package(\"bslib\"))
-            
+          # With bslib disabled in _pkgdown.yml, we can use standard pkgdown build
+          nix-shell default.nix --run "Rscript -e '
             # Clean any existing site first
             if (dir.exists(\"docs\")) {
               pkgdown::clean_site()
             }
-            
-            # Build pkgdown site
-            # install = FALSE because we just installed it manually
+
+            # Build pkgdown site (bslib disabled, no permissions issues)
             pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
           '"
 
