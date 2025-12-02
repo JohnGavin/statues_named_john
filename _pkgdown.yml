@@ -3,7 +3,8 @@ url: https://johngavin.github.io/statues_named_john/
 template:
   bootstrap: 5
   # bslib causes permissions issues with Nix store
-  # Workaround: Delete docs/ directory before building (see workflow)
+  # Solution: Pre-build vignettes with targets, pkgdown uses inst/doc/*.html
+  # See: R/tar_plans/documentation_plan.R
 
 navbar:
   structure:

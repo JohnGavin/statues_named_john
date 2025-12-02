@@ -13,21 +13,26 @@ if (file.exists("DESCRIPTION")) {
 # Set options
 tar_option_set(
   packages = c(
-    "londonremembers", 
+    "londonremembers",
     "dplyr",
     "tidyr",
     "stringr",
     "ggplot2",
     "lubridate",
-    "arrow" 
+    "arrow",
+    "quarto",      # For vignette rendering
+    "pkgdown",     # For site building
+    "sf"           # For spatial data in vignettes
   ),
-  format = "parquet" 
+  format = "parquet"
 )
 
 # Source plans
 source("R/tar_plans/memorial_analysis_plan.R")
+source("R/tar_plans/documentation_plan.R")
 
 # Define pipeline
 list(
-  memorial_analysis_plan
+  memorial_analysis_plan,
+  documentation_plan
 )

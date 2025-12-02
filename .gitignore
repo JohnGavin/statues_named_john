@@ -18,3 +18,9 @@
 /nix-support/
 /.direnv/
 /.envrc
+
+# targets cache (local development)
+/_targets/
+
+# Pre-built vignettes (these SHOULD be committed)
+# inst/doc/*.html  # DO NOT ignore - we want to commit these!
