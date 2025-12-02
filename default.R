@@ -8,7 +8,7 @@ library(rix)
 #print(latest)
 
 rix(
-  date = "2025-11-10",  # Updated from 2025-11-24 to try earlier snapshot for macOS stability
+  date = "2025-11-24",  # Reverted from 2025-11-10 - older snapshot broke R-CMD-check
   r_pkgs = c(
     "roxygen2",
     "testthat",
