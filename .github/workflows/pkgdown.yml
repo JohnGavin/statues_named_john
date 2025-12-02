@@ -24,31 +24,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Nix
-        uses: cachix/install-nix-action@v31
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
+          use-public-rspm: true
 
-      - name: Setup Cachix
-        uses: cachix/cachix-action@v15
+      - name: Setup R dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          name: rstats-on-nix
-          extraPullNames: johngavin
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-          skipPush: true
+          extra-packages: any::pkgdown, local::.
+          needs: website
 
-      - name: Build and Deploy pkgdown site
-        run: |
-          # With bslib disabled in _pkgdown.yml, we can use standard pkgdown build
-          nix-shell default.nix --run "Rscript -e '
-            # Clean any existing site first
-            if (dir.exists(\"docs\")) {
-              pkgdown::clean_site()
-            }
-
-            # Build pkgdown site (bslib disabled, no permissions issues)
-            pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
-          '"
+      - name: Build pkgdown site
+        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+        shell: Rscript {0}
 
       - name: Deploy to GitHub pages
         if: github.event_name != 'pull_request'
