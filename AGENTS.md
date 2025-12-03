@@ -52,19 +52,30 @@
 
 ## 3. CI/CD & Caching
 
-- **Cachix**: The project uses a specific Cachix cache (`johngavin`) for
-  storing package build artifacts.
-- **Workflows**: Ensure GitHub Actions workflows (like
-  `R-CMD-check.yml`) are configured to push to `johngavin` and pull from
-  `rstats-on-nix`.
-- **Cache Priority**: To ensure the fastest binary cache search,
+### Optimization Strategy (randomwalk Pattern)
+
+- **Magic Nix Cache**: For maximum CI speed, workflows should leverage
+  `DeterminateSystems/magic-nix-cache-action`. This provides zero-config
+  caching of the entire Nix store within GitHub Actions, often
+  outperforming external binary caches for CI re-runs.
+- **Hybrid Workflow**:
+  - **R-CMD-check**: Run in **Nix** (`nix-shell`) to guarantee
+    reproducibility and consistent system dependencies.
+  - **pkgdown**: Run in **Native R** (`r-lib/actions`) to bypass Nix
+    read-only limitations with Quarto/bslib. Use
+    [`remotes::install_local`](https://remotes.r-lib.org/reference/install_local.html)
+    to handle local packages robustly.
+
+### Cachix Configuration
+
+- **Prioritization**: To ensure the fastest binary cache search,
   `rstats-on-nix` MUST be prioritized over the project-specific cache
   (`johngavin`).
-  - **Configuration Rule**: Set `name: rstats-on-nix` and
-    `extraPullNames: johngavin` (or other project cache) in
-    `cachix-action`. This ensures `rstats-on-nix` is checked first.
-  - **Example YAML**:
-    `yaml - name: Setup Cachix uses: cachix/cachix-action@v15 with: name: rstats-on-nix # Primary cache (checked first) extraPullNames: johngavin # Secondary cache (checked next) authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'`
+- **Configuration Rule**: Set `name: rstats-on-nix` and
+  `extraPullNames: johngavin` (or other project cache) in
+  `cachix-action`.
+- **Example YAML**:
+  `yaml - name: Setup Cachix uses: cachix/cachix-action@v15 with: name: rstats-on-nix # Primary cache (checked first) extraPullNames: johngavin # Secondary cache (checked next) authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'`
 
 ## 4. Documentation Management
 
