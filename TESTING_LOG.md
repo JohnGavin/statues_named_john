@@ -45,21 +45,20 @@
 
 ---
 
-### Phase 3: CI Workflow Test (Failed - Pak Error)
+### Phase 3: CI Workflow Test (In Progress - Fix Applied)
 
 **Goal:** Verify CI builds site correctly from pre-built vignettes
 
-**Diagnosis (2025-12-03 Run 2):**
-- **Status:** Failed (19m 16s).
-- **Error:** `! Cannot select new package installation task. 1 package still waiting to install: londonremembers.`
-- **Analysis:** All dependencies (including `sf`, `arrow`, `visNetwork`) were successfully installed. The error is an internal `pak` failure when attempting to install the local package itself. This might be due to a dependency resolution edge case or the package name `londonremembers` differing from the repo name (though usually fine).
+**Diagnosis (2025-12-03):**
+- **Run 1:** Failed (missing visNetwork).
+- **Run 2:** Failed (`pak` internal error installing local package).
+- **Fix (Run 3):** Modified `pkgdown.yml` to separate dependency installation (via `pak`) from local package installation (via `remotes::install_local`). This bypasses the `pak` solver error.
 
 **Steps:**
 1. ✅ Commit all outputs (code + html + docs/)
 2. ✅ Push to GitHub
-3. ❌ Monitor `.github/workflows/pkgdown.yml`
-   - **Run 1:** Failed (missing visNetwork).
-   - **Run 2:** Failed (pak internal error).
+3. 🔄 Monitor `.github/workflows/pkgdown.yml` (Run 3)
+   - **Status:** Waiting for result...
 4. ⏳ Verify:
    - [ ] CI completes in 1-2 mins (not 20 mins)
    - [ ] Uses pre-built vignettes (doesn't run Quarto)

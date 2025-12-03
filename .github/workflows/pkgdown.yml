@@ -39,8 +39,13 @@ jobs:
       - name: Setup R dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, local::.
+          extra-packages: any::pkgdown, any::remotes
           needs: website
+
+      - name: Install local package
+        run: |
+          remotes::install_local(".", dependencies = FALSE, force = TRUE)
+        shell: Rscript {0}
 
       - name: Verify pre-built vignettes
         run: |
