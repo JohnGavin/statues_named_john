@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git commit:*)",
+      "Bash(gh repo create:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)",
+      "Bash(gh run watch:*)",
+      "Bash(TARGETS_PKGDOWN_SOLUTION.md )",
+      "Bash(NIX_VS_NATIVE_R_WORKFLOWS.md )",
+      "Bash(AGENTS.md)",
+      "Bash(cat:*)",
+      "Bash(git clone:*)",
+      "Bash(git mv:*)",
+      "Bash(git reset:*)",
+      "Bash(curl:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
