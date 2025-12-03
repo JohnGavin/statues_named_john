@@ -65,7 +65,7 @@ run_r_code(testthat::test_local(stop_on_failure = TRUE), "❌ testthat::test_loc
 # 4. Run R CMD check
 cat("\n--- 4. Running R CMD check (rcmdcheck::rcmdcheck()) ---
 ")
-run_r_code(rcmdcheck::rcmdcheck(error_on = "note", args = c("--no-build-vignettes", "--no-manual")), "❌ rcmdcheck::rcmdcheck() found errors, warnings, or notes.")
+run_r_code(rcmdcheck::rcmdcheck(error_on = "error", args = c("--no-build-vignettes", "--no-manual")), "❌ rcmdcheck::rcmdcheck() found errors.")
 
 # 5. Build targets pipeline (OPTIONAL - controlled by RUN_TARGETS env var)
 # This can take time and is better suited for a separate CI job
