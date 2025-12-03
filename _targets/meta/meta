@@ -5,19 +5,19 @@ osm_std|stem|a9c9f53d1cc63b2a|ca39ce8567fc5eb7|24ccc8b51532b2e6|1955182145||t204
 glher_std|stem|19a917d012dea199|af208b2f1e764ec2|17e36343ee8d39c4|1200811353||t20425.4140192333s|s2546b|2546|parquet|local|vector|||0.001||
 vignette_sources|stem|08d5f59e833de599|ae042ea468547fc9|2c530c1562a7fbd1|794972430||t0s|s0b|0|file|local|vector|||0||
 pkgdown_verification|stem|8c6c50438d1b2e74|08f8781cdffc7263|2c530c1562a7fbd1|-2100439276||t20425.4162544032s|s774b|774|parquet|local|vector|||0.001||
-.Random.seed|object|2447f6b0417b7992
-update.packages|function|30d2377eab38636a
-install.packages|function|e3b0a9d56d54eeba
-remove.packages|function|e5e5ba52f888863b
 wikidata_raw|stem|3a1259e6ab53b9e1|70d05b42b462b6f4|2c530c1562a7fbd1|-1969361436||t20425.6171505218s|s7324b|7324|parquet|local|vector|||1.386||
-pkgdown_site|stem|4ad881307943efa9|146540c7da0725c2|2c530c1562a7fbd1|1264297866|docs|t20425.6172582553s|s3814706b|3814706|file|local|vector|||9.299|problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js to /tmp/RtmpkvgZQw/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js: Permission denied. problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js.map to /tmp/RtmpkvgZQw/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js.map: Permission denied. Failed to copy over bootstrap's javascript files into the htmlDependency() directory.|
 wikidata_std|stem|54a496f494ecc80c|644fd81909f43052|892d9945f5a9b4e4|836736429||t20425.6172588086s|s8250b|8250|parquet|local|vector|||0.004||
 all_memorials|stem|7473fe468062c354|79da7315e5b8f3ba|3faf52b9942263db|1729866638||t20425.6173630305s|s139088b|139088|parquet|local|vector|||8.989||
 memorial_interactive_map|stem|6d6fd1075ac2bfca|fa146368ea2d6512|9dfb7e093d5c20b8|-269169706||t20425.6173695266s|s391076b|391076|rds|local|vector|||0.522||
-gender_analysis|stem|1a9fa89a6cd8a89f|d3e4b0f84377a073|9dfb7e093d5c20b8|1856577162||t20425.6173698573s|s94574b|94574|rds|local|vector|||0.013||
-johns_comparison|stem|69332d1c8e11782b|95b80fc145377e7f|9dfb7e093d5c20b8|-1045227736||t20425.6173701274s|s220b|220|rds|local|vector|||0.016||
 memorial_map_plot|stem|bb5ed03f04799ba8|66667320e36d9e4e|9dfb7e093d5c20b8|1866069921||t20425.6173721139s|s945386b|945386|rds|local|vector|||0.03||
-summary_table|stem|c52aed94b92e925f|7e98facf38967347|f56ee06955573821|-1890126374||t20425.6173722708s|s1133b|1133|parquet|local|vector|||0||
-findings|stem|86c11077b5603337|54c7126afbd7c443|f56ee06955573821|644882975||t20425.6173725312s|s1145b|1145|parquet|local|vector|||0.001||
-category_plot|stem|5143fe9176ce75d0|aff0c6b85111a39d|f56ee06955573821|-977205175||t20425.6173736746s|s334013b|334013|rds|local|vector|||0.018||
-vignette_memorial_analysis_html|stem|4f242d881c00b338|32d4f4c7f8671992|033db473ff56561e|1413839597|/Users/johngavin/docs_gh/claude_rix/statues_named_john/vignettes/memorial-analysis.html|t20425.6174281468s|s834989b|834989|file|local|vector|||4.597||
+.Random.seed|object|e291df4cce4c7222
+update.packages|function|30d2377eab38636a
+install.packages|function|e3b0a9d56d54eeba
+remove.packages|function|e5e5ba52f888863b
+pkgdown_site|stem|768757962d20ec4c|146540c7da0725c2|2c530c1562a7fbd1|1264297866|docs|t20425.7118487225s|s3814896b|3814896|file|local|vector|||10.124|problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js to /tmp/RtmpdULRtt/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js: Permission denied. problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js.map to /tmp/RtmpdULRtt/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js.map: Permission denied. Failed to copy over bootstrap's javascript files into the htmlDependency() directory.|
+gender_analysis|stem|2078f9e8d26a1379|d3e4b0f84377a073|9dfb7e093d5c20b8|1856577162||t20425.711849567s|s95598b|95598|rds|local|vector|||0.023||
+johns_comparison|stem|004eec4eedd99ba3|95b80fc145377e7f|9dfb7e093d5c20b8|-1045227736||t20425.7118501158s|s233b|233|rds|local|vector|||0.028||
+summary_table|stem|0c1e30a9f90856cb|7e98facf38967347|a51b682280e9266c|-1890126374||t20425.7118503664s|s1149b|1149|parquet|local|vector|||0||
+findings|stem|2f034a06fd1b1d9e|54c7126afbd7c443|a51b682280e9266c|644882975||t20425.7118505233s|s1161b|1161|parquet|local|vector|||0.003||
+category_plot|stem|6fff5e03be48b36d|aff0c6b85111a39d|a51b682280e9266c|-977205175||t20425.7118518581s|s335040b|335040|rds|local|vector|||0.035||
+vignette_memorial_analysis_html|stem|9adf1ba0e48ab0ab|32d4f4c7f8671992|c45b2fe0b92eb86d|1413839597|/Users/johngavin/docs_gh/claude_rix/statues_named_john/vignettes/memorial-analysis.html|t20425.711907225s|s835146b|835146|file|local|vector|||4.671||

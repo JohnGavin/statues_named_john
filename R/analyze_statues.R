@@ -24,10 +24,10 @@
 analyze_by_gender <- function(statue_data, gender_mapping = NULL) {
 
   # Attempt to classify gender
-  # Priority: 1. Existing subject_gender (from Wikidata), 2. Heuristic from name
+  # Priority: 1. Existing subject_gender (from Wikidata), 2. Heuristic from subject, 3. Heuristic from name
   classified <- statue_data %>%
     dplyr::mutate(
-      heuristic_gender = classify_gender_from_subject(subject, gender_mapping),
+      heuristic_gender = classify_gender_from_subject(subject, name, gender_mapping),
       inferred_gender = dplyr::case_when(
         !is.na(subject_gender) & subject_gender %in% c("male", "female") ~ stringr::str_to_title(subject_gender),
         !is.na(subject_gender) ~ "Other", # Transgender, non-binary, etc. mapped to Other for high-level summary
@@ -67,17 +67,20 @@ analyze_by_gender <- function(statue_data, gender_mapping = NULL) {
 }
 
 # Helper function: Classify gender
-classify_gender_from_subject <- function(subjects, gender_mapping = NULL) {
+classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping = NULL) {
   if (!is.null(gender_mapping)) {
     return(gender_mapping[subjects])
   }
+  
+  # Use name if subject is NA
+  text_to_check <- dplyr::coalesce(subjects, names)
 
-  # Simple heuristic classification (would need enhancement)
+  # Simple heuristic classification
   classified <- dplyr::case_when(
-    is.na(subjects) ~ "Unknown",
-    stringr::str_detect(subjects, "(?i)queen|victoria|elizabeth|woman") ~ "Female",
-    stringr::str_detect(subjects, "(?i)king|prince|duke|sir|man|admiral") ~ "Male",
-    stringr::str_detect(subjects, "(?i)dog|horse|lion|animal") ~ "Animal",
+    is.na(text_to_check) ~ "Unknown",
+    stringr::str_detect(text_to_check, "(?i)\\b(queen|victoria|elizabeth|woman|mary|anne|lady|dame|florence|edith)\\b") ~ "Female",
+    stringr::str_detect(text_to_check, "(?i)\\b(king|prince|duke|sir|man|admiral|john|william|george|henry|charles|james|edward|richard|robert|thomas|arthur)\\b") ~ "Male",
+    stringr::str_detect(text_to_check, "(?i)\\b(dog|horse|lion|animal|cat)\\b") ~ "Animal",
     TRUE ~ "Unknown"
   )
 
@@ -98,9 +101,10 @@ classify_gender_from_subject <- function(subjects, gender_mapping = NULL) {
 compare_johns_vs_women <- function(statue_data) {
   classified <- analyze_by_gender(statue_data)$data
 
-  # Count Johns
+  # Count Johns (looking at subject OR name)
+  # We look for "John" as a whole word to avoid "Johnson" etc.
   johns <- classified %>%
-    dplyr::filter(stringr::str_detect(subject, "(?i)john")) %>%
+    dplyr::filter(stringr::str_detect(dplyr::coalesce(subject, name), "(?i)\\bjohn\\b")) %>%
     nrow()
 
   # Count women
