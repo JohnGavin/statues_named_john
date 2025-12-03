@@ -45,16 +45,20 @@
 
 ---
 
-### Phase 3: CI Workflow Test (Failed - Diagnosing)
+### Phase 3: CI Workflow Test (In Progress - Retrying)
 
 **Goal:** Verify CI builds site correctly from pre-built vignettes
+
+**Diagnosis (2025-12-03):**
+- `pak` failed to install local package `londonremembers`.
+- Root cause identified: `visNetwork` package is used in the project (targets visualization) but was missing from `DESCRIPTION`.
+- Fix applied: Added `visNetwork` to `Suggests` in `DESCRIPTION`, regenerated Nix files (`default.nix`, `package.nix`), pushed dependencies to Cachix, and pushed code to GitHub.
 
 **Steps:**
 1. ✅ Commit all outputs (code + html + docs/)
 2. ✅ Push to GitHub
-3. ❌ Monitor `.github/workflows/pkgdown.yml`
-   - **Status:** Failed during "Setup R dependencies".
-   - **Error:** `! Cannot select new package installation task. 1 package still waiting to install: londonremembers.` (Internal `pak` error).
+3. 🔄 Monitor `.github/workflows/pkgdown.yml` (New run triggered by fix commit)
+   - **Status:** Waiting for result...
 4. ⏳ Verify:
    - [ ] CI completes in 1-2 mins (not 20 mins)
    - [ ] Uses pre-built vignettes (doesn't run Quarto)
