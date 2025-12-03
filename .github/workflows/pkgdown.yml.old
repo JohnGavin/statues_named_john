@@ -1,0 +1,94 @@
+name: pkgdown
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  pkgdown:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+          r-version: 'release'  # Ensure using release version with RSPM binaries
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            libcurl4-openssl-dev \
+            libssl-dev \
+            libxml2-dev \
+            libfontconfig1-dev \
+            libharfbuzz-dev \
+            libfribidi-dev \
+            libfreetype6-dev \
+            libpng-dev \
+            libtiff5-dev \
+            libjpeg-dev \
+            libgit2-dev
+
+      - name: Setup R dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::pkgdown, local::.
+          needs: website
+          pak-version: devel  # Use latest pak for best binary detection
+
+      - name: Show cache and timing info
+        run: |
+          echo "=== R Package Cache Info ==="
+          echo "R_LIBS_USER: ${R_LIBS_USER:-not set}"
+          if [ -d "$R_LIBS_USER" ]; then
+            echo "Cache size:"
+            du -sh "$R_LIBS_USER"
+            echo "Packages installed:"
+            ls "$R_LIBS_USER" | wc -l
+          else
+            echo "Cache directory doesn't exist (first run)"
+          fi
+          echo ""
+          echo "=== System Info ==="
+          Rscript -e 'cat("R version:", R.version.string, "\n")'
+          Rscript -e 'cat("pkgdown version:", as.character(packageVersion("pkgdown")), "\n")'
+          Rscript -e 'cat("bslib version:", as.character(packageVersion("bslib")), "\n")'
+
+      - name: Clean docs directory
+        run: |
+          echo "Removing docs/ directory to avoid permissions issues"
+          rm -rf docs/
+          echo "docs/ directory cleaned"
+
+      - name: Build pkgdown site
+        run: |
+          # Build site with verbose output for debugging
+          pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+        shell: Rscript {0}
+
+      - name: Deploy to GitHub pages
+        if: github.event_name != 'pull_request'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: docs
+          branch: gh-pages

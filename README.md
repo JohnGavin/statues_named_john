@@ -172,6 +172,7 @@ internal guidelines, please refer to the following documents:
 
 - [**Project Overview**](R/setup/PROJECT_OVERVIEW.md): Comprehensive
   guide to the project plan and implementation details.
+- [**Developer Workflow**](DEVELOPER_WORKFLOW.md): Guide for developers on the targets-based workflow and pre-built vignettes.
 - [**Agent Guidelines**](AGENTS.md): Internal workflow standards and
   reproducibility requirements.
 - [**Quick Start Guide**](R/setup/QUICK_START_GUIDE.md): Step-by-step

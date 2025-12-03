@@ -42,7 +42,8 @@ This vignette compares and contrasts memorials in London honoring three distinct
 We use the `targets` package to manage the data pipeline.
 
 ```{r packages}
-library(londonremembers)
+# Note: londonremembers not loaded - vignette uses pre-computed targets objects
+# devtools::load_all()  # Uncomment if package functions are needed
 library(dplyr)
 library(ggplot2)
 library(sf)
@@ -57,13 +58,13 @@ if (dir.exists(file.path(rprojroot::find_root(rprojroot::is_r_package), "_target
   # Set path to project root
   tar_config_set(store = file.path(rprojroot::find_root(rprojroot::is_r_package), "_targets"))
   
-  all_memorials <- targets::tar_read(all_memorials)
-  summary_table <- targets::tar_read(summary_table)
-  findings <- targets::tar_read(findings)
-  category_plot <- targets::tar_read(category_plot)
-  memorial_map_plot <- targets::tar_read(memorial_map_plot)
-  johns_comparison <- targets::tar_read(johns_comparison)
-  memorial_interactive_map <- targets::tar_read(memorial_interactive_map)
+  all_memorials <- targets::tar_read(all_memorials, store = "_targets")
+  summary_table <- targets::tar_read(summary_table, store = "_targets")
+  findings <- targets::tar_read(findings, store = "_targets")
+  category_plot <- targets::tar_read(category_plot, store = "_targets")
+  memorial_map_plot <- targets::tar_read(memorial_map_plot, store = "_targets")
+  johns_comparison <- targets::tar_read(johns_comparison, store = "_targets")
+  memorial_interactive_map <- targets::tar_read(memorial_interactive_map, store = "_targets")
 } else {
   message("Targets pipeline store not found. Please run targets::tar_make() to generate data.")
   # Create dummy data for rendering if pipeline not run

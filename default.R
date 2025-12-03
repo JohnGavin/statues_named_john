@@ -8,7 +8,7 @@ library(rix)
 #print(latest)
 
 rix(
-  date = "2025-11-24",
+  date = "2025-11-24",  # Reverted from 2025-11-10 - older snapshot broke R-CMD-check
   r_pkgs = c(
     "roxygen2",
     "testthat",
@@ -43,7 +43,8 @@ rix(
     "rprojroot",
     "quarto",
     "pkgload", # New dependency for ci_verification.R
-    "rcmdcheck" # New dependency for ci_verification.R
+    "rcmdcheck", # New dependency for ci_verification.R
+    "visNetwork"
   ),
   system_pkgs = NULL,
   git_pkgs = NULL,

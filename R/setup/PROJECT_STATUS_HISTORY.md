@@ -39,14 +39,17 @@
 *   **Status:** PR #52 merged.
     *   `R-CMD-check` ✅ PASSED.
     *   `test-coverage` ✅ PASSED.
-    *   `pkgdown` ❌ FAILED (but with different reasons). This implies the fixes have not fully resolved `pkgdown` issues.
+    *   `pkgdown` ❌ FAILED (Permission denied copying `bslib` files).
+
+**2025-12-01: Pkgdown Permission Fix (PR #55)**
+*   **Issue:** `pkgdown` fails to copy `bslib` assets from the read-only Nix store.
+*   **Solution:** Modified `.github/workflows/pkgdown.yml` to manually install `bslib` from CRAN into the writable user library (`$HOME/R_libs`) *inside* the CI environment, overriding the Nix store version.
+*   **Status:** PR #55 created and running.
 
 **2025-12-01: Nix Health & Recovery Scripts (Issue #53)**
 *   **Goal:** Add scripts to manage local Nix environment health and recovery, and attempt to fix the macOS segfault.
 *   **Changes (PR #54):**
     *   Added `R/setup/pin_local_env.R` for local GC root pinning.
     *   Added `R/setup/nix_clean_rebuild.sh` for a "Nuclear Option" clean rebuild.
-    *   Attempted to update `default.R` to `2025-12-01`, but the snapshot was not available in `rix`. Reverted `default.R`.
 *   **Outcome of Clean Rebuild:** Executed `R/setup/nix_clean_rebuild.sh`. The local verification (`Rscript R/setup/ci_verification.R`) still resulted in a Segmentation Fault (Exit Code 139).
 *   **Conclusion:** The segfault is likely due to a persistent binary incompatibility in the `2025-11-24` snapshot for macOS AArch64, not local store corruption.
-*   **Next Steps:** If the segfault persists, waiting for a newer `rstats-on-nix` date (e.g., `2025-12-02`) and trying to update `default.R` then, or trying the `r-daily` branch directly in `default.nix`.

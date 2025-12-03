@@ -2,6 +2,15 @@
 
 ## 1. Vignette Standards
 
+### Pre-built Vignettes Strategy (CRITICAL)
+*   **CI/CD Strategy**: To avoid incompatibilities between Nix, Quarto, and bslib in CI, and to speed up builds, vignettes are rendered **locally via targets** and committed to git.
+*   **Workflow**:
+    1.  Edit `.qmd` source.
+    2.  Run `targets::tar_make()` locally (in Nix shell).
+    3.  Commit the generated `inst/doc/*.html` files.
+    4.  Push to GitHub.
+*   **CI Behavior**: The CI workflow (`pkgdown.yml`) uses these pre-built HTML files and DOES NOT run Quarto or targets.
+
 ### File Format
 *   **ALWAYS** use Quarto (`.qmd`) files for vignettes in preference to RMarkdown (`.Rmd`).
 *   Ensure the YAML header output format is appropriate (e.g., `rmarkdown::html_vignette` or `quarto::html_document` depending on package setup).
