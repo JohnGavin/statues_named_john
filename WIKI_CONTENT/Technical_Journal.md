@@ -106,3 +106,46 @@ Despite the extensive efforts and successful prototyping with generic HTTP tools
 ### 4.2 Current Status
 
 The critical blocker identified on `2025-11-12` has been definitively resolved. The specialized R packages required for the multi-source API approach are now confirmed to be available and will be utilized in the project's implementation. The generic HTTP prototype and the problem-solving journey documented herein represent an important historical account of the project's technical evolution.
+
+## 5. The Nix-Pkgdown-Quarto Incompatibility & Targets Solution (Dec 2025)
+
+*Consolidated from `WIKI_NIX_PKGDOWN_ISSUE.md` and `targets_pkgdown_workflow_20251202.md`*
+
+### 5.1 The Problem: Immutability vs. Runtime Copying
+
+A critical incompatibility was discovered when attempting to build the `pkgdown` site within the Nix environment.
+
+*   **The Incompatibility:**
+    *   **Quarto Vignettes** require the `bslib` package for Bootstrap 5 styling.
+    *   **bslib** attempts to copy CSS/JS assets from its installed package directory to the build output directory during runtime.
+    *   **Nix Store** (`/nix/store/...`) is **read-only** and immutable by design.
+    *   **Result:** `pkgdown::build_site()` fails with `Permission denied` errors when `bslib` tries to copy files.
+
+### 5.2 The Solution: Hybrid Workflow & Pre-built Vignettes
+
+To resolve this without abandoning Nix for development, a hybrid approach was adopted:
+
+1.  **Local Development (Nix)**: All coding, testing (`devtools::check`), and data pipelines (`targets`) run in the reproducible Nix shell.
+2.  **Vignette Rendering (Local Targets)**:
+    *   Vignettes are rendered **locally** using `targets::tar_make()`.
+    *   Since the local project directory is writable, `bslib` works fine here.
+    *   The rendered HTML files (`inst/doc/*.html`) are **committed to git**.
+3.  **CI/CD (Native R)**:
+    *   The `pkgdown` GitHub Action uses **Native R** (`r-lib/actions`), not Nix.
+    *   It uses the **pre-built vignettes** (committed HTML) instead of re-rendering them.
+    *   This bypasses the Nix permissions issue and dramatically speeds up CI (from >20 mins to <2 mins).
+
+### 5.3 CI Logic Fix (Dec 3, 2025)
+
+A secondary issue arose in the Native R CI workflow where the `pak` package manager failed to install the local package due to internal solver errors.
+
+*   **Fix:** Modified `.github/workflows/pkgdown.yml` to:
+    *   Use `pak` for dependencies only (`deps::.`).
+    *   Use `remotes::install_local(".", dependencies = FALSE)` for the package itself.
+*   **Result:** Robust and fast site building.
+
+### 5.4 Key Lessons
+
+*   **Nix Immutability:** Is absolute. Any tool requiring runtime modification of its own install location will fail.
+*   **Hybrid is Practical:** Using Nix for "Hard Reproducibility" (data, logic) and Native R for "Presentation" (website) is a valid and effective pattern.
+*   **Targets:** Is an excellent bridge, allowing artifacts (HTML) to be generated in the "safe" local environment and consumed by the "fast" CI environment.
