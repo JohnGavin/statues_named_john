@@ -21,4 +21,5 @@
 ^prompt\.md$
 ^result$
 ^shell\.nix$
-^vignettes/*.qmd$
+^vignettes/.*\.qmd$
+^\.local-shell$
