@@ -39,6 +39,20 @@
 <div class="section level2">
 <h2 id="id_1-vignette-standards">1. Vignette Standards<a class="anchor" aria-label="anchor" href="#id_1-vignette-standards"></a></h2>
 <div class="section level3">
+<h3 id="pre-built-vignettes-strategy-critical">Pre-built Vignettes Strategy (CRITICAL)<a class="anchor" aria-label="anchor" href="#pre-built-vignettes-strategy-critical"></a></h3>
+<ul><li>
+<strong>CI/CD Strategy</strong>: To avoid incompatibilities between Nix, Quarto, and bslib in CI, and to speed up builds, vignettes are rendered <strong>locally via targets</strong> and committed to git.</li>
+<li>
+<strong>Workflow</strong>:
+<ol style="list-style-type: decimal"><li>Edit <code>.qmd</code> source.</li>
+<li>Run <code><a href="https://docs.ropensci.org/targets/reference/tar_make.html" class="external-link">targets::tar_make()</a></code> locally (in Nix shell).</li>
+<li>Commit the generated <code>inst/doc/*.html</code> files.</li>
+<li>Push to GitHub.</li>
+</ol></li>
+<li>
+<strong>CI Behavior</strong>: The CI workflow (<code>pkgdown.yml</code>) uses these pre-built HTML files and DOES NOT run Quarto or targets.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="file-format">File Format<a class="anchor" aria-label="anchor" href="#file-format"></a></h3>
 <ul><li>
 <strong>ALWAYS</strong> use Quarto (<code>.qmd</code>) files for vignettes in preference to RMarkdown (<code>.Rmd</code>).</li>
@@ -70,13 +84,22 @@
 </div>
 <div class="section level2">
 <h2 id="id_3-cicd--caching">3. CI/CD &amp; Caching<a class="anchor" aria-label="anchor" href="#id_3-cicd--caching"></a></h2>
+<div class="section level3">
+<h3 id="optimization-strategy-randomwalk-pattern">Optimization Strategy (randomwalk Pattern)<a class="anchor" aria-label="anchor" href="#optimization-strategy-randomwalk-pattern"></a></h3>
 <ul><li>
-<strong>Cachix</strong>: The project uses a specific Cachix cache (<code>johngavin</code>) for storing package build artifacts.</li>
+<strong>Magic Nix Cache</strong>: For maximum CI speed, workflows should leverage <code>DeterminateSystems/magic-nix-cache-action</code>. This provides zero-config caching of the entire Nix store within GitHub Actions, often outperforming external binary caches for CI re-runs.</li>
 <li>
-<strong>Workflows</strong>: Ensure GitHub Actions workflows (like <code>R-CMD-check.yml</code>) are configured to push to <code>johngavin</code> and pull from <code>rstats-on-nix</code>.</li>
+<strong>Hybrid Workflow</strong>:
+<ul><li>
+<strong>R-CMD-check</strong>: Run in <strong>Nix</strong> (<code>nix-shell</code>) to guarantee reproducibility and consistent system dependencies.</li>
 <li>
-<strong>Cache Priority</strong>: To ensure the fastest binary cache search, <code>rstats-on-nix</code> MUST be prioritized over the project-specific cache (<code>johngavin</code>).
-<ul><li><p><strong>Configuration Rule</strong>: Set <code>name: rstats-on-nix</code> and <code>extraPullNames: johngavin</code> (or other project cache) in <code>cachix-action</code>. This ensures <code>rstats-on-nix</code> is checked first.</p></li>
+<strong>pkgdown</strong>: Run in <strong>Native R</strong> (<code>r-lib/actions</code>) to bypass Nix read-only limitations with Quarto/bslib. Use <code><a href="https://remotes.r-lib.org/reference/install_local.html" class="external-link">remotes::install_local</a></code> to handle local packages robustly.</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="cachix-configuration">Cachix Configuration<a class="anchor" aria-label="anchor" href="#cachix-configuration"></a></h3>
+<ul><li><p><strong>Prioritization</strong>: To ensure the fastest binary cache search, <code>rstats-on-nix</code> MUST be prioritized over the project-specific cache (<code>johngavin</code>).</p></li>
+<li><p><strong>Configuration Rule</strong>: Set <code>name: rstats-on-nix</code> and <code>extraPullNames: johngavin</code> (or other project cache) in <code>cachix-action</code>.</p></li>
 <li>
 <p><strong>Example YAML</strong>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Setup Cachix</span></span>
@@ -86,8 +109,8 @@
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="at">    </span><span class="fu">extraPullNames</span><span class="kw">:</span><span class="at"> johngavin</span><span class="co">    # Secondary cache (checked next)</span></span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="at">    </span><span class="fu">authToken</span><span class="kw">:</span><span class="at"> </span><span class="st">'${{ secrets.CACHIX_AUTH_TOKEN }}'</span></span></code></pre></div>
 </li>
-</ul></li>
 </ul></div>
+</div>
 <div class="section level2">
 <h2 id="id_4-documentation-management">4. Documentation Management<a class="anchor" aria-label="anchor" href="#id_4-documentation-management"></a></h2>
 <p>When tidying up towards the end of each session, consider reducing the number of ’<em>.md’ files in ./R/setup/ by merging files and merging duplicated topics to produce fewer more detailed md files. Summarise the themes, topics and contents by similarity, and suggest which parts might be better migrated to a wiki page on that topic or theme on the GH repo or to a FAQs wiki page and raise a GH issue for any outstanding issues/todo/features. </em> <strong>Wiki FAQs</strong>: Create and maintain a “FAQs” page on the GitHub Wiki documenting tasks logged in <code>./R/setup/</code>. Each entry should summarize the task and provide a direct link to the corresponding R script in the repository (e.g., link <code>R/setup/task_name.R</code> for <code>task_name</code>). * <strong>README Maintenance</strong>: The top-level <code>README.md</code> should be generated from <code>inst/qmd/README.qmd</code>. Any content updates should be made in the <code>.qmd</code> file and then rendered to <code>README.md</code> using Quarto (e.g., <code>quarto render inst/qmd/README.qmd --to gfm --output README.md</code>).</p>
@@ -176,7 +199,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

@@ -88,7 +88,7 @@ standardize_wikidata <- function(data) {
       id = paste0("wikidata_", wikidata_id),
       name = name,
       subject = subject,
-      subject_gender = NA_character_,  # Could be enhanced with additional query
+      subject_gender = subject_gender,  # Now fetched from query
       lat = lat,
       lon = lon,
       location = NA_character_,  # Could reverse geocode

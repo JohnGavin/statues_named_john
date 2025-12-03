@@ -36,7 +36,7 @@ get_statues_wikidata <- function(location = "Q84",
 
   # SPARQL query
   sparql_query <- sprintf(
-'SELECT ?statue ?statueLabel ?coords ?subjectLabel ?inceptionDate
+'SELECT ?statue ?statueLabel ?coords ?subjectLabel ?genderLabel ?inceptionDate
        ?materialLabel ?creatorLabel ?image ?article
 WHERE {
   # Instance of statue
@@ -49,7 +49,10 @@ WHERE {
   ?statue wdt:P625 ?coords.
 
   # Optional fields
-  OPTIONAL { ?statue wdt:P180 ?subject }
+  OPTIONAL { 
+    ?statue wdt:P180 ?subjectItem.
+    OPTIONAL { ?subjectItem wdt:P21 ?gender. }
+  }
   OPTIONAL { ?statue wdt:P571 ?inceptionDate }
   OPTIONAL { ?statue wdt:P186 ?material }
   OPTIONAL { ?statue wdt:P170 ?creator }
@@ -94,6 +97,7 @@ LIMIT %d
       wikidata_id = stringr::str_extract(statue, "Q[0-9]+$"),
       name = statueLabel,
       subject = subjectLabel,
+      subject_gender = genderLabel,
       lat = lat,
       lon = lon,
       inception_date = inceptionDate,

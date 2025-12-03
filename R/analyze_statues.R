@@ -23,10 +23,16 @@
 #' @export
 analyze_by_gender <- function(statue_data, gender_mapping = NULL) {
 
-  # Attempt to classify gender from subject names
+  # Attempt to classify gender
+  # Priority: 1. Existing subject_gender (from Wikidata), 2. Heuristic from name
   classified <- statue_data %>%
     dplyr::mutate(
-      inferred_gender = classify_gender_from_subject(subject, gender_mapping)
+      heuristic_gender = classify_gender_from_subject(subject, gender_mapping),
+      inferred_gender = dplyr::case_when(
+        !is.na(subject_gender) & subject_gender %in% c("male", "female") ~ stringr::str_to_title(subject_gender),
+        !is.na(subject_gender) ~ "Other", # Transgender, non-binary, etc. mapped to Other for high-level summary
+        TRUE ~ heuristic_gender
+      )
     )
 
   # Overall summary

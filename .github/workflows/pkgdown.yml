@@ -70,6 +70,12 @@ jobs:
           mkdir -p docs/articles
           cp -v vignettes/memorial-analysis.html docs/articles/
           
+          # Copy supporting files (images, libs)
+          if [ -d "vignettes/memorial-analysis_files" ]; then
+            echo "Copying vignette assets..."
+            cp -r vignettes/memorial-analysis_files docs/articles/
+          fi
+          
           # Create simple index if missing
           if [ ! -f docs/articles/index.html ]; then
             echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=memorial-analysis.html" /></head></html>' > docs/articles/index.html
