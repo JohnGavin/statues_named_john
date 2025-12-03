@@ -23,4 +23,4 @@
 /_targets/
 
 # Pre-built vignettes (these SHOULD be committed)
-# inst/doc/*.html  # DO NOT ignore - we want to commit these!
+# inst/doc/*.html  # DO NOT ignore - we want to commit these!.local-shell
