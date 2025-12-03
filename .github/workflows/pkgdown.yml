@@ -50,11 +50,11 @@ jobs:
       - name: Verify pre-built vignettes
         run: |
           echo "=== Checking for pre-built vignettes ==="
-          if [ -f "inst/doc/memorial-analysis.html" ]; then
-            ls -lh inst/doc/memorial-analysis.html
+          if [ -f "vignettes/memorial-analysis.html" ]; then
+            ls -lh vignettes/memorial-analysis.html
             echo "✅ Pre-built vignette found"
           else
-            echo "⚠️  No pre-built vignette - will build site without it"
+            echo "⚠️  No pre-built vignette found in vignettes/"
           fi
 
       - name: Build pkgdown site
@@ -63,6 +63,18 @@ jobs:
           # NO targets, NO Quarto rendering
           pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
+
+      - name: Manually install vignettes
+        run: |
+          echo "Copying pre-built vignettes to docs/articles/..."
+          mkdir -p docs/articles
+          cp -v vignettes/memorial-analysis.html docs/articles/
+          
+          # Create simple index if missing
+          if [ ! -f docs/articles/index.html ]; then
+            echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=memorial-analysis.html" /></head></html>' > docs/articles/index.html
+          fi
+
 
       - name: Deploy to GitHub Pages
         if: github.event_name != 'pull_request'
