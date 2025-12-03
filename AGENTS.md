@@ -30,8 +30,9 @@
 
 ## 3. CI/CD & Caching
 
-### Optimization Strategy (randomwalk Pattern)
-*   **Magic Nix Cache**: For maximum CI speed, workflows should leverage `DeterminateSystems/magic-nix-cache-action`. This provides zero-config caching of the entire Nix store within GitHub Actions, often outperforming external binary caches for CI re-runs.
+### Optimization Strategy
+*   **Cachix (Preferred)**: This project uses `cachix/install-nix-action` and `cachix-action` to pull binaries from `rstats-on-nix` and `johngavin`. This has proven faster (3-4 mins) than `magic-nix-cache` (26+ mins due to upload overhead) for this specific R environment.
+*   **Magic Nix Cache (Avoid)**: Do not use `magic-nix-cache-action` unless the cache upload time is acceptable or the binary cache is insufficient.
 *   **Hybrid Workflow**:
     *   **R-CMD-check**: Run in **Nix** (`nix-shell`) to guarantee reproducibility and consistent system dependencies.
     *   **pkgdown**: Run in **Native R** (`r-lib/actions`) to bypass Nix read-only limitations with Quarto/bslib. Use `remotes::install_local` to handle local packages robustly.
