@@ -39,8 +39,9 @@ get_statues_wikidata <- function(location = "Q84",
 'SELECT ?statue ?statueLabel ?coords ?subjectLabel ?genderLabel ?inceptionDate
        ?materialLabel ?creatorLabel ?image ?article
 WHERE {
-  # Instance of statue
-  ?statue wdt:P31 wd:Q179700.
+  # Instance of statue, sculpture, or memorial
+  VALUES ?type { wd:Q179700 wd:Q860861 wd:Q5020292 }
+  ?statue wdt:P31 ?type.
 
   # Located in specified location (or any subdivision)
   ?statue wdt:P131+ wd:%s.
