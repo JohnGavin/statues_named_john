@@ -1,23 +1,23 @@
 # Testing Log - Pre-built Vignettes Workflow
 
-**Date:** December 2, 2025
+**Date:** December 3, 2025
 **Purpose:** Verify complete workflow before updating documentation
 
 ---
 
 ## Test Plan
 
-### Phase 1: Local Build (In Progress)
+### Phase 1: Local Build (Completed)
 
 **Goal:** Verify targets pipeline builds everything correctly
 
 **Steps:**
 1. ✅ Clean targets cache (`tar_destroy()`)
-2. ⏳ Run full pipeline (`tar_make()`)
-3. ⏳ Verify outputs generated:
-   - [ ] `inst/doc/memorial-analysis.html` (pre-built vignette)
-   - [ ] `docs/` directory (pkgdown site)
-   - [ ] All assets copied correctly
+2. ✅ Run full pipeline (`tar_make()`) - *All targets passed locally.*
+3. ✅ Verify outputs generated:
+   - ✅ `vignettes/memorial-analysis.html` (pre-built vignette)
+   - ✅ `docs/` directory (pkgdown site)
+   - ✅ All assets copied correctly
 
 **What This Tests:**
 - Data fetching works
@@ -27,15 +27,17 @@
 
 ---
 
-### Phase 2: Identify Files to Commit
+### Phase 2: Identify Files to Commit (Completed)
 
 **Goal:** Document exactly what needs to be committed after `tar_make()`
 
 **Files to Check:**
-- Code changes: `R/`, `vignettes/`, `man/`, `NAMESPACE`
-- Pre-built vignettes: `inst/doc/*.html`
-- pkgdown site: `docs/` directory
-- Documentation: `README.md`, etc.
+- ✅ Code changes: `R/tar_plans/documentation_plan.R`
+- ✅ Vignette source: `inst/qmd/memorial-analysis.qmd` (moved)
+- ✅ Pre-built vignettes: `vignettes/memorial-analysis.html`
+- ✅ pkgdown site: `docs/` directory (generated)
+- ✅ Documentation: `TESTING_LOG.md` (updated), `_Rbuildignore` (updated), `_pkgdown.yml` (updated)
+- ✅ Generated files: `_targets.yaml`
 
 **What This Tests:**
 - Nothing is missed in git commits
@@ -43,14 +45,16 @@
 
 ---
 
-### Phase 3: CI Workflow Test
+### Phase 3: CI Workflow Test (Failed - Diagnosing)
 
 **Goal:** Verify CI builds site correctly from pre-built vignettes
 
 **Steps:**
-1. ⏳ Commit all outputs (code + inst/doc/ + docs/)
-2. ⏳ Push to GitHub
-3. ⏳ Monitor `.github/workflows/pkgdown.yml`
+1. ✅ Commit all outputs (code + html + docs/)
+2. ✅ Push to GitHub
+3. ❌ Monitor `.github/workflows/pkgdown.yml`
+   - **Status:** Failed during "Setup R dependencies".
+   - **Error:** `! Cannot select new package installation task. 1 package still waiting to install: londonremembers.` (Internal `pak` error).
 4. ⏳ Verify:
    - [ ] CI completes in 1-2 mins (not 20 mins)
    - [ ] Uses pre-built vignettes (doesn't run Quarto)
@@ -64,7 +68,7 @@
 
 ---
 
-### Phase 4: Documentation Update
+### Phase 4: Documentation Update (Pending)
 
 **Goal:** Update all docs to reflect correct workflow
 
@@ -80,7 +84,7 @@
 
 ---
 
-### Phase 5: User Approval
+### Phase 5: User Approval (Pending)
 
 **Goal:** Get user sign-off before finalizing
 
@@ -94,9 +98,11 @@
 
 ## Current Status
 
-**Phase 1:** In progress (building locally)
+**Phase 1:** Completed
+**Phase 2:** Completed
+**Phase 3:** **FAILED** - CI dependency installation error.
 
 **Next Steps:**
-1. Wait for `tar_make()` to complete
-2. Check what files were generated
-3. Move to Phase 2
+1. Debug `pkgdown.yml` workflow: The `pak` error suggests an issue with installing the local package `.` in the CI environment.
+2. Verify if `visNetwork` is available in the new local Nix shell (as requested for next session).
+3. Retry CI.

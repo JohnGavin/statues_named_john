@@ -43,7 +43,8 @@ rix(
     "rprojroot",
     "quarto",
     "pkgload", # New dependency for ci_verification.R
-    "rcmdcheck" # New dependency for ci_verification.R
+    "rcmdcheck", # New dependency for ci_verification.R
+    "visNetwork"
   ),
   system_pkgs = NULL,
   git_pkgs = NULL,

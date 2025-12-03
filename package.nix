@@ -39,6 +39,7 @@ pkgs.rPackages.buildRPackage {
     targets # For pipeline
     tarchetypes # For pipeline
     arrow # For caching
+    visNetwork # For pipeline visualization
     # quarto # For rendering .qmd (also in propagated)
   ];
 }
