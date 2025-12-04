@@ -49,7 +49,7 @@ jobs:
           nix-shell ./default.nix --run "
             set -e
             echo 'Nix environment ready'
-            Rscript R/setup/ci_verification.R
+            Rscript R/setup/ci_scripts/ci_verification.R
           "
 
       - name: Upload check results
