@@ -85,7 +85,7 @@
 <div class="section level3">
 <h3 id="step-5-push-to-trigger-fast-ci">Step 5: Push to Trigger Fast CI<a class="anchor" aria-label="anchor" href="#step-5-push-to-trigger-fast-ci"></a></h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://docs.ropensci.org/gert/reference/git_fetch.html" class="external-link">git_push</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/pull-requests.html" class="external-link">pr_push</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><strong>CI will:</strong> - Run in <strong>1-2 minutes</strong> (not 20 minutes!) - Use pre-built vignettes from <code>inst/doc/</code> - Build pkgdown site - Deploy to GitHub Pages</p>
 <p><strong>NO targets, NO Quarto, NO data fetching in CI</strong></p>
 <hr></div>

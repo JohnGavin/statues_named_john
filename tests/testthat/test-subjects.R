@@ -37,6 +37,8 @@ test_that("get_subject returns detailed information", {
 
 
 test_that("fetch_page handles invalid URLs gracefully", {
-  result <- fetch_page("https://invalid-url-that-does-not-exist-12345.com")
-  expect_null(result)
+  expect_warning({
+    result <- fetch_page("https://invalid-url-that-does-not-exist-12345.com")
+    expect_null(result)
+  }, class = "warning") # Expect any warning, or be more specific if needed
 })
