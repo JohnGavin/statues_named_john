@@ -154,18 +154,9 @@ commands across all projects.
 
 ### 9.1 Starting and Using the Persistent Nix Shell
 
-- **Check Environment**: First, check if you are already in a nix shell
-  (e.g., check for `NIX_CC` environment variable or `which R` pointing
-  to `/nix/store`).
-- **Already Inside?**: If you are already inside a nix-shell, **DO NOT**
-  nest another `nix-shell` command (e.g., `nix-shell --run ...` or
-  `nix-shell default.nix`). Just run the command directly (e.g.,
-  `Rscript ...`).
-- **Package Updates**: If you modify `DESCRIPTION` or `default.nix` to
-  add new packages, you **CANNOT** load them in the current running
-  shell. You must **ask the user to restart** the nix-shell environment
-  to pick up the changes.
-- **Execute All Commands Within**: ALL subsequent R commands and related
+- Always verify you are in a nix shell. All necessary commands and R
+  packages should be available.
+- **Execute All Commands Within:** ALL subsequent R commands and related
   operations for that project must be executed within this single shell
   instance. This includes:
   - Running R scripts (`Rscript`).
