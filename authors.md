@@ -7,16 +7,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/yourusername/londonremembers/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/JohnGavin/statues_named_john/blob/main/DESCRIPTION)
 
-GAvin J (2025). *londonremembers: Access and Analyze London Memorials
+GAvin J (2025). *statuesnamedjohn: Access and Analyze London Memorials
 Data*. R package version 0.1.0,
-<https://github.com/yourusername/londonremembers>.
+<https://github.com/JohnGavin/statues_named_john>.
 
     @Manual{,
-      title = {londonremembers: Access and Analyze London Memorials Data},
+      title = {statuesnamedjohn: Access and Analyze London Memorials Data},
       author = {John GAvin},
       year = {2025},
       note = {R package version 0.1.0},
-      url = {https://github.com/yourusername/londonremembers},
+      url = {https://github.com/JohnGavin/statues_named_john},
     }
