@@ -41,8 +41,8 @@ reproducibility compared to single-source methods.
   heritage data, accessed via CSV exports. Offers authoritative records
   with high data quality.
 
-**Note on `statuesnamedjohn.com`:** While initially a source of interest,
-direct programmatic access (e.g., web scraping) to `statuesnamedjohn.com`
+**Note on `londonremembers.com`:** While initially a source of interest,
+direct programmatic access (e.g., web scraping) to `londonremembers.com`
 proved unfeasible due to its JavaScript-rendered content and lack of a
 public API. This project thus pivots to the above API-driven sources to
 ensure reliability and reproducibility.

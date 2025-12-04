@@ -3,7 +3,7 @@
 NULL
 
 # Base URL for London Remembers
-base_url <- "https://www.statuesnamedjohn.com"
+base_url <- "https://www.londonremembers.com"
 
 #' Safely fetch and parse HTML from a URL
 #'

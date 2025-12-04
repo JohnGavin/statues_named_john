@@ -134,11 +134,20 @@ classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping 
   
   text_to_check <- dplyr::coalesce(subjects, names)
 
+  # Heuristic using common names (Top 50-100 common English names)
+  # Source: US SSA / UK ONS common historic names
   classified <- dplyr::case_when(
     is.na(text_to_check) ~ "Unknown",
-    stringr::str_detect(text_to_check, "(?i)\\b(queen|victoria|elizabeth|woman|mary|anne|lady|dame|florence|edith)\\b") ~ "Female",
-    stringr::str_detect(text_to_check, "(?i)\\b(king|prince|duke|sir|man|admiral|john|william|george|henry|charles|james|edward|richard|robert|thomas|arthur)\\b") ~ "Male",
+    
+    # Female Names & Titles
+    stringr::str_detect(text_to_check, "(?i)\\b(queen|victoria|elizabeth|woman|mary|anne|lady|dame|florence|edith|patricia|linda|barbara|jennifer|maria|susan|margaret|dorothy|lisa|nancy|karen|betty|helen|sandra|donna|carol|ruth|sharon|michelle|laura|sarah|kimberly|deborah|jessica|shirley|cynthia|angela|melissa|brenda|amy|anna|rebecca|virginia|kathleen|pamela|martha|debra|amanda|stephanie|carolyn|christine|marie|janet|catherine|frances|ann|joyce|diane)\\b") ~ "Female",
+    
+    # Male Names & Titles
+    stringr::str_detect(text_to_check, "(?i)\\b(king|prince|duke|sir|man|admiral|john|william|george|henry|charles|james|edward|richard|robert|thomas|arthur|michael|david|joseph|christopher|daniel|paul|mark|kenneth|steven|brian|ronald|anthony|kevin|jason|matthew|gary|timothy|jose|larry|jeffrey|frank|scott|eric|stephen|andrew|raymond|gregory|joshua|jerry|dennis|walter|patrick|peter|harold|douglas|carl|ryan|roger)\\b") ~ "Male",
+    
+    # Animals
     stringr::str_detect(text_to_check, "(?i)\\b(dog|horse|lion|animal|cat)\\b") ~ "Animal",
+    
     TRUE ~ "Unknown"
   )
 
