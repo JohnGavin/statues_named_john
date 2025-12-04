@@ -1,29 +1,32 @@
-# Current Focus: Feature - Gender Classification Refinement
+# Current Focus: Feature Implementation
 
 ## Active Branch
-`fix-issue-18-gender-classification`
+`main` (switched back after pushing feature branches)
 
 ## What I'm Doing
-Implementing gender classification improvements using the 'gender' R package to handle unknown subjects.
+Implemented three key features/fixes locally and pushed them to GitHub. Created PRs for each.
 
 ## Progress
-- [x] **Reorganization:** Tidied `R/setup/` scripts into subdirectories.
-- [x] **Dependencies:** Added `gender` to `default.R` and `DESCRIPTION`. Regenerated `default.nix`.
-- [x] **Implementation:** Updated `R/analyze_statues.R` to use `gender::gender()` for refining "Unknown" classifications.
-- [x] **Verification:** Verified graceful degradation locally.
-- [x] **Push:** Pushed changes to GitHub and manually created PR #68.
-- [x] **CI Fix:** Fixed incorrect path to `ci_verification.R` in `R-CMD-check.yml` which caused the initial CI failure.
-- [x] **Limerick Formatting:** Updated limerick in `inst/qmd/memorial-analysis.qmd` with new text and ensured correct newline formatting.
-- [ ] **CI:** Monitoring new run for PR #68.
+- [x] **Issue #69 (Bug - Male Plot):**
+    -   Fix: Updated `analyze_by_gender` to use case-insensitive check for "male"/"female".
+    -   Verification: Verified locally with reproduction script.
+    -   Status: Pushed -> PR #71 Created.
+- [x] **Issue #67 (QA Validation):**
+    -   Feat: Added `generate_qa_sample()` in `R/qa_utils.R`.
+    -   Verification: Function exists, but documentation build skipped locally due to `gender` package reload requirement (see Limitations).
+    -   Status: Pushed -> PR #72 Created.
+- [x] **Issue #20 (Wikidata Props):**
+    -   Feat: Updated `get_statues_wikidata.R` to fetch `height` (P2048) and `dedicatedTo` (P825).
+    -   Status: Pushed -> PR #73 Created.
+- [x] **Docs:** Updated `AGENTS.md` to clarify nested nix-shell usage.
 
 ## Key Files Modified
-- `default.R`, `default.nix`, `DESCRIPTION`
 - `R/analyze_statues.R`
-- `.github/workflows/R-CMD-check.yml`
-- `inst/qmd/memorial-analysis.qmd`
-- `R/setup/session_logs/`
+- `R/qa_utils.R` (New)
+- `R/get_statues_wikidata.R`
+- `AGENTS.md`
 
 ## Next Session Should
-1. **Monitor CI:** Wait for the new PR #68 checks to pass.
-2. **Merge:** If CI passes, merge the PR.
-3. **Verify Results:** Check analysis output.
+1. **Monitor CI:** Check status of PRs #71, #72, #73.
+2. **Review:** Ensure the new Wikidata columns don't break downstream schema validation (targets pipeline).
+3. **Merge:** Merge passing PRs.
