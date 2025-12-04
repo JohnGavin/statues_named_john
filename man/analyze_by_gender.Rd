@@ -16,17 +16,10 @@ A list containing:
   - summary: tibble with gender counts and percentages
   - by_source: gender breakdown by data source
   - top_subjects: most frequently commemorated subjects
+  - top_names_by_gender: top 5 first names for each gender
   - data: original data with 'inferred_gender' column
 }
 \description{
 Performs gender analysis on statue subjects to compare representation
 of men, women, and other subjects (animals, abstract concepts, etc.)
-}
-\examples{
-\dontrun{
-all_statues <- get_all_statue_data()
-gender_analysis <- analyze_by_gender(all_statues)
-print(gender_analysis$summary)
-}
-
 }

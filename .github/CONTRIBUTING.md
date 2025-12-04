@@ -1,4 +1,4 @@
-# Contributing to londonremembers
+# Contributing to statuesnamedjohn
 
 ## Development Setup
 

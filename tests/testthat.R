@@ -1,5 +1,5 @@
 # This file is part of the standard testthat setup
 library(testthat)
-library(londonremembers)
+library(statuesnamedjohn)
 
-test_check("londonremembers")
+test_check("statuesnamedjohn")

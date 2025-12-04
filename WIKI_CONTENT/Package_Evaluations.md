@@ -1,10 +1,10 @@
 # Session Package Review & Results Access
 **Date:** 2025-11-29
-**Project:** statues_named_john (londonremembers)
+**Project:** statues_named_john (statuesnamedjohn)
 
 ## 1. Package Review: JavaScript Scraping & Vignette UX
 
-**Context:** The project is currently blocked on scraping `londonremembers.com` because search results are rendered via JavaScript (Issue #16). We also need to improve vignette UX (Issue #15).
+**Context:** The project is currently blocked on scraping `statuesnamedjohn.com` because search results are rendered via JavaScript (Issue #16). We also need to improve vignette UX (Issue #15).
 
 ### A. Installed Packages (Current Capabilities)
 | Package | Purpose | Status | Limitation for Current Tasks |

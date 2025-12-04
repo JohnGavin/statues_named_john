@@ -1,11 +1,11 @@
-Package: londonremembers
+Package: statuesnamedjohn
 Type: Package
 Title: Access and Analyze London Memorials Data
 Version: 0.1.0
 Authors@R: person("John", "GAvin", email = "john.b.gavin@gmail.com",
                   role = c("aut", "cre"))
 Description: Provides functions to scrape and analyze memorial data from
-    London Remembers (www.londonremembers.com), including statues, plaques,
+    London Remembers (www.statuesnamedjohn.com), including statues, plaques,
     and other commemorative markers across London. Includes tools for
     comparative analysis of memorials by subject type and characteristics.
 License: MIT + file LICENSE
@@ -43,5 +43,5 @@ Suggests:
     visNetwork
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-URL: https://github.com/yourusername/londonremembers
-BugReports: https://github.com/yourusername/londonremembers/issues
+URL: https://github.com/JohnGavin/statues_named_john
+BugReports: https://github.com/JohnGavin/statues_named_john/issues

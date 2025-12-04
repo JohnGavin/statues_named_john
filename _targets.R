@@ -13,7 +13,7 @@ if (file.exists("DESCRIPTION")) {
 # Set options
 tar_option_set(
   packages = c(
-    "londonremembers",
+    "statuesnamedjohn",
     "dplyr",
     "tidyr",
     "stringr",

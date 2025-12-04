@@ -45,7 +45,7 @@ This vignette compares and contrasts memorials in London honoring three distinct
 We use the `targets` package to manage the data pipeline.
 
 ```{r packages}
-# Note: londonremembers not loaded - vignette uses pre-computed targets objects
+# Note: statuesnamedjohn not loaded - vignette uses pre-computed targets objects
 # devtools::load_all()  # Uncomment if package functions are needed
 library(dplyr)
 library(ggplot2)
@@ -86,6 +86,20 @@ if (dir.exists(file.path(rprojroot::find_root(rprojroot::is_r_package), "_target
 ```{r summary-stats}
 knitr::kable(summary_table,
              caption = "Gender Representation Summary")
+```
+
+## Top Names by Gender
+
+We extracted the first names from the memorials to identify the most common names for each gender group.
+
+```{r top-names}
+gender_analysis <- targets::tar_read(gender_analysis, store = "_targets")
+top_names <- gender_analysis$top_names_by_gender %>%
+  dplyr::filter(inferred_gender %in% c("Female", "Male")) %>%
+  dplyr::select(Gender = inferred_gender, Name = extracted_names, Count = n, Percent = percent) %>%
+  dplyr::arrange(Gender, desc(Count))
+
+knitr::kable(top_names, caption = "Most Common First Names by Gender")
 ```
 
 ## Representation Analysis

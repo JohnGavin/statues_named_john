@@ -42,7 +42,7 @@ message("Bbox: ", bbox)
 tryCatch({
   response <- request(endpoint) %>%
     req_body_form(data = overpass_query) %>%
-    req_user_agent("LondonRemembersR/1.0 (https://github.com/user/londonremembers)") %>%
+    req_user_agent("LondonRemembersR/1.0 (https://github.com/user/statuesnamedjohn)") %>%
     req_timeout(60) %>%
     req_perform()
 

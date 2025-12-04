@@ -37,7 +37,7 @@ jobs:
           # Push only the project package and its direct dependencies
           # This filters the massive list of all system deps
           nix-store -qR --include-outputs $(nix-instantiate default.nix -A shell) | \
-            grep -E 'statues_named_john|londonremembers|package.nix' | \
+            grep -E 'statues_named_john|statuesnamedjohn|package.nix' | \
             cachix push johngavin
 
       - name: Build Nix Shell
