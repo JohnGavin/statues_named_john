@@ -4,20 +4,17 @@
 `main`
 
 ## What I'm Doing
-Session complete. Documentation improvements implemented.
+Session complete. Project fully updated. Vignette layout and content issues resolved.
 
 ## Progress
-- [x] **Refactor:** Package renamed `londonremembers` -> `statuesnamedjohn`.
-- [x] **Data:** Gender analysis significantly improved.
-- [x] **CI:** Fast and robust.
-- [x] **Docs:** `README.md` layout improved (Limerick top, better intro).
+- [x] **Vignette UX:** Added tabsets for top names, moved limerick to top, removed static map.
+- [x] **Data:** Verified "John" count accuracy and animal detection.
+- [x] **CI:** Stable and fast.
 
 ## Key Files Modified
-- `DESCRIPTION`
-- `package.nix`
-- `R/analyze_statues.R`
-- `inst/qmd/README.qmd`
+- `inst/qmd/memorial-analysis.qmd` (Layout)
+- `R/get_statues_osm.R` (Fixing OSM links logic)
 
 ## Next Session Should
-1. **Verify Website:** Check `johngavin.github.io/statues_named_john` to see the new layout.
-2. **Feature Work:** Proceed with next planned analysis.
+1. **Verify Website:** Check `johngavin.github.io/statues_named_john/articles/memorial-analysis.html` for final layout.
+2. **Feature Work:** Consider further data enrichment.

@@ -25,6 +25,7 @@ analyze_by_gender <- function(statue_data, gender_mapping = NULL) {
       inferred_gender = dplyr::case_when(
         !is.na(subject_gender) & subject_gender %in% c("male", "female") ~ stringr::str_to_title(subject_gender),
         !is.na(subject_gender) ~ "Other", # Transgender, non-binary, etc. mapped to Other for high-level summary
+        type == "animal" | stringr::str_detect(type, "(?i)animal") ~ "Animal",
         TRUE ~ heuristic_gender
       )
     )
@@ -146,7 +147,7 @@ classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping 
     stringr::str_detect(text_to_check, "(?i)\\b(king|prince|duke|sir|man|admiral|john|william|george|henry|charles|james|edward|richard|robert|thomas|arthur|michael|david|joseph|christopher|daniel|paul|mark|kenneth|steven|brian|ronald|anthony|kevin|jason|matthew|gary|timothy|jose|larry|jeffrey|frank|scott|eric|stephen|andrew|raymond|gregory|joshua|jerry|dennis|walter|patrick|peter|harold|douglas|carl|ryan|roger)\\b") ~ "Male",
     
     # Animals
-    stringr::str_detect(text_to_check, "(?i)\\b(dog|horse|lion|animal|cat)\\b") ~ "Animal",
+    stringr::str_detect(text_to_check, "(?i)\\b(dog|horse|lion|animal|cat|bear|pigeon|dolphin|elephant|donkey|camel|animals? in war)\\b") ~ "Animal",
     
     TRUE ~ "Unknown"
   )

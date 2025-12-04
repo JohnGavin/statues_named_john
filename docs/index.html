@@ -51,28 +51,13 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="statuesnamedjohn-multi-source-analysis-of-london-statues">statuesnamedjohn: Multi-Source Analysis of London Statues<a class="anchor" aria-label="anchor" href="#statuesnamedjohn-multi-source-analysis-of-london-statues"></a>
 </h1></div>
-<!-- badges: start -->
-
-<p>The <code>statuesnamedjohn</code> R package provides a robust, transparent, and reproducible framework for acquiring, analyzing, and interactively mapping public statues and memorials in London. Moving beyond a single data source, this package integrates information from multiple authoritative APIs (Wikidata, OpenStreetMap, and Greater London Historic Environment Record) to create a comprehensive, deduplicated dataset. Its core purpose is to enable in-depth analysis of London’s commemorative landscape, facilitate the validation of public claims (e.g., regarding gender representation), and offer interactive data exploration.</p>
 <blockquote>
 <p>In England’s grand capital, dear, More Johns than dames, it appears. For each woman of might, A John’s in plain sight, Confirming our gendered-statue fears.</p>
 </blockquote>
-<div class="section level2">
-<h2 id="data-sources">Data Sources<a class="anchor" aria-label="anchor" href="#data-sources"></a>
-</h2>
-<p>This package leverages a robust multi-source data acquisition strategy to build a comprehensive dataset of London’s statues and memorials. This approach ensures broader coverage, higher data quality, and improved reproducibility compared to single-source methods.</p>
-<p><strong>Primary Data Sources:</strong></p>
-<ul>
-<li>
-<strong>Wikidata</strong>: Structured linked open data, queried via its SPARQL endpoint. Provides rich metadata on subjects, creators, and precise geographic coordinates.</li>
-<li>
-<strong>OpenStreetMap (OSM)</strong>: Community-contributed geographic data, accessed via the Overpass API. Excellent for detailed location information and various memorial tags.</li>
-<li>
-<strong>Greater London Historic Environment Record (GLHER)</strong>: Professional heritage data, accessed via CSV exports. Offers authoritative records with high data quality.</li>
-</ul>
-<p><strong>Note on <code>londonremembers.com</code>:</strong> While initially a source of interest, direct programmatic access (e.g., web scraping) to <code>londonremembers.com</code> proved unfeasible due to its JavaScript-rendered content and lack of a public API. This project thus pivots to the above API-driven sources to ensure reliability and reproducibility.</p>
-<p>This multi-source strategy allows for spatial deduplication and intelligent merging of records, creating a unified and enriched dataset for analysis.</p>
-</div>
+<!-- badges: start -->
+
+<p>The <code>statuesnamedjohn</code> R package provides a robust framework for analyzing London’s commemorative landscape. Moving beyond single data sources, it integrates information from authoritative APIs to create a comprehensive dataset.</p>
+<p><strong>Key Capabilities:</strong> * <strong>Multi-Source Integration:</strong> Combines data from Wikidata, OpenStreetMap, and Historic England. * <strong>Gender Analysis:</strong> Facilitates validation of public claims (e.g., “more Johns than women”). * <strong>Interactive Mapping:</strong> Visualizes data with rich, clustered Leaflet maps. * <strong>Reproducibility:</strong> Built on a Nix-based, target-driven pipeline.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -98,6 +83,22 @@
 <li>
 <strong>Reproducible Workflow</strong>: Built with reproducibility in mind, leveraging caching, <code>targets</code> pipelines, and a transparent methodology.</li>
 </ul>
+</div>
+<div class="section level2">
+<h2 id="data-sources">Data Sources<a class="anchor" aria-label="anchor" href="#data-sources"></a>
+</h2>
+<p>This package leverages a robust multi-source data acquisition strategy to build a comprehensive dataset of London’s statues and memorials. This approach ensures broader coverage, higher data quality, and improved reproducibility compared to single-source methods.</p>
+<p><strong>Primary Data Sources:</strong></p>
+<ul>
+<li>
+<strong>Wikidata</strong>: Structured linked open data, queried via its SPARQL endpoint. Provides rich metadata on subjects, creators, and precise geographic coordinates.</li>
+<li>
+<strong>OpenStreetMap (OSM)</strong>: Community-contributed geographic data, accessed via the Overpass API. Excellent for detailed location information and various memorial tags.</li>
+<li>
+<strong>Greater London Historic Environment Record (GLHER)</strong>: Professional heritage data, accessed via CSV exports. Offers authoritative records with high data quality.</li>
+</ul>
+<p><strong>Note on <code>londonremembers.com</code>:</strong> While initially a source of interest, direct programmatic access (e.g., web scraping) to <code>londonremembers.com</code> proved unfeasible due to its JavaScript-rendered content and lack of a public API. This project thus pivots to the above API-driven sources to ensure reliability and reproducibility.</p>
+<p>This multi-source strategy allows for spatial deduplication and intelligent merging of records, creating a unified and enriched dataset for analysis.</p>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>

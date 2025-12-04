@@ -22,6 +22,12 @@ knitr::opts_chunk$set(
 )
 ```
 
+> A count of the bronzes revealed,
+> That John's common form was unsealed.
+> While feminine grace,
+> Held a much smaller place,
+> A sad truth the numbers unpeeled.
+
 ## Introduction
 
 This vignette compares and contrasts memorials in London honoring three distinct groups:
@@ -33,12 +39,6 @@ This vignette compares and contrasts memorials in London honoring three distinct
 **Data Sources**: 
 * **Wikidata**: Structured data for statues and public art in London.
 * **OpenStreetMap**: Crowdsourced data for memorials and statues.
-
-> A count of the bronzes revealed,
-> That John's common form was unsealed.
-> While feminine grace,
-> Held a much smaller place,
-> A sad truth the numbers unpeeled.
 
 ## Load Data
 
@@ -68,6 +68,8 @@ if (dir.exists(file.path(rprojroot::find_root(rprojroot::is_r_package), "_target
   memorial_map_plot <- targets::tar_read(memorial_map_plot, store = "_targets")
   johns_comparison <- targets::tar_read(johns_comparison, store = "_targets")
   memorial_interactive_map <- targets::tar_read(memorial_interactive_map, store = "_targets")
+  
+  gender_analysis <- targets::tar_read(gender_analysis, store = "_targets")
 } else {
   message("Targets pipeline store not found. Please run targets::tar_make() to generate data.")
   # Create dummy data for rendering if pipeline not run
@@ -78,6 +80,7 @@ if (dir.exists(file.path(rprojroot::find_root(rprojroot::is_r_package), "_target
   memorial_map_plot <- ggplot()
   johns_comparison <- list(message = "Pipeline not run", claim_validated = FALSE, john_statues = 0, john_percent = 0, woman_statues = 0, woman_percent = 0)
   memorial_interactive_map <- leaflet()
+  gender_analysis <- list(top_names_by_gender = data.frame())
 }
 ```
 
@@ -92,15 +95,31 @@ knitr::kable(summary_table,
 
 We extracted the first names from the memorials to identify the most common names for each gender group.
 
-```{r top-names}
-gender_analysis <- targets::tar_read(gender_analysis, store = "_targets")
-top_names <- gender_analysis$top_names_by_gender %>%
-  dplyr::filter(inferred_gender %in% c("Female", "Male")) %>%
-  dplyr::select(Gender = inferred_gender, Name = extracted_names, Count = n, Percent = percent) %>%
-  dplyr::arrange(Gender, desc(Count))
+::: {.panel-tabset}
 
-knitr::kable(top_names, caption = "Most Common First Names by Gender")
+## Female
+
+```{r top-names-female}
+top_names_f <- gender_analysis$top_names_by_gender %>%
+  dplyr::filter(inferred_gender == "Female") %>%
+  dplyr::select(Name = extracted_names, Count = n, Percent = percent) %>%
+  dplyr::arrange(desc(Count))
+
+knitr::kable(top_names_f, caption = "Most Common Female Names")
 ```
+
+## Male
+
+```{r top-names-male}
+top_names_m <- gender_analysis$top_names_by_gender %>%
+  dplyr::filter(inferred_gender == "Male") %>%
+  dplyr::select(Name = extracted_names, Count = n, Percent = percent) %>%
+  dplyr::arrange(desc(Count))
+
+knitr::kable(top_names_m, caption = "Most Common Male Names")
+```
+
+:::
 
 ## Representation Analysis
 
@@ -111,12 +130,6 @@ category_plot
 ## Geographic Distribution
 
 We can map the location of these memorials to see spatial patterns.
-
-### Static Map (Source Distribution)
-
-```{r map, fig.cap="Map of Memorials in London by Source"}
-memorial_map_plot
-```
 
 ### Interactive Map
 

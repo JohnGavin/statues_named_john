@@ -27,6 +27,7 @@
 get_statues_osm <- function(bbox = c(-0.510375, 51.28676, 0.334015, 51.691874),
                              tags = list(
                                list(key = "memorial", value = "statue"),
+                               list(key = "memorial", value = "animal"),
                                list(key = "historic", value = "memorial"),
                                list(key = "man_made", value = "statue")
                              ),
@@ -90,7 +91,7 @@ get_statues_osm <- function(bbox = c(-0.510375, 51.28676, 0.334015, 51.691874),
     ) %>%
     dplyr::transmute(
       osm_id = osm_id,
-      osm_type = as.character(query_tag),
+      osm_type = "node", # osm_points are nodes
       name = name,
       subject = subject,  # May be missing in many cases
       lat = lat,
