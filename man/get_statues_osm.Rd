@@ -6,8 +6,9 @@
 \usage{
 get_statues_osm(
   bbox = c(-0.510375, 51.28676, 0.334015, 51.691874),
-  tags = list(list(key = "memorial", value = "statue"), list(key = "historic", value =
-    "memorial"), list(key = "man_made", value = "statue")),
+  tags = list(list(key = "memorial", value = "statue"), list(key = "memorial", value =
+    "animal"), list(key = "historic", value = "memorial"), list(key = "man_made", value =
+    "statue")),
   cache_path = NULL
 )
 }

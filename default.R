@@ -47,7 +47,7 @@ rix(
     "visNetwork",
     "gender"
   ),
-  system_pkgs = NULL,
+  system_pkgs = c("llvmPackages.openmp"),
   git_pkgs = NULL,
   ide = "none",
   project_path = ".",

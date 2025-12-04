@@ -14,6 +14,7 @@
 #'   - top_names_by_gender: top 5 first names for each gender
 #'   - data: original data with 'inferred_gender' column
 #'
+#' @importFrom stats setNames
 #' @export
 analyze_by_gender <- function(statue_data, gender_mapping = NULL) {
 

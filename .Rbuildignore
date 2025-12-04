@@ -21,5 +21,12 @@
 ^prompt\.md$
 ^result$
 ^shell\.nix$
-^vignettes/.*\.qmd$
+^vignettes$
 ^\.local-shell$
+^_targets\.yaml$
+^DEVELOPER_WORKFLOW\.md$
+^docs$
+^local_verification\.log$
+^TESTING_LOG\.md$
+^WIKI_CONTENT$
+^inst/qmd/.*_files$
