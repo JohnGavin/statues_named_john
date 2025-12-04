@@ -2,14 +2,14 @@
 format: gfm
 ---
 
-# londonremembers: Multi-Source Analysis of London Statues
+# statuesnamedjohn: Multi-Source Analysis of London Statues
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/JohnGavin/statues_named_john/workflows/R-CMD-check/badge.svg)](https://github.com/JohnGavin/statues_named_john/actions)
 [![codecov](https://codecov.io/gh/JohnGavin/statues_named_john/branch/main/graph/badge.svg)](https://codecov.io/gh/JohnGavin/statues_named_john)
 <!-- badges: end -->
 
-The `londonremembers` R package provides a robust, transparent, and reproducible framework for acquiring, analyzing, and interactively mapping public statues and memorials in London. Moving beyond a single data source, this package integrates information from multiple authoritative APIs (Wikidata, OpenStreetMap, and Greater London Historic Environment Record) to create a comprehensive, deduplicated dataset. Its core purpose is to enable in-depth analysis of London's commemorative landscape, facilitate the validation of public claims (e.g., regarding gender representation), and offer interactive data exploration.
+The `statuesnamedjohn` R package provides a robust, transparent, and reproducible framework for acquiring, analyzing, and interactively mapping public statues and memorials in London. Moving beyond a single data source, this package integrates information from multiple authoritative APIs (Wikidata, OpenStreetMap, and Greater London Historic Environment Record) to create a comprehensive, deduplicated dataset. Its core purpose is to enable in-depth analysis of London's commemorative landscape, facilitate the validation of public claims (e.g., regarding gender representation), and offer interactive data exploration.
 
 > In England's grand capital, dear,
 > More Johns than dames, it appears.
@@ -45,7 +45,7 @@ This project is developed within a Nix environment to ensure full reproducibilit
 
 ## Features
 
-The `londonremembers` package offers a comprehensive suite of functionalities for exploring London's commemorative landscape:
+The `statuesnamedjohn` package offers a comprehensive suite of functionalities for exploring London's commemorative landscape:
 
 -   **Multi-Source Data Retrieval**: Seamlessly acquire statue and memorial data from Wikidata, OpenStreetMap, and GLHER APIs.
 -   **Data Standardization & Deduplication**: Standardize diverse data formats into a common schema and intelligently deduplicate records based on geographic proximity using spatial algorithms.
@@ -55,11 +55,11 @@ The `londonremembers` package offers a comprehensive suite of functionalities fo
 
 ## Usage
 
-The `londonremembers` package simplifies the process of acquiring, processing, and analyzing statue data. Below are basic examples to get started. For a comprehensive guide, refer to the project vignette.
+The `statuesnamedjohn` package simplifies the process of acquiring, processing, and analyzing statue data. Below are basic examples to get started. For a comprehensive guide, refer to the project vignette.
 
 ```{r}
 #| eval: false
-library(londonremembers)
+library(statuesnamedjohn)
 library(dplyr)
 library(ggplot2)
 library(leaflet) # For viewing the map
@@ -117,7 +117,7 @@ statue_map # Display the map in RStudio Viewer or browser
 For a comprehensive walkthrough of the data acquisition, processing, analysis, and interactive mapping, please refer to the project's main vignette. It provides detailed explanations and examples of the package's functionalities.
 
 ```r
-vignette("memorial-analysis", package = "londonremembers")
+vignette("memorial-analysis", package = "statuesnamedjohn")
 ```
 
 You can also view the deployed vignette directly on GitHub Pages:

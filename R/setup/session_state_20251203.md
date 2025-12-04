@@ -25,7 +25,7 @@ We are implementing a **"Pre-built Vignettes Strategy"** to fix persistent `pkgd
         ```
         ! error in pak subprocess
         ! Cannot select new package installation task.
-        ℹ 1 package still waiting to install: londonremembers.
+        ℹ 1 package still waiting to install: statuesnamedjohn.
         ```
     *   This suggests `pak` is having trouble installing the local package (`local::.`) in the CI environment.
 
@@ -46,7 +46,7 @@ The `pkgdown` workflow is failing to install the package itself.
           extra-packages: any::pkgdown, local::.
         ```
     *   The `local::.` might be causing issues with `pak` in this specific context.
-    *   **Try:** Removing `local::.` from `extra-packages` or checking if `londonremembers` dependencies are causing conflicts.
+    *   **Try:** Removing `local::.` from `extra-packages` or checking if `statuesnamedjohn` dependencies are causing conflicts.
 
 ### C. Documentation
 Once CI passes:

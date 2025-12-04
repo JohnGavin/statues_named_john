@@ -1,6 +1,6 @@
 # Technical Journal: Nix Package Availability Blocker & Resolution
 
-This document chronicles a critical technical challenge faced by the `londonremembers` project concerning the availability of R packages within the Nix environment, and its eventual resolution.
+This document chronicles a critical technical challenge faced by the `statuesnamedjohn` project concerning the availability of R packages within the Nix environment, and its eventual resolution.
 
 ## 1. Initial Blocker Identification (2025-11-12)
 

@@ -1,21 +1,22 @@
 # Current Focus: Maintenance & Next Steps
 
 ## Active Branch
-`main`
+`refactor-rename-package` (PR Open)
 
 ## What I'm Doing
-Session complete. Project stable. Data analysis improved significantly.
+Renamed the package to `statuesnamedjohn` to reflect multi-source data.
 
 ## Progress
-- [x] **CI Speed:** Restored to 3 mins (Reverted Magic Cache).
-- [x] **Website:** Assets fixed, stats updated.
-- [x] **Data:** Gender inference now falls back to `name` column, reducing "Unknown" from 99% to ~75%.
-- [x] **Docs:** All documentation synchronized.
+- [x] **Refactor:** Renamed `londonremembers` -> `statuesnamedjohn` globally.
+- [x] **Validation:** `tar_make()` and `devtools::document()` passed locally.
+- [x] **CI:** Pushed to trigger checks.
 
 ## Key Files Modified
-- `R/analyze_statues.R` (Improved logic)
-- `AGENTS.md` (Caching strategy updated)
+- `DESCRIPTION`
+- `package.nix`
+- All `.R` files (renamed calls)
+- `_targets.R`
 
 ## Next Session Should
-1. **Verify Website:** Confirm `johngavin.github.io/statues_named_john/articles/memorial-analysis.html` shows the new stats (Male ~22%).
-2. **Further Data Work:** To tackle the remaining 75% Unknowns, consider querying OSM for `subject:wikidata` tags or using a name-gender dictionary.
+1. **Merge PR:** `usethis::pr_merge_main()` if CI passes.
+2. **Verify Website:** Ensure the site deploys correctly with the new package name (URLs might change if we update `_pkgdown.yml` url field to match repo, which we did).

@@ -1,6 +1,6 @@
 # Session Package Review & Results Access
 **Date:** 2025-11-29
-**Project:** statues_named_john (londonremembers)
+**Project:** statues_named_john (statuesnamedjohn)
 
 ## 1. Package Review: JavaScript Scraping & Vignette UX
 

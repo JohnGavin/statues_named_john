@@ -1,6 +1,6 @@
 
 
-# londonremembers: Multi-Source Analysis of London Statues
+# statuesnamedjohn: Multi-Source Analysis of London Statues
 
 <!-- badges: start -->
 
@@ -8,7 +8,7 @@
 [![codecov](https://codecov.io/gh/JohnGavin/statues_named_john/branch/main/graph/badge.svg)](https://codecov.io/gh/JohnGavin/statues_named_john)
 <!-- badges: end -->
 
-The `londonremembers` R package provides a robust, transparent, and
+The `statuesnamedjohn` R package provides a robust, transparent, and
 reproducible framework for acquiring, analyzing, and interactively
 mapping public statues and memorials in London. Moving beyond a single
 data source, this package integrates information from multiple
@@ -72,7 +72,7 @@ shell.
 
 ## Features
 
-The `londonremembers` package offers a comprehensive suite of
+The `statuesnamedjohn` package offers a comprehensive suite of
 functionalities for exploring London’s commemorative landscape:
 
 - **Multi-Source Data Retrieval**: Seamlessly acquire statue and
@@ -93,12 +93,12 @@ functionalities for exploring London’s commemorative landscape:
 
 ## Usage
 
-The `londonremembers` package simplifies the process of acquiring,
+The `statuesnamedjohn` package simplifies the process of acquiring,
 processing, and analyzing statue data. Below are basic examples to get
 started. For a comprehensive guide, refer to the project vignette.
 
 ``` r
-library(londonremembers)
+library(statuesnamedjohn)
 library(dplyr)
 library(ggplot2)
 library(leaflet) # For viewing the map
@@ -159,7 +159,7 @@ vignette. It provides detailed explanations and examples of the
 package’s functionalities.
 
 ``` r
-vignette("memorial-analysis", package = "londonremembers")
+vignette("memorial-analysis", package = "statuesnamedjohn")
 ```
 
 You can also view the deployed vignette directly on GitHub Pages:

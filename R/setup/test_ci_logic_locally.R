@@ -42,7 +42,7 @@ tryCatch({
 # 5. Verify Loading
 message("\n--- Step 3: Verification ---")
 tryCatch({
-  library(londonremembers)
+  library(statuesnamedjohn)
   message("✅ Package loaded successfully")
 }, error = function(e) {
   message("❌ Failed to load package: ", e$message)

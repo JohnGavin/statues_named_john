@@ -2,7 +2,7 @@
 { pkgs ? import (fetchTarball "https://github.com/rstats-on-nix/nixpkgs/archive/2025-11-24.tar.gz") {} }: # Using the same hash as default.nix
 
 pkgs.rPackages.buildRPackage {
-  name = "londonremembers";
+  name = "statuesnamedjohn";
   src = ./.; # Source is current directory
 
   # Runtime dependencies (from DESCRIPTION Imports)

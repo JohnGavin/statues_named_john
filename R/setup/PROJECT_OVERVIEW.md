@@ -1,12 +1,12 @@
-# Project Overview: londonremembers
+# Project Overview: statuesnamedjohn
 
-This document provides a comprehensive overview of the `londonremembers` R package, including its project plan, detailed implementation, and a summary of its key features and architecture.
+This document provides a comprehensive overview of the `statuesnamedjohn` R package, including its project plan, detailed implementation, and a summary of its key features and architecture.
 
 ---
 
 ## 1. Project Plan (`PROJECT_PLAN.md`)
 
-Build an R package `londonremembers` to source and analyze data about statues in London, specifically to compare memorials for men named John, women, and dogs. The project aims to provide a transparent, reproducible, and interactive analysis of London's commemorative landscape, validating public claims with real data.
+Build an R package `statuesnamedjohn` to source and analyze data about statues in London, specifically to compare memorials for men named John, women, and dogs. The project aims to provide a transparent, reproducible, and interactive analysis of London's commemorative landscape, validating public claims with real data.
 
 ### Core Requirements
 
@@ -83,7 +83,7 @@ The project will critically examine and validate claims from campaigns such as "
 
 ## 2. Implementation Details (`PROJECT_IMPLEMENTATION.md` & `implementation_plan.md`)
 
-This section details the architecture, data flow, function implementations, and technical strategy used in the `londonremembers` package.
+This section details the architecture, data flow, function implementations, and technical strategy used in the `statuesnamedjohn` package.
 
 ### Architecture Overview
 
@@ -171,7 +171,7 @@ This section details the architecture, data flow, function implementations, and 
 #### Basic: Get Data from One Source
 
 ```r
-library(londonremembers)
+library(statuesnamedjohn)
 
 # Get Wikidata statues
 statues <- get_statues_wikidata(location = "Q84")  # Q84 = London
@@ -198,7 +198,7 @@ sum(all_statues$is_multi_source)
 #### Advanced: Full Pipeline with Analysis and Mapping
 
 ```r
-library(londonremembers)
+library(statuesnamedjohn)
 library(dplyr)
 library(ggplot2)
 
@@ -259,7 +259,7 @@ saveRDS(all_statues, "data-raw/combined_statues.rds")
 devtools::build_vignettes()
 
 # View vignette
-vignette("memorial-analysis", package = "londonremembers")
+vignette("memorial-analysis", package = "statuesnamedjohn")
 ```
 
 ### Performance Considerations
@@ -309,7 +309,7 @@ The interactive map with hover popups will allow users to explore each statue in
 
 ## 3. Implementation Summary (`R/setup/README.md`)
 
-**Project:** londonremembers R package
+**Project:** statuesnamedjohn R package
 **Date:** 2025-11-12
 **Status:** Ready for execution once nix packages build
 

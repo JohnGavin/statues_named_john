@@ -181,7 +181,7 @@ After implementing the individual functions, run the full data acquisition, stan
 
 ```bash
 R --quiet -e '
-library(londonremembers)
+library(statuesnamedjohn)
 library(dplyr)
 library(htmlwidgets) # For saveWidget
 
@@ -240,7 +240,7 @@ Run the analysis functions on the combined dataset.
 
 ```bash
 R --quiet -e '
-library(londonremembers)
+library(statuesnamedjohn)
 
 # Load combined data
 all_statues <- readRDS("data-raw/combined_statues.rds")
