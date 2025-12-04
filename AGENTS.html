@@ -152,9 +152,14 @@
 <p>The primary objective for all R development workflows within Nix/rix environments is <strong>true reproducibility</strong>. This is achieved by enforcing the use of a <strong>single persistent nix-shell</strong> for executing all R commands across all projects.</p>
 <div class="section level3">
 <h3 id="id_91-starting-and-using-the-persistent-nix-shell">9.1 Starting and Using the Persistent Nix Shell<a class="anchor" aria-label="anchor" href="#id_91-starting-and-using-the-persistent-nix-shell"></a></h3>
-<ul><li>Always verify you are in a nix shell. All necessary commands and R packages should be available.</li>
+<ul><li>
+<strong>Check Environment</strong>: First, check if you are already in a nix shell (e.g., check for <code>NIX_CC</code> environment variable or <code>which R</code> pointing to <code>/nix/store</code>).</li>
 <li>
-<strong>Execute All Commands Within:</strong> ALL subsequent R commands and related operations for that project must be executed within this single shell instance. This includes:
+<strong>Already Inside?</strong>: If you are already inside a nix-shell, <strong>DO NOT</strong> nest another <code>nix-shell</code> command (e.g., <code>nix-shell --run ...</code> or <code>nix-shell default.nix</code>). Just run the command directly (e.g., <code>Rscript ...</code>).</li>
+<li>
+<strong>Package Updates</strong>: If you modify <code>DESCRIPTION</code> or <code>default.nix</code> to add new packages, you <strong>CANNOT</strong> load them in the current running shell. You must <strong>ask the user to restart</strong> the nix-shell environment to pick up the changes.</li>
+<li>
+<strong>Execute All Commands Within</strong>: ALL subsequent R commands and related operations for that project must be executed within this single shell instance. This includes:
 <ul><li>Running R scripts (<code>Rscript</code>).</li>
 <li>Interactive R sessions (<code>R</code>).</li>
 <li>Package development commands (<code>devtools::check()</code>, <code>devtools::test()</code>, <code>devtools::document()</code>).</li>
@@ -179,6 +184,20 @@
 </li>
 </ul></div>
 </div>
+<div class="section level2">
+<h2 id="id_10-rsetup-organization">10. R/setup/ Organization<a class="anchor" aria-label="anchor" href="#id_10-rsetup-organization"></a></h2>
+<ul><li>
+<strong>Purpose</strong>: The <code>R/setup/</code> directory is for storing R scripts that manage the project’s development workflow, including session logs, CI scripts, development utilities, and test data.</li>
+<li>
+<strong>Structure</strong>: To maintain clarity and ease of navigation, all scripts within <code>R/setup/</code> MUST be organized into logical subfolders based on their topic or function.
+<ul><li>
+<strong>Example Subfolders</strong>: <code>archive/</code>, <code>ci_scripts/</code>, <code>dev_scripts/</code>, <code>session_logs/</code>, <code>test_data/</code>, <code>docs/</code>, <code>plans/</code>.</li>
+</ul></li>
+<li>
+<strong>Naming Convention</strong>: Subfolders should clearly indicate their purpose.</li>
+<li>
+<strong>Reference</strong>: See <code>https://github.com/JohnGavin/statues_named_john/tree/main/R/setup</code> for a concrete example of this organization.</li>
+</ul></div>
 </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

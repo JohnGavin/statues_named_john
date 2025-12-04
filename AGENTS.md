@@ -154,9 +154,18 @@ commands across all projects.
 
 ### 9.1 Starting and Using the Persistent Nix Shell
 
-- Always verify you are in a nix shell. All necessary commands and R
-  packages should be available.
-- **Execute All Commands Within:** ALL subsequent R commands and related
+- **Check Environment**: First, check if you are already in a nix shell
+  (e.g., check for `NIX_CC` environment variable or `which R` pointing
+  to `/nix/store`).
+- **Already Inside?**: If you are already inside a nix-shell, **DO NOT**
+  nest another `nix-shell` command (e.g., `nix-shell --run ...` or
+  `nix-shell default.nix`). Just run the command directly (e.g.,
+  `Rscript ...`).
+- **Package Updates**: If you modify `DESCRIPTION` or `default.nix` to
+  add new packages, you **CANNOT** load them in the current running
+  shell. You must **ask the user to restart** the nix-shell environment
+  to pick up the changes.
+- **Execute All Commands Within**: ALL subsequent R commands and related
   operations for that project must be executed within this single shell
   instance. This includes:
   - Running R scripts (`Rscript`).
@@ -191,3 +200,19 @@ different package configurations.
 - **✅ CORRECT Approach (Always Do This)**: Execute all commands within
   the single persistent shell.
   `bash # Then execute all commands in that shell: Rscript script1.R Rscript script2.R Rscript script3.R`
+
+## 10. R/setup/ Organization
+
+- **Purpose**: The `R/setup/` directory is for storing R scripts that
+  manage the project’s development workflow, including session logs, CI
+  scripts, development utilities, and test data.
+- **Structure**: To maintain clarity and ease of navigation, all scripts
+  within `R/setup/` MUST be organized into logical subfolders based on
+  their topic or function.
+  - **Example Subfolders**: `archive/`, `ci_scripts/`, `dev_scripts/`,
+    `session_logs/`, `test_data/`, `docs/`, `plans/`.
+- **Naming Convention**: Subfolders should clearly indicate their
+  purpose.
+- **Reference**: See
+  `https://github.com/JohnGavin/statues_named_john/tree/main/R/setup`
+  for a concrete example of this organization.
