@@ -9,7 +9,7 @@ printf '%s
 # This is also a shell command, equivalent to the source builtin
 # Recommended fix for default.R (line ~204)
 # This command is the CRITICAL step that sets PATH, man pages, and other environment variables.
-true && source /nix/store/bidcrqwa915840s8yjvy2vlww1s2njy7-nix-shell/etc/profile.d/nix-shell.sh
+true && source /nix/store/amv66sdhyrn7ik3hpa4nzb6rbli8hrvw-nix-shell/etc/profile.d/nix-shell.sh
 
 # 2. Run environment activation hooks (if defined by Nix)
 if declare -f __start_nix_shell_environment > /dev/null; then
