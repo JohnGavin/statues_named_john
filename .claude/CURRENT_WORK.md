@@ -4,19 +4,20 @@
 `main`
 
 ## What I'm Doing
-Session complete. Project renamed to `statuesnamedjohn`. All systems functional.
+Session complete. Documentation improvements implemented.
 
 ## Progress
 - [x] **Refactor:** Package renamed `londonremembers` -> `statuesnamedjohn`.
 - [x] **Data:** Gender analysis significantly improved.
 - [x] **CI:** Fast and robust.
-- [x] **Docs:** Updated.
+- [x] **Docs:** `README.md` layout improved (Limerick top, better intro).
 
 ## Key Files Modified
 - `DESCRIPTION`
 - `package.nix`
 - `R/analyze_statues.R`
+- `inst/qmd/README.qmd`
 
 ## Next Session Should
-1. **Verify Website:** Check `johngavin.github.io/statues_named_john` (URLs might have shifted if any hardcoded ones were missed, but `_pkgdown.yml` url was untouched).
+1. **Verify Website:** Check `johngavin.github.io/statues_named_john` to see the new layout.
 2. **Feature Work:** Proceed with next planned analysis.
