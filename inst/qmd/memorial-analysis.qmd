@@ -22,11 +22,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-> A count of the bronzes revealed,
-> That John's common form was unsealed.
-> While feminine grace,
-> Held a much smaller place,
-> A sad truth the numbers unpeeled.
+> In England’s grand capital, dear,
+> More Johns than dames, it appears.
+> For each woman of might,
+> A John’s in plain sight,
+> Confirming our gendered-statue fears.
 
 ## Introduction
 
