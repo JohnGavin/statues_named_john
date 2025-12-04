@@ -291,28 +291,27 @@ R --quiet -e 'devtools::check()'
 If all checks pass with no errors, warnings, or notes:
 
 ```bash
-git add .
-git commit -m "feat: Implement multi-source statue data retrieval and analysis
-
-This commit introduces the full pipeline for acquiring statue data from
-Wikidata, OpenStreetMap, and GLHER APIs, standardizing and combining
-the data using spatial deduplication, and performing gender analysis.
-It includes:
-
-- Functions for data retrieval from multiple APIs.
-- Data standardization and merging logic using specialized R packages.
-- Interactive Leaflet map generation.
-- Gender analysis and 'Johns vs Women' claims validation.
-- Updated vignette reflecting the new data and analysis.
-- Comprehensive documentation for all functions.
-
-Resolves initial Nix package availability blockers by leveraging
-confirmed available specialized R packages.
-
-🤖 Generated with Claude Code"
-
-git push origin main
-```
+gert::git_add(".")                                                                                                            
+gert::git_commit("feat: Implement multi-source statue data retrieval and analysis                                       
+                                                                                                                     
+This commit introduces the full pipeline for acquiring statue data from                                              
+Wikidata, OpenStreetMap, and GLHER APIs, standardizing and combining                                                 
+the data using spatial deduplication, and performing gender analysis.                                                
+It includes:                                                                                                         
+                                                                                                                     
+- Functions for data retrieval from multiple APIs.                                                                   
+- Data standardization and merging logic using specialized R packages.                                               
+- Interactive Leaflet map generation.                                                                                
+- Gender analysis and 'Johns vs Women' claims validation.                                                            
+- Updated vignette reflecting the new data and analysis.                                                             
+- Comprehensive documentation for all functions.                                                                     
+                                                                                                                     
+Resolves initial Nix package availability blockers by leveraging                                                     
+confirmed available specialized R packages.                                                                          
+                                                                                                                     
+🤖 Generated with Claude Code")                                                                                       
+                                                                                                                     
+usethis::pr_push()```
 
 ---
 

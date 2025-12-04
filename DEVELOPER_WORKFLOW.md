@@ -64,7 +64,7 @@ git_commit("Update analysis: description of changes")
 ### Step 5: Push to Trigger Fast CI
 
 ```r
-git_push()
+usethis::pr_push()
 ```
 
 **CI will:**
