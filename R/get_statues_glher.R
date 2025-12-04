@@ -96,6 +96,13 @@ get_statues_glher <- function(query_terms = c("person", "statue"),
 
     # Parse CSV
     content_text <- httr::content(response, as = "text", encoding = "UTF-8")
+    
+    # Check for HTML response (scraper blocked)
+    if (substr(content_text, 1, 1) == "<") {
+      warning("GLHER returned HTML instead of CSV. Direct download likely blocked or API changed.")
+      return(tibble::tibble())
+    }
+
     statues_glher_raw <- readr::read_csv(content_text, show_col_types = FALSE)
 
     message("Retrieved ", nrow(statues_glher_raw), " records from GLHER")

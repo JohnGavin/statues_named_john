@@ -77,6 +77,7 @@ create_empty_standard_schema <- function() {
     image_url = character(),
     source = character(),
     source_url = character(),
+    nhle_id = character(),
     last_updated = as.Date(character())
   )
 }
@@ -98,7 +99,8 @@ standardize_wikidata <- function(data) {
       sculptor = creator,
       description = NA_character_,
       image_url = image_url,
-      source_url = wikipedia_url
+      source_url = wikipedia_url,
+      nhle_id = as.character(nhle_id)
     )
 }
 
@@ -123,7 +125,8 @@ standardize_osm <- function(data) {
         !is.na(wikipedia),
         paste0("https://en.wikipedia.org/wiki/", wikipedia),
         paste0("https://www.openstreetmap.org/", osm_type, "/", osm_id)
-      )
+      ),
+      nhle_id = NA_character_
     )
 }
 
@@ -144,7 +147,8 @@ standardize_glher <- function(data) {
       sculptor = NA_character_,
       description = description,
       image_url = NA_character_,
-      source_url = url
+      source_url = url,
+      nhle_id = NA_character_
     )
 }
 
@@ -165,7 +169,8 @@ standardize_historic_england <- function(data) {
       sculptor = NA_character_,
       description = paste(heritage_category, grade, sep = " - "),
       image_url = NA_character_,
-      source_url = url
+      source_url = url,
+      nhle_id = list_entry_number
     )
 }
 

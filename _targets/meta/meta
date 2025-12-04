@@ -1,23 +1,23 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 osm_raw|stem|ae12ba05f4224180|f1765a5bed51e7fb|2c530c1562a7fbd1|1724282779||t20426.3699415779s|s139759b|139759|parquet|local|vector|||11.005||
-wikidata_raw|stem|3a1259e6ab53b9e1|70d05b42b462b6f4|2c530c1562a7fbd1|-1969361436||t20426.3699606018s|s7324b|7324|parquet|local|vector|||1.63||
 vignette_sources|stem|08d5f59e833de599|ae042ea468547fc9|2c530c1562a7fbd1|794972430||t0s|s0b|0|file|local|vector|||0||
 pkgdown_verification|stem|8c6c50438d1b2e74|08f8781cdffc7263|2c530c1562a7fbd1|-2100439276||t20426.3700757956s|s774b|774|parquet|local|vector|||0||
-glher_raw|stem|b07372d9261e8930|d284f152c5ab23b0|2c530c1562a7fbd1|138080810||t20426.3700894362s|s176b|176|parquet|local|vector|||1.173|One or more parsing issues, call `problems()` on your data frame for details, e.g.:   dat <- vroom(...)   problems(dat). Error retrieving GLHER data: In argument: `glher_id = Monument ID`.. Note: Column names may need adjustment based on actual GLHER CSV format|
-osm_std|stem|6b312a29195a1f67|ca39ce8567fc5eb7|0d1d838d02c22d5e|1955182145||t20426.370089911s|s174028b|174028|parquet|local|vector|||0.01||
-wikidata_std|stem|0a4b9e38de42acc4|644fd81909f43052|892d9945f5a9b4e4|836736429||t20426.3700900743s|s8250b|8250|parquet|local|vector|||0.005||
-glher_std|stem|19a917d012dea199|af208b2f1e764ec2|17e36343ee8d39c4|1200811353||t20426.3700901702s|s2546b|2546|parquet|local|vector|||0.002||
-all_memorials|stem|7645edb9b74b2295|79da7315e5b8f3ba|36dbaff6d3595448|1729866638||t20426.3701933841s|s139088b|139088|parquet|local|vector|||8.904||
-memorial_interactive_map|stem|9e74d8ffcd2f0533|fa146368ea2d6512|f8025d2678bfef82|-269169706||t20426.3701996959s|s391058b|391058|rds|local|vector|||0.508||
-johns_comparison|stem|dd48af5c6458735a|95b80fc145377e7f|f8025d2678bfef82|-1045227736||t20426.3702097327s|s241b|241|rds|local|vector|||0.555||
-memorial_map_plot|stem|f008cf58e73f407d|66667320e36d9e4e|f8025d2678bfef82|1866069921||t20426.3702116913s|s945389b|945389|rds|local|vector|||0.03||
-.Random.seed|object|c0fb8684d8aa59ee
+wikidata_raw|stem|7b78cd2448eb5742|70d05b42b462b6f4|2c530c1562a7fbd1|-1969361436||t20426.4414678676s|s7643b|7643|parquet|local|vector|||1.913||
+glher_raw|stem|b07372d9261e8930|d284f152c5ab23b0|2c530c1562a7fbd1|138080810||t20426.4415993516s|s176b|176|parquet|local|vector|||1.265|GLHER returned HTML instead of CSV. Direct download likely blocked or API changed.|
+.Random.seed|object|437b717b22f5ac2b
 update.packages|function|30d2377eab38636a
 install.packages|function|e3b0a9d56d54eeba
 remove.packages|function|e5e5ba52f888863b
-pkgdown_site|stem|729beea8e42c2060|146540c7da0725c2|2c530c1562a7fbd1|1264297866|docs|t20426.3909227891s|s3818225b|3818225|file|local|vector|||10.718|problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js to /private/tmp/nix-build-nix-shell.drv-0/RtmpDIBs1U/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js: Permission denied. problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js.map to /private/tmp/nix-build-nix-shell.drv-0/RtmpDIBs1U/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js.map: Permission denied. Failed to copy over bootstrap's javascript files into the htmlDependency() directory.|
-gender_analysis|stem|dfd66fd00a1126e4|d3e4b0f84377a073|f8025d2678bfef82|1856577162||t20426.3909269726s|s96094b|96094|rds|local|vector|||0.312||
-summary_table|stem|6f6f5253dea55e62|7e98facf38967347|e20dee5445201f0b|-1890126374||t20426.3909284898s|s1148b|1148|parquet|local|vector|||0||
-findings|stem|a8cbe322aa18c45f|54c7126afbd7c443|e20dee5445201f0b|644882975||t20426.3909286219s|s1160b|1160|parquet|local|vector|||0.001||
-category_plot|stem|6fd07fdb06d49275|aff0c6b85111a39d|e20dee5445201f0b|-977205175||t20426.3909298772s|s335411b|335411|rds|local|vector|||0.028||
-vignette_memorial_analysis_html|stem|553181a57a9dc1c0|32d4f4c7f8671992|091baa47c83f4b39|1413839597|/Users/johngavin/docs_gh/claude_rix/statues_named_john/vignettes/memorial-analysis.html|t20426.3909877158s|s839781b|839781|file|local|vector|||4.889||
+pkgdown_site|stem|e31c8193bd5c116c|146540c7da0725c2|2c530c1562a7fbd1|1264297866|docs|t20426.4440979045s|s3818212b|3818212|file|local|vector|||8.389|problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js to /private/tmp/nix-build-nix-shell.drv-0/Rtmp0215UD/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js: Permission denied. problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js.map to /private/tmp/nix-build-nix-shell.drv-0/Rtmp0215UD/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js.map: Permission denied. Failed to copy over bootstrap's javascript files into the htmlDependency() directory.|
+osm_std|stem|42abf0b40d5e9180|ca39ce8567fc5eb7|0d1d838d02c22d5e|1955182145||t20426.4440985218s|s174265b|174265|parquet|local|vector|||0.014||
+wikidata_std|stem|dbb4884fbb35a596|644fd81909f43052|3320bde6c01cfec1|836736429||t20426.4440989403s|s8552b|8552|parquet|local|vector|||0.007||
+glher_std|stem|fe712e5c3340adc3|af208b2f1e764ec2|17e36343ee8d39c4|1200811353||t20426.4440990489s|s2679b|2679|parquet|local|vector|||0.001||
+all_memorials|stem|ff63999945e8b155|79da7315e5b8f3ba|9807373259ee3aa6|1729866638||t20426.4442005977s|s139413b|139413|parquet|local|vector|||8.76||
+memorial_interactive_map|stem|a037eb8723a6825c|fa146368ea2d6512|59a08a33c831ff62|-269169706||t20426.4442067833s|s391477b|391477|rds|local|vector|||0.497||
+gender_analysis|stem|81e0045391340306|d3e4b0f84377a073|59a08a33c831ff62|1856577162||t20426.4442104174s|s96234b|96234|rds|local|vector|||0.298||
+johns_comparison|stem|09cb5cbf2187f696|95b80fc145377e7f|59a08a33c831ff62|-1045227736||t20426.4442171349s|s241b|241|rds|local|vector|||0.573||
+memorial_map_plot|stem|140a2659d7b04435|66667320e36d9e4e|59a08a33c831ff62|1866069921||t20426.4442191989s|s946049b|946049|rds|local|vector|||0.04||
+summary_table|stem|6f6f5253dea55e62|7e98facf38967347|6341a72a3c26b8ba|-1890126374||t20426.4442193515s|s1148b|1148|parquet|local|vector|||0||
+findings|stem|a8cbe322aa18c45f|54c7126afbd7c443|6341a72a3c26b8ba|644882975||t20426.4442194791s|s1160b|1160|parquet|local|vector|||0.001||
+category_plot|stem|aef80c6cd4348e09|aff0c6b85111a39d|6341a72a3c26b8ba|-977205175||t20426.4442206323s|s335503b|335503|rds|local|vector|||0.017||
+vignette_memorial_analysis_html|stem|eee07e33693b129a|32d4f4c7f8671992|01fae357bdaf80cd|1413839597|/Users/johngavin/docs_gh/claude_rix/statues_named_john/vignettes/memorial-analysis.html|t20426.4442788789s|s839779b|839779|file|local|vector|||4.923||

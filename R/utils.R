@@ -12,7 +12,11 @@ base_url <- "https://www.londonremembers.com"
 #' @keywords internal
 fetch_page <- function(url) {
   tryCatch({
-    response <- httr::GET(url, httr::timeout(30))
+    response <- httr::GET(
+      url, 
+      httr::timeout(30),
+      httr::add_headers(`User-Agent` = "statuesnamedjohn R package (https://github.com/JohnGavin/statues_named_john)")
+    )
     if (response$status_code == 200) {
       return(rvest::read_html(httr::content(response, as = "text", encoding = "UTF-8")))
     } else {
