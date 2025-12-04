@@ -152,6 +152,52 @@ classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping 
     TRUE ~ "Unknown"
   )
 
+  # Refine Unknowns using 'gender' package if available
+  if (requireNamespace("gender", quietly = TRUE)) {
+    unknown_idx <- which(classified == "Unknown" & !is.na(text_to_check))
+    
+    if (length(unknown_idx) > 0) {
+      # Extract likely first names
+      raw_names <- text_to_check[unknown_idx]
+      
+      # Use helper to extract first token that looks like a name
+      # We process them to get a clean vector of first names
+      clean_names <- purrr::map_chr(raw_names, function(x) {
+        tokens <- extract_first_names(x)
+        if (length(tokens) > 0) tokens[1] else NA_character_
+      })
+      
+      valid_mask <- !is.na(clean_names)
+      unique_names <- unique(clean_names[valid_mask])
+      
+      if (length(unique_names) > 0) {
+        # Predict gender
+        # Use tryCatch as gender() might fail if data not downloaded
+        preds <- tryCatch({
+          gender::gender(unique_names, years = c(1800, 2000), method = "ssa")
+        }, error = function(e) NULL)
+        
+        if (!is.null(preds) && nrow(preds) > 0) {
+          # Map predictions back
+          # preds has columns: name, gender
+          name_gender_map <- setNames(preds$gender, preds$name)
+          
+          # Update classification
+          # Identify which original indices correspond to which name
+          names_to_update <- clean_names[valid_mask]
+          indices_to_update <- unknown_idx[valid_mask]
+          
+          new_genders <- name_gender_map[names_to_update]
+          
+          # Only update if we got a result ("male" or "female")
+          update_mask <- !is.na(new_genders)
+          
+          classified[indices_to_update[update_mask]] <- stringr::str_to_title(new_genders[update_mask])
+        }
+      }
+    }
+  }
+
   return(classified)
 }
 

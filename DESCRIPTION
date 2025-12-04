@@ -24,7 +24,8 @@ Imports:
     osmdata,
     leaflet,
     jsonlite,
-    readr
+    readr,
+    gender
 Suggests:
     testthat (>= 3.0.0),
     knitr,

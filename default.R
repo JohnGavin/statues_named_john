@@ -44,7 +44,8 @@ rix(
     "quarto",
     "pkgload", # New dependency for ci_verification.R
     "rcmdcheck", # New dependency for ci_verification.R
-    "visNetwork"
+    "visNetwork",
+    "gender"
   ),
   system_pkgs = NULL,
   git_pkgs = NULL,
