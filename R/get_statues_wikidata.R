@@ -37,7 +37,7 @@ get_statues_wikidata <- function(location = "Q84",
   # SPARQL query
   sparql_query <- sprintf(
 'SELECT ?statue ?statueLabel ?coords ?subjectLabel ?genderLabel ?inceptionDate
-       ?materialLabel ?creatorLabel ?image ?article ?nhle
+       ?materialLabel ?creatorLabel ?image ?article ?nhle ?height ?dedicatedToLabel
 WHERE {
   # Instance of statue, sculpture, or memorial
   VALUES ?type { wd:Q179700 wd:Q860861 wd:Q5020292 }
@@ -59,6 +59,8 @@ WHERE {
   OPTIONAL { ?statue wdt:P170 ?creator }
   OPTIONAL { ?statue wdt:P18 ?image }
   OPTIONAL { ?statue wdt:P1216 ?nhle }
+  OPTIONAL { ?statue wdt:P2048 ?height } # P2048: Height
+  OPTIONAL { ?statue wdt:P825 ?dedicatedTo } # P825: Dedicated to
 
   # Wikipedia article link
   OPTIONAL {
@@ -108,6 +110,8 @@ LIMIT %d
       image_url = image,
       wikipedia_url = article,
       nhle_id = nhle,
+      height = as.numeric(height),
+      dedicated_to = dedicatedToLabel,
       source = "wikidata"
     )
 

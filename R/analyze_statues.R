@@ -23,7 +23,7 @@ analyze_by_gender <- function(statue_data, gender_mapping = NULL) {
     dplyr::mutate(
       heuristic_gender = classify_gender_from_subject(subject, name, gender_mapping),
       inferred_gender = dplyr::case_when(
-        !is.na(subject_gender) & subject_gender %in% c("male", "female") ~ stringr::str_to_title(subject_gender),
+        !is.na(subject_gender) & tolower(subject_gender) %in% c("male", "female") ~ stringr::str_to_title(subject_gender),
         !is.na(subject_gender) ~ "Other", # Transgender, non-binary, etc. mapped to Other for high-level summary
         type == "animal" | stringr::str_detect(type, "(?i)animal") ~ "Animal",
         TRUE ~ heuristic_gender
