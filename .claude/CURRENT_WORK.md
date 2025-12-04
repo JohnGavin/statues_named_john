@@ -1,20 +1,25 @@
-# Current Focus: Maintenance & Next Steps
+# Current Focus: Feature - Gender Classification Refinement
 
 ## Active Branch
-`main`
+`fix-issue-18-gender-classification`
 
 ## What I'm Doing
-Session complete. Project fully updated. Vignette layout and content issues resolved.
+Implementing gender classification improvements using the 'gender' R package to handle unknown subjects.
 
 ## Progress
-- [x] **Vignette UX:** Added tabsets for top names, moved limerick to top, removed static map.
-- [x] **Data:** Verified "John" count accuracy and animal detection.
-- [x] **CI:** Stable and fast.
+- [x] **Reorganization:** Tidied `R/setup/` scripts into subdirectories.
+- [x] **Dependencies:** Added `gender` to `default.R` and `DESCRIPTION`. Regenerated `default.nix`.
+- [x] **Implementation:** Updated `R/analyze_statues.R` to use `gender::gender()` for refining "Unknown" classifications.
+- [x] **Verification:** Verified graceful degradation locally.
+- [x] **Push:** Pushed changes to GitHub and manually created PR #68.
+- [ ] **CI:** Workflow `R-CMD-check` is currently **in_progress**.
 
 ## Key Files Modified
-- `inst/qmd/memorial-analysis.qmd` (Layout)
-- `R/get_statues_osm.R` (Fixing OSM links logic)
+- `default.R`, `default.nix`, `DESCRIPTION`
+- `R/analyze_statues.R`
+- `R/setup/session_logs/`
 
 ## Next Session Should
-1. **Verify Website:** Check `johngavin.github.io/statues_named_john/articles/memorial-analysis.html` for final layout.
-2. **Feature Work:** Consider further data enrichment.
+1. **Monitor CI:** Wait for PR #68 checks to complete.
+2. **Merge:** If CI passes, merge the PR.
+3. **Verify Results:** Check analysis output.
