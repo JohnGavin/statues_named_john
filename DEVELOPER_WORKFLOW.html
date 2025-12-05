@@ -103,7 +103,10 @@
 <ul><li>Build vignettes <strong>locally</strong> (Nix works fine locally)</li>
 <li>Commit pre-built HTML to git</li>
 <li>CI just builds website (fast)</li>
-</ul></div>
+</ul><p><strong>CRITICAL CONFIGURATION:</strong> The <code>.github/workflows/pkgdown.yml</code> MUST explicitly prevent <code>pkgdown</code> from rebuilding articles:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="at">pkgdown::build_site_github_pages(..., override = list(articles = NULL))</span></span></code></pre></div>
+<p><strong>Why?</strong> If <code>pkgdown</code> attempts to rebuild the vignette in CI, it will fail to find the local <code>_targets</code> store and default to using <strong>dummy/empty data</strong>, overwriting your correct pre-built HTML with a broken version.</p>
+</div>
 <div class="section level3">
 <h3 id="trade-offs">Trade-offs<a class="anchor" aria-label="anchor" href="#trade-offs"></a></h3>
 <p>✅ <strong>Pros:</strong> - Fast CI (1-2 mins vs 20+ mins) - No bslib/Nix compatibility issues - Saves GitHub Actions quota - Reproducible (Nix locally, targets manages dependencies)</p>
@@ -114,69 +117,69 @@
 <h2 id="common-mistakes-to-avoid">Common Mistakes to Avoid<a class="anchor" aria-label="anchor" href="#common-mistakes-to-avoid"></a></h2>
 <div class="section level3">
 <h3 id="id_-wrong-push-without-running-targets-locally">❌ WRONG: Push without running targets locally<a class="anchor" aria-label="anchor" href="#id_-wrong-push-without-running-targets-locally"></a></h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">vim</span> R/my_function.R</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">git</span> add R/</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Update function"</span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="fu">git</span> push  <span class="co"># ← WRONG! Vignette is now stale!</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">vim</span> R/my_function.R</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">git</span> add R/</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Update function"</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="fu">git</span> push  <span class="co"># ← WRONG! Vignette is now stale!</span></span></code></pre></div>
 <p><strong>Problem:</strong> Vignette shows old results, website is outdated</p>
 </div>
 <div class="section level3">
 <h3 id="id_-correct-always-run-targets-first">✅ CORRECT: Always run targets first<a class="anchor" aria-label="anchor" href="#id_-correct-always-run-targets-first"></a></h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">vim</span> R/my_function.R</span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'targets::tar_make()'</span>  <span class="co"># ← Rebuilds vignette</span></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">git</span> add R/ inst/doc/</span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Update function and vignette"</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="fu">git</span> push  <span class="co"># ← Good! Everything is up-to-date</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="ex">vim</span> R/my_function.R</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'targets::tar_make()'</span>  <span class="co"># ← Rebuilds vignette</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">git</span> add R/ inst/doc/</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Update function and vignette"</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="fu">git</span> push  <span class="co"># ← Good! Everything is up-to-date</span></span></code></pre></div>
 <hr></div>
 <div class="section level3">
 <h3 id="id_-wrong-forget-to-commit-pre-built-vignettes">❌ WRONG: Forget to commit pre-built vignettes<a class="anchor" aria-label="anchor" href="#id_-wrong-forget-to-commit-pre-built-vignettes"></a></h3>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'targets::tar_make()'</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">git</span> add R/ vignettes/  <span class="co"># ← Missing inst/doc/!</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Update"</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'targets::tar_make()'</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">git</span> add R/ vignettes/  <span class="co"># ← Missing inst/doc/!</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Update"</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
 <p><strong>Problem:</strong> CI won’t find pre-built vignettes</p>
 </div>
 <div class="section level3">
 <h3 id="id_-correct-always-commit-instdochtml">✅ CORRECT: Always commit inst/doc/*.html<a class="anchor" aria-label="anchor" href="#id_-correct-always-commit-instdochtml"></a></h3>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'targets::tar_make()'</span></span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">git</span> add R/ vignettes/ inst/doc/<span class="pp">*</span>.html  <span class="co"># ← Include pre-built HTML</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Update"</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'targets::tar_make()'</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">git</span> add R/ vignettes/ inst/doc/<span class="pp">*</span>.html  <span class="co"># ← Include pre-built HTML</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Update"</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
 <hr></div>
 </div>
 <div class="section level2">
 <h2 id="troubleshooting">Troubleshooting<a class="anchor" aria-label="anchor" href="#troubleshooting"></a></h2>
 <div class="section level3">
 <h3 id="ci-says-no-pre-built-vignettes-found">“CI says no pre-built vignettes found”<a class="anchor" aria-label="anchor" href="#ci-says-no-pre-built-vignettes-found"></a></h3>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Check if they exist</span></span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> inst/doc/</span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co"># If missing, run targets</span></span>
-<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'targets::tar_make()'</span></span>
-<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co"># Commit them</span></span>
-<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="fu">git</span> add inst/doc/<span class="pp">*</span>.html</span>
-<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">--amend</span> <span class="at">--no-edit</span></span>
-<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="fu">git</span> push <span class="at">--force-with-lease</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># Check if they exist</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> inst/doc/</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co"># If missing, run targets</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'targets::tar_make()'</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co"># Commit them</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="fu">git</span> add inst/doc/<span class="pp">*</span>.html</span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">--amend</span> <span class="at">--no-edit</span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="fu">git</span> push <span class="at">--force-with-lease</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="vignette-shows-old-data">“Vignette shows old data”<a class="anchor" aria-label="anchor" href="#vignette-shows-old-data"></a></h3>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># Force rebuild</span></span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'targets::tar_destroy()'</span></span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'targets::tar_make()'</span></span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co"># Commit updated vignette</span></span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="fu">git</span> add inst/doc/<span class="pp">*</span>.html</span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Update vignette with latest data"</span></span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># Force rebuild</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'targets::tar_destroy()'</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'targets::tar_make()'</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co"># Commit updated vignette</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="fu">git</span> add inst/doc/<span class="pp">*</span>.html</span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Update vignette with latest data"</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="ci-taking-too-long">“CI taking too long”<a class="anchor" aria-label="anchor" href="#ci-taking-too-long"></a></h3>
 <p>If CI is taking 20+ minutes, check: 1. Is <code>targets-pkgdown.yml</code> enabled? (should be DISABLED) 2. Is <code>pkgdown.yml</code> running? (should be the ONLY active workflow)</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> .github/workflows/</span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="co"># Should see:</span></span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co"># pkgdown.yml ← ACTIVE (simple, fast)</span></span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co"># targets-pkgdown.yml.DISABLED ← DISABLED (slow)</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> .github/workflows/</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="co"># Should see:</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co"># pkgdown.yml ← ACTIVE (simple, fast)</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co"># targets-pkgdown.yml.DISABLED ← DISABLED (slow)</span></span></code></pre></div>
 <hr></div>
 </div>
 <div class="section level2">

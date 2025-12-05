@@ -87,6 +87,18 @@ vignettes from `inst/doc/` - Build pkgdown site - Deploy to GitHub Pages
 - Commit pre-built HTML to git
 - CI just builds website (fast)
 
+**CRITICAL CONFIGURATION:** The `.github/workflows/pkgdown.yml` MUST
+explicitly prevent `pkgdown` from rebuilding articles:
+
+``` yaml
+pkgdown::build_site_github_pages(..., override = list(articles = NULL))
+```
+
+**Why?** If `pkgdown` attempts to rebuild the vignette in CI, it will
+fail to find the local `_targets` store and default to using
+**dummy/empty data**, overwriting your correct pre-built HTML with a
+broken version.
+
 ### Trade-offs
 
 ✅ **Pros:** - Fast CI (1-2 mins vs 20+ mins) - No bslib/Nix
