@@ -61,7 +61,8 @@ jobs:
         run: |
           # Build site using pre-built vignettes
           # NO targets, NO Quarto rendering
-          pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+          # We exclude articles here to prevent pkgdown from rebuilding them with dummy data
+          pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE, override = list(articles = NULL))
         shell: Rscript {0}
 
       - name: Manually install vignettes

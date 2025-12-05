@@ -22,10 +22,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-> In England’s grand capital, dear,
-> More Johns than dames, it appears.
-> For each woman of might,
-> A John’s in plain sight,
+> In England’s grand capital, dear,<br>
+> More Johns than dames, it appears.<br>
+> For each woman of might,<br>
+> A John’s in plain sight,<br>
 > Confirming our gendered-statue fears.
 
 ## Introduction
@@ -117,6 +117,28 @@ top_names_m <- gender_analysis$top_names_by_gender %>%
   dplyr::arrange(desc(Count))
 
 knitr::kable(top_names_m, caption = "Most Common Male Names")
+```
+
+## Animal
+
+```{r top-names-animal}
+top_names_a <- gender_analysis$top_names_by_gender %>%
+  dplyr::filter(inferred_gender == "Animal") %>%
+  dplyr::select(Name = extracted_names, Count = n, Percent = percent) %>%
+  dplyr::arrange(desc(Count))
+
+knitr::kable(top_names_a, caption = "Most Common Animal Names")
+```
+
+## Unknown
+
+```{r top-names-unknown}
+top_names_u <- gender_analysis$top_names_by_gender %>%
+  dplyr::filter(inferred_gender == "Unknown") %>%
+  dplyr::select(Name = extracted_names, Count = n, Percent = percent) %>%
+  dplyr::arrange(desc(Count))
+
+knitr::kable(top_names_u, caption = "Most Common Unknown Names")
 ```
 
 :::

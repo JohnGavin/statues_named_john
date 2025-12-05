@@ -2,9 +2,9 @@
 
 # statuesnamedjohn: Multi-Source Analysis of London Statues
 
-> In England’s grand capital, dear, More Johns than dames, it appears.
-> For each woman of might, A John’s in plain sight, Confirming our
-> gendered-statue fears.
+> In England’s grand capital, dear,<br> More Johns than dames, it
+> appears.<br> For each woman of might,<br> A John’s in plain sight,<br>
+> Confirming our gendered-statue fears.
 
 <!-- badges: start -->
 
