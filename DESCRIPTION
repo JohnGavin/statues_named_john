@@ -43,5 +43,5 @@ Suggests:
     rcmdcheck,
     visNetwork
 Config/testthat/edition: 3
-URL: https://github.com/JohnGavin/statues_named_john
+URL: https://github.com/JohnGavin/statues_named_john, https://johngavin.github.io/statues_named_john
 BugReports: https://github.com/JohnGavin/statues_named_john/issues
