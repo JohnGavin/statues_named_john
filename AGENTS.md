@@ -160,10 +160,13 @@ Adhering to this principle ensures:
 ## 13. Vignette Requirements
 
 *   **Session Info**: Always include `sessionInfo()` at the bottom of each vignette (`.qmd` file) to aid in reproducibility and debugging.
-    ```r
-    ## Session Info
+    ```
 
-    ```{r session-info}
-    sessionInfo()
+## 14. README Automation
+
+*   **Automation**: `README.md` must be automatically rendered from `inst/qmd/README.qmd` via a `targets` pipeline step to maintain consistency.
+    *   Ensure a target exists that tracks `inst/qmd/README.qmd` and renders it to the project root `README.md`.
+    *   This prevents manual rendering steps and ensures the README is always up-to-date with the source.
+
     ```
     ```
