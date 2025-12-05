@@ -140,3 +140,30 @@ Adhering to this principle ensures:
     *   **Example Subfolders**: `archive/`, `ci_scripts/`, `dev_scripts/`, `session_logs/`, `test_data/`, `docs/`, `plans/`.
 *   **Naming Convention**: Subfolders should clearly indicate their purpose.
 *   **Reference**: See `https://github.com/JohnGavin/statues_named_john/tree/main/R/setup` for a concrete example of this organization.
+
+## 11. Documentation Maintenance & Cleanup
+
+*   **Session Tidy-up**: When tidying up towards the end of each session:
+    *   Consider reducing the number of `*.md` files in `./R/setup/` by merging files and merging duplicated topics to produce fewer, more detailed markdown files.
+    *   Summarise the themes, topics, and contents by similarity.
+    *   Suggest which parts might be better migrated to a wiki page on that topic or theme on the GitHub repository or to a FAQs wiki page.
+    *   Raise GitHub issues for any outstanding issues, todos, or features identified during cleanup.
+
+## 12. Session Start Protocol
+
+*   **Initial Review**: At the start of each session:
+    *   Review all `./*.md` files for next steps, todos, issues, bugs, and new features.
+    *   Review open GitHub issues.
+    *   Group the issues/items by similarity.
+    *   Order them by difficulty, placing the easiest first within each group and between groups.
+
+## 13. Vignette Requirements
+
+*   **Session Info**: Always include `sessionInfo()` at the bottom of each vignette (`.qmd` file) to aid in reproducibility and debugging.
+    ```r
+    ## Session Info
+
+    ```{r session-info}
+    sessionInfo()
+    ```
+    ```
