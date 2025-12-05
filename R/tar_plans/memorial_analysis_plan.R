@@ -33,6 +33,13 @@ memorial_analysis_plan <- list(
     format = "rds"
   ),
 
+  # QA Samples
+  tar_target(
+    qa_samples,
+    generate_qa_sample(all_memorials),
+    format = "rds"
+  ),
+
   tar_target(
     summary_table,
     gender_analysis$summary
@@ -47,15 +54,23 @@ memorial_analysis_plan <- list(
   # Plots
   tar_target(
     category_plot,
-    ggplot(gender_analysis$summary, aes(x = inferred_gender, y = n, fill = inferred_gender)) +
-      geom_col() +
-      geom_text(aes(label = sprintf("%d (%.1f%%)", n, percent)), vjust = -0.5) +
-      labs(
-        title = "Gender Representation in London Statues",
-        x = "Gender",
-        y = "Count"
-      ) +
-      theme_minimal(),
+    {
+      # Explicitly set factor levels to ensure consistent ordering and prevent dropping
+      plot_data <- gender_analysis$summary %>%
+        dplyr::mutate(inferred_gender = factor(inferred_gender, 
+                                               levels = c("Male", "Female", "Unknown", "Animal", "Other")))
+      
+      ggplot(plot_data, aes(x = inferred_gender, y = n, fill = inferred_gender)) +
+        geom_col() +
+        geom_text(aes(label = sprintf("%d (%.1f%%)", n, percent)), vjust = -0.5) +
+        scale_x_discrete(drop = FALSE) + # Force all levels to display
+        labs(
+          title = "Gender Representation in London Statues (Verified)",
+          x = "Gender",
+          y = "Count"
+        ) +
+        theme_minimal()
+    },
     format = "rds"
   ),
 

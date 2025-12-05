@@ -4,20 +4,21 @@ vignette_sources|stem|08d5f59e833de599|ae042ea468547fc9|2c530c1562a7fbd1|7949724
 pkgdown_verification|stem|8c6c50438d1b2e74|08f8781cdffc7263|2c530c1562a7fbd1|-2100439276||t20426.3700757956s|s774b|774|parquet|local|vector|||0||
 wikidata_raw|stem|7b78cd2448eb5742|70d05b42b462b6f4|2c530c1562a7fbd1|-1969361436||t20426.4414678676s|s7643b|7643|parquet|local|vector|||1.913||
 glher_raw|stem|b07372d9261e8930|d284f152c5ab23b0|2c530c1562a7fbd1|138080810||t20426.4415993516s|s176b|176|parquet|local|vector|||1.265|GLHER returned HTML instead of CSV. Direct download likely blocked or API changed.|
-osm_std|stem|42abf0b40d5e9180|ca39ce8567fc5eb7|0d1d838d02c22d5e|1955182145||t20426.4440985218s|s174265b|174265|parquet|local|vector|||0.014||
-wikidata_std|stem|dbb4884fbb35a596|644fd81909f43052|3320bde6c01cfec1|836736429||t20426.4440989403s|s8552b|8552|parquet|local|vector|||0.007||
-glher_std|stem|fe712e5c3340adc3|af208b2f1e764ec2|17e36343ee8d39c4|1200811353||t20426.4440990489s|s2679b|2679|parquet|local|vector|||0.001||
-all_memorials|stem|ff63999945e8b155|79da7315e5b8f3ba|9807373259ee3aa6|1729866638||t20426.4442005977s|s139413b|139413|parquet|local|vector|||8.76||
-memorial_interactive_map|stem|a037eb8723a6825c|fa146368ea2d6512|59a08a33c831ff62|-269169706||t20426.4442067833s|s391477b|391477|rds|local|vector|||0.497||
-gender_analysis|stem|81e0045391340306|d3e4b0f84377a073|59a08a33c831ff62|1856577162||t20426.4442104174s|s96234b|96234|rds|local|vector|||0.298||
-johns_comparison|stem|09cb5cbf2187f696|95b80fc145377e7f|59a08a33c831ff62|-1045227736||t20426.4442171349s|s241b|241|rds|local|vector|||0.573||
-memorial_map_plot|stem|140a2659d7b04435|66667320e36d9e4e|59a08a33c831ff62|1866069921||t20426.4442191989s|s946049b|946049|rds|local|vector|||0.04||
-summary_table|stem|6f6f5253dea55e62|7e98facf38967347|6341a72a3c26b8ba|-1890126374||t20426.4442193515s|s1148b|1148|parquet|local|vector|||0||
-findings|stem|a8cbe322aa18c45f|54c7126afbd7c443|6341a72a3c26b8ba|644882975||t20426.4442194791s|s1160b|1160|parquet|local|vector|||0.001||
-category_plot|stem|aef80c6cd4348e09|aff0c6b85111a39d|6341a72a3c26b8ba|-977205175||t20426.4442206323s|s335503b|335503|rds|local|vector|||0.017||
-.Random.seed|object|ba52810212c2ab31
+osm_std|stem|35fef88b6d018bba|ca39ce8567fc5eb7|0d1d838d02c22d5e|1955182145||t20427.4749529113s|s174294b|174294|parquet|local|vector|||0.021||
+wikidata_std|stem|690ba5c7cb71efd4|644fd81909f43052|3320bde6c01cfec1|836736429||t20427.474953269s|s8605b|8605|parquet|local|vector|||0.007||
+glher_std|stem|fe712e5c3340adc3|af208b2f1e764ec2|17e36343ee8d39c4|1200811353||t20427.4749533836s|s2679b|2679|parquet|local|vector|||0.002||
+all_memorials|stem|87a042000fd9c37f|79da7315e5b8f3ba|eceefe1c730dfff0|1729866638||t20427.4750645448s|s139544b|139544|parquet|local|vector|||9.59||
+memorial_interactive_map|stem|290542a055cc912b|fa146368ea2d6512|0641c2578d63fb19|-269169706||t20427.4750714425s|s391900b|391900|rds|local|vector|||0.554||
+gender_analysis|stem|5308c2c60d98a6d7|d3e4b0f84377a073|0641c2578d63fb19|1856577162||t20427.4750774606s|s96405b|96405|rds|local|vector|||0.502||
+johns_comparison|stem|09cb5cbf2187f696|95b80fc145377e7f|0641c2578d63fb19|-1045227736||t20427.4750868852s|s241b|241|rds|local|vector|||0.807||
+memorial_map_plot|stem|6b3eeffc349a8fec|66667320e36d9e4e|0641c2578d63fb19|1866069921||t20427.4750890374s|s946804b|946804|rds|local|vector|||0.034||
+qa_samples|stem|8eb8a08d25e0664f|4d11f4ade59ec18d|0641c2578d63fb19|1653646144||t20427.4750950345s|s2140b|2140|rds|local|vector|||0.509||
+summary_table|stem|6f6f5253dea55e62|7e98facf38967347|cf68f1f827dd001c|-1890126374||t20427.4750951744s|s1148b|1148|parquet|local|vector|||0||
+findings|stem|a8cbe322aa18c45f|54c7126afbd7c443|cf68f1f827dd001c|644882975||t20427.4750953166s|s1160b|1160|parquet|local|vector|||0.001||
+.Random.seed|object|dc11e4b6ce4664e6
 update.packages|function|30d2377eab38636a
 install.packages|function|e3b0a9d56d54eeba
 remove.packages|function|e5e5ba52f888863b
-pkgdown_site|stem|75cc577c3c151779|146540c7da0725c2|2c530c1562a7fbd1|1264297866|docs|t20426.4722662239s|s3818229b|3818229|file|local|vector|||10.499|problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js to /private/tmp/nix-build-nix-shell.drv-0/RtmpRj7AJN/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js: Permission denied. problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js.map to /private/tmp/nix-build-nix-shell.drv-0/RtmpRj7AJN/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js.map: Permission denied. Failed to copy over bootstrap's javascript files into the htmlDependency() directory.|
-vignette_memorial_analysis_html|stem|71de024a2da9226a|32d4f4c7f8671992|01fae357bdaf80cd|1413839597|/Users/johngavin/docs_gh/claude_rix/statues_named_john/vignettes/memorial-analysis.html|t20426.4723197534s|s841126b|841126|file|local|vector|||4.478||
+pkgdown_site|stem|6879ac5ca2717b21|146540c7da0725c2|2c530c1562a7fbd1|1264297866|docs|t20427.4770949837s|s3822767b|3822767|file|local|vector|||9.344|problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js to /private/tmp/nix-build-nix-shell.drv-9/RtmpmwLoC5/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js: Permission denied. problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js.map to /private/tmp/nix-build-nix-shell.drv-9/RtmpmwLoC5/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js.map: Permission denied. Failed to copy over bootstrap's javascript files into the htmlDependency() directory.|
+category_plot|stem|43d5ba1bc42412ba|d0adb6412c4a9e05|cf68f1f827dd001c|-977205175||t20427.4770968254s|s370655b|370655|rds|local|vector|||0.048||
+vignette_memorial_analysis_html|stem|1cad2f08a9336f79|32d4f4c7f8671992|ec35dec5b84db9d6|1413839597|/Users/johngavin/docs_gh/claude_rix/statues_named_john/vignettes/memorial-analysis.html|t20427.4771538678s|s841131b|841131|file|local|vector|||4.76||

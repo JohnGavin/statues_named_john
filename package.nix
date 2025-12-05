@@ -23,6 +23,7 @@ pkgs.rPackages.buildRPackage {
     gert
     gh
     usethis
+    gender # Added for conditional use in analyze_statues.R
     rprojroot # if used in runtime (Suggests)
     quarto # if used in runtime (Suggests)
   ];

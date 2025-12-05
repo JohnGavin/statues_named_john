@@ -5,7 +5,7 @@
 #' consistent column names, data types, and structure.
 #'
 #' @param data A tibble from any source (wikidata, osm, glher, etc.)
-#' @param source Source identifier ("wikidata", "osm", "glher", "he")
+#' @param source_name Source identifier ("wikidata", "osm", "glher", "he")
 #'
 #' @return A tibble with standardized schema:
 #'   - id: character - unique identifier (source_originalid)
@@ -32,18 +32,18 @@
 #' }
 #'
 #' @export
-standardize_statue_data <- function(data, source) {
+standardize_statue_data <- function(data, source_name) {
 
   if (nrow(data) == 0) {
     return(create_empty_standard_schema())
   }
 
-  standardized <- switch(source,
+  standardized <- switch(source_name,
     "wikidata" = standardize_wikidata(data),
     "osm" = standardize_osm(data),
     "glher" = standardize_glher(data),
     "he" = standardize_historic_england(data),
-    stop("Unknown source: ", source)
+    stop("Unknown source: ", source_name)
   )
 
   # Ensure all required columns exist
@@ -52,7 +52,7 @@ standardize_statue_data <- function(data, source) {
   # Add metadata
   standardized <- standardized %>%
     dplyr::mutate(
-      source = source,
+      source = source_name,
       last_updated = Sys.Date()
     )
 
