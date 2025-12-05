@@ -57,6 +57,26 @@ documentation_plan <- list(
       file.copy(source_file, destination_file, overwrite = TRUE)
       file.remove(source_file) # Remove from inst/qmd/
 
+      # Copy supporting files (images, libs)
+      source_files_dir <- file.path(getwd(), "inst/qmd/memorial-analysis_files")
+      
+      if (dir.exists(source_files_dir)) {
+        message("Copying support files from '", source_files_dir, "' to '", target_vignettes_dir, "'")
+        # Destination path for the folder itself
+        dest_files_dir <- file.path(target_vignettes_dir, "memorial-analysis_files")
+        
+        # Remove existing destination folder to ensure clean copy
+        if (dir.exists(dest_files_dir)) {
+          unlink(dest_files_dir, recursive = TRUE)
+        }
+        
+        # Copy the directory
+        file.copy(source_files_dir, target_vignettes_dir, recursive = TRUE)
+        
+        # Remove source directory
+        unlink(source_files_dir, recursive = TRUE)
+      }
+
       # Return path to generated HTML (now in vignettes/)
       normalizePath(destination_file)
     },

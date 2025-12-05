@@ -4,11 +4,6 @@ vignette_sources|stem|08d5f59e833de599|ae042ea468547fc9|2c530c1562a7fbd1|7949724
 pkgdown_verification|stem|8c6c50438d1b2e74|08f8781cdffc7263|2c530c1562a7fbd1|-2100439276||t20426.3700757956s|s774b|774|parquet|local|vector|||0||
 wikidata_raw|stem|7b78cd2448eb5742|70d05b42b462b6f4|2c530c1562a7fbd1|-1969361436||t20426.4414678676s|s7643b|7643|parquet|local|vector|||1.913||
 glher_raw|stem|b07372d9261e8930|d284f152c5ab23b0|2c530c1562a7fbd1|138080810||t20426.4415993516s|s176b|176|parquet|local|vector|||1.265|GLHER returned HTML instead of CSV. Direct download likely blocked or API changed.|
-.Random.seed|object|b519aa4683b87c3e
-update.packages|function|30d2377eab38636a
-install.packages|function|e3b0a9d56d54eeba
-remove.packages|function|e5e5ba52f888863b
-pkgdown_site|stem|ab9ad003a6b999fd|146540c7da0725c2|2c530c1562a7fbd1|1264297866|docs|t20427.5138714192s|s3832715b|3832715|file|local|vector|||10.624|problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js to /private/tmp/nix-build-nix-shell.drv-9/Rtmp17iI1B/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js: Permission denied. problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js.map to /private/tmp/nix-build-nix-shell.drv-9/Rtmp17iI1B/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js.map: Permission denied. Failed to copy over bootstrap's javascript files into the htmlDependency() directory.|
 osm_std|stem|19f0b0598c54f9db|ca39ce8567fc5eb7|0d1d838d02c22d5e|1955182145||t20427.5138723639s|s174265b|174265|parquet|local|vector|||0.014||
 wikidata_std|stem|2944c7bd80687a31|644fd81909f43052|3320bde6c01cfec1|836736429||t20427.5138727225s|s8552b|8552|parquet|local|vector|||0.008||
 glher_std|stem|fe712e5c3340adc3|af208b2f1e764ec2|17e36343ee8d39c4|1200811353||t20427.4749533836s|s2679b|2679|parquet|local|vector|||0.001||
@@ -20,4 +15,9 @@ memorial_map_plot|stem|1d9c02d3e374ec50|66667320e36d9e4e|2c389c3c15fbdb30|186606
 summary_table|stem|6f6f5253dea55e62|7e98facf38967347|749841be61ee2083|-1890126374||t20427.5140092705s|s1148b|1148|parquet|local|vector|||0.001||
 findings|stem|a8cbe322aa18c45f|54c7126afbd7c443|749841be61ee2083|644882975||t20427.5140094104s|s1160b|1160|parquet|local|vector|||0.001||
 category_plot|stem|c1d089ad43c069c5|aff0c6b85111a39d|749841be61ee2083|-977205175||t20427.514010755s|s335504b|335504|rds|local|vector|||0.03||
-vignette_memorial_analysis_html|stem|44211d15f7046954|32d4f4c7f8671992|952cd41813849a19|1413839597|/Users/johngavin/docs_gh/claude_rix/statues_named_john/vignettes/memorial-analysis.html|t20427.5140722125s|s841151b|841151|file|local|vector|||5.192||
+.Random.seed|object|9009e54932971579
+update.packages|function|30d2377eab38636a
+install.packages|function|e3b0a9d56d54eeba
+remove.packages|function|e5e5ba52f888863b
+pkgdown_site|stem|89cb8744ef6e2b62|146540c7da0725c2|2c530c1562a7fbd1|1264297866|docs|t20427.5950909315s|s3827636b|3827636|file|local|vector|||11.058|problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js to /private/tmp/nix-build-nix-shell.drv-9/RtmpG0mWCU/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js: Permission denied. problem copying /nix/store/k2h5ah80vpfc80f801ryizj1jmbxnb9j-r-bslib-0.9.0/library/bslib/lib/bs5/dist/js/bootstrap.bundle.min.js.map to /private/tmp/nix-build-nix-shell.drv-9/RtmpG0mWCU/bslib-5a33e91bb5ebba214fc8f993e140872a/bootstrap.bundle.min.js.map: Permission denied. Failed to copy over bootstrap's javascript files into the htmlDependency() directory.|
+vignette_memorial_analysis_html|stem|3e862d7da947940b|be555925ebe17118|952cd41813849a19|1413839597|/Users/johngavin/docs_gh/claude_rix/statues_named_john/vignettes/memorial-analysis.html|t20427.5951458934s|s841151b|841151|file|local|vector|||4.611||
