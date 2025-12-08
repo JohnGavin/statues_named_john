@@ -63,6 +63,36 @@ documentation_plan <- list(
     format = "file"
   ),
 
+  # Render presentation to HTML
+  tar_target(
+    vignette_presentation_html,
+    command = {
+      # Ensure output directory exists for Quarto (project root)
+      quarto::quarto_render(
+        input = "inst/qmd/presentation.qmd",
+        output_file = "presentation.html",
+        quiet = FALSE,
+        execute_dir = getwd()
+      )
+
+      # Ensure vignettes directory exists
+      target_vignettes_dir <- file.path(getwd(), "vignettes")
+      dir.create(target_vignettes_dir, recursive = TRUE, showWarnings = FALSE)
+
+      # Copy rendered HTML
+      source_file <- file.path(getwd(), "inst/qmd/presentation.html")
+      destination_file <- file.path(target_vignettes_dir, "presentation.html")
+      
+      message("Attempting to copy '", source_file, "' to '", destination_file, "'")
+      file.copy(source_file, destination_file, overwrite = TRUE)
+      file.remove(source_file)
+
+      # Return path
+      normalizePath(destination_file)
+    },
+    format = "file"
+  ),
+
   # ── Vignette Metadata ─────────────────────────────────────────────────
 
   # Track vignette source files
@@ -105,15 +135,19 @@ documentation_plan <- list(
       # Ensure articles directory exists within docs/
       dir.create("docs/articles", recursive = TRUE, showWarnings = FALSE)
       
-      # Copy the pre-built vignette
+      # Copy the pre-built vignettes
       file.copy("vignettes/memorial-analysis.html", "docs/articles/memorial-analysis.html", overwrite = TRUE)
+      file.copy("vignettes/presentation.html", "docs/articles/presentation.html", overwrite = TRUE)
 
       # Create a minimal articles index.html (required by pkgdown_verification)
       writeLines(c(
         '<!DOCTYPE html>',
         '<html lang="en"><head><meta charset="utf-8"></head><body>',
         '<h1>Articles</h1>',
-        '<ul><li><a href="memorial-analysis.html">Comparing London Memorials: Johns, Women, and Dogs</a></li></ul>',
+        '<ul>',
+        '<li><a href="memorial-analysis.html">Comparing London Memorials: Johns, Women, and Dogs</a></li>',
+        '<li><a href="presentation.html">Project Presentation</a></li>',
+        '</ul>',
         '</body></html>'
       ), con = "docs/articles/index.html")
 

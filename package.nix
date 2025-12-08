@@ -25,6 +25,8 @@ pkgs.rPackages.buildRPackage {
     usethis
     rprojroot # if used in runtime (Suggests)
     quarto # if used in runtime (Suggests)
+    gender
+    readr
   ];
 
   # Build dependencies (from DESCRIPTION Suggests, typically)
