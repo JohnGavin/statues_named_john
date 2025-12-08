@@ -22,6 +22,8 @@ navbar:
       menu:
         - text: Memorial Analysis
           href: articles/memorial-analysis.html
+        - text: Presentation
+          href: articles/presentation.html
     github:
       icon: fab-github fa-lg
       href: https://github.com/JohnGavin/statues_named_john
