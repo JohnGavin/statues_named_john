@@ -156,6 +156,27 @@ Our analysis of London-specific data finds:
 
 *(Note: Percentages are relative to the total dataset of queried memorials).*
 
+## Reproducibility: Pipeline Code
+
+The following code defines the `targets` pipeline used to generate the analysis objects.
+
+```{r pipeline-code}
+#| echo: false
+#| results: asis
+cat("```r\n")
+# Read the plan files
+root_dir <- rprojroot::find_root(rprojroot::is_r_package)
+plan_path <- file.path(root_dir, "R/tar_plans/memorial_analysis_plan.R")
+
+if (file.exists(plan_path)) {
+  plan_code <- readLines(plan_path)
+  cat(paste(plan_code, collapse = "\n"))
+} else {
+  cat("# Plan file not found")
+}
+cat("\n```")
+```
+
 ## Session Info
 
 ```{r session-info}
