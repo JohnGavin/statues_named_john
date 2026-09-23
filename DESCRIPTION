@@ -20,7 +20,6 @@ Imports:
     stringr,
     tibble,
     sf,
-    WikidataQueryServiceR,
     osmdata,
     leaflet,
     jsonlite,

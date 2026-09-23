@@ -78,7 +78,7 @@ LIMIT %d
   message("Location: ", location, " | Limit: ", limit)
 
   # Execute query
-  results <- WikidataQueryServiceR::query_wikidata(sparql_query)
+  results <- query_wikidata_sparql(sparql_query)
 
   if (nrow(results) == 0) {
     warning("No statues found in Wikidata for location ", location)
@@ -122,4 +122,74 @@ LIMIT %d
   }
 
   return(statues_wikidata)
+}
+
+#' Query the Wikidata SPARQL endpoint
+#'
+#' @description
+#' Sends a SPARQL query to the public Wikidata Query Service and parses the
+#' JSON response into a tibble. Replaces the archived
+#' \code{WikidataQueryServiceR::query_wikidata()} (CRAN-archived 2026-02-08)
+#' with a minimal \code{httr} + \code{jsonlite} implementation.
+#'
+#' @param sparql_query A SPARQL query string.
+#'
+#' @return A tibble, one character column per SPARQL result variable.
+#'
+#' @noRd
+query_wikidata_sparql <- function(sparql_query) {
+  response <- httr::GET(
+    url = "https://query.wikidata.org/sparql",
+    query = list(query = sparql_query),
+    httr::add_headers(Accept = "application/sparql-results+json"),
+    httr::user_agent(
+      "statuesnamedjohn R package (https://github.com/JohnGavin/statues_named_john)"
+    )
+  )
+
+  if (httr::status_code(response) != 200) {
+    stop(
+      "Wikidata SPARQL request failed with status ",
+      httr::status_code(response)
+    )
+  }
+
+  json_text <- httr::content(response, as = "text", encoding = "UTF-8")
+  parse_sparql_json(json_text)
+}
+
+#' Parse a Wikidata SPARQL JSON response
+#'
+#' @description
+#' Converts the JSON body returned by the Wikidata SPARQL endpoint (the
+#' standard SPARQL 1.1 Query Results JSON Format) into a tibble with one
+#' character column per variable named in \code{head$vars}, in that order.
+#' A variable absent from a given binding (SPARQL's OPTIONAL semantics)
+#' becomes \code{NA_character_} for that row; a variable absent from every
+#' binding still produces a column of all-\code{NA} values. Zero bindings
+#' produces a zero-row tibble with the expected columns.
+#'
+#' @param json_text A JSON string in SPARQL 1.1 Query Results JSON Format.
+#'
+#' @return A tibble.
+#'
+#' @noRd
+parse_sparql_json <- function(json_text) {
+  parsed <- jsonlite::fromJSON(json_text, simplifyVector = FALSE)
+
+  vars <- unlist(parsed$head$vars)
+  bindings <- parsed$results$bindings
+
+  columns <- lapply(vars, function(var) {
+    vapply(bindings, function(binding) {
+      if (!is.null(binding[[var]]) && !is.null(binding[[var]]$value)) {
+        as.character(binding[[var]]$value)
+      } else {
+        NA_character_
+      }
+    }, character(1))
+  })
+  names(columns) <- vars
+
+  tibble::as_tibble(columns)
 }
