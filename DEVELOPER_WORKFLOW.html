@@ -175,11 +175,12 @@
 </div>
 <div class="section level3">
 <h3 id="ci-taking-too-long">“CI taking too long”<a class="anchor" aria-label="anchor" href="#ci-taking-too-long"></a></h3>
-<p>If CI is taking 20+ minutes, check: 1. Is <code>targets-pkgdown.yml</code> enabled? (should be DISABLED) 2. Is <code>pkgdown.yml</code> running? (should be the ONLY active workflow)</p>
+<p>If CI is taking 20+ minutes, check: 1. Has a workflow that runs targets or renders Quarto in CI been added? (there should be none; vignettes are pre-built locally) 2. Is <code>pkgdown.yml</code> the only pkgdown workflow?</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> .github/workflows/</span>
 <span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="co"># Should see:</span></span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co"># pkgdown.yml ← ACTIVE (simple, fast)</span></span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co"># targets-pkgdown.yml.DISABLED ← DISABLED (slow)</span></span></code></pre></div>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co"># R-CMD-check.yml    ← Nix + Cachix</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co"># test-coverage.yml  ← Nix + Cachix</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co"># pkgdown.yml        ← native R, pre-built vignettes</span></span></code></pre></div>
 <hr></div>
 </div>
 <div class="section level2">
