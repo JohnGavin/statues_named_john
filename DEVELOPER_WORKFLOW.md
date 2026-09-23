@@ -190,14 +190,15 @@ git push
 ### "CI taking too long"
 
 If CI is taking 20+ minutes, check:
-1. Is `targets-pkgdown.yml` enabled? (should be DISABLED)
-2. Is `pkgdown.yml` running? (should be the ONLY active workflow)
+1. Has a workflow that runs targets or renders Quarto in CI been added? (there should be none; vignettes are pre-built locally)
+2. Is `pkgdown.yml` the only pkgdown workflow?
 
 ```bash
 ls -lh .github/workflows/
 # Should see:
-# pkgdown.yml ← ACTIVE (simple, fast)
-# targets-pkgdown.yml.DISABLED ← DISABLED (slow)
+# R-CMD-check.yml    ← Nix + Cachix
+# test-coverage.yml  ← Nix + Cachix
+# pkgdown.yml        ← native R, pre-built vignettes
 ```
 
 ---
