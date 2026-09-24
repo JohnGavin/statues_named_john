@@ -1,0 +1,15 @@
+term,gender,note
+queen,Female,Royal title always denoting a female subject
+king,Male,Royal title always denoting a male subject
+princess,Female,Royal title always denoting a female subject
+prince,Male,Royal title always denoting a male subject
+dame,Female,Honorific always denoting a female subject
+sir,Male,Honorific always denoting a male subject
+lady,Female,Honorific/title always denoting a female subject
+lord,Male,Honorific/title always denoting a male subject
+duke,Male,Peerage title always denoting a male subject
+duchess,Female,Peerage title always denoting a female subject
+woman,Female,Generic descriptor for an unnamed female subject
+women,Female,Generic descriptor for unnamed female subjects (plural)
+man,Male,Generic descriptor for an unnamed male subject
+men,Male,Generic descriptor for unnamed male subjects (plural)

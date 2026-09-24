@@ -17,30 +17,23 @@ clean_names <- function(name_vector) {
 
 #' Classify gender based on first name or available metadata
 #'
-#' A simple heuristic function. For robust analysis, relies on Wikidata 'gender' field.
+#' Delegates to \code{classify_gender_from_subject()} (Wikidata P21 priority,
+#' then a documented title/term override table, then a genderdata name-lookup
+#' cascade). \code{known_gender}, when supplied and not "unknown"/"", always
+#' wins outright and is returned unchanged.
 #'
 #' @param name Character string
 #' @param known_gender Optional character string (e.g., from Wikidata)
-#' @return "Male", "Female", or "Unknown"
+#' @return "male", "female", "unknown", "animal", or "mixed" (lower-case)
 #' @export
 classify_gender <- function(name, known_gender = NA) {
   if (!is.na(known_gender) && known_gender != "unknown" && known_gender != "") {
     return(known_gender)
   }
-  
+
   if (is.na(name) || name == "") return("unknown")
 
-  # Very basic heuristic for fallback (can be expanded)
-  first_name <- stringr::word(name, 1)
-  
-  # Common lists (placeholders - in real package use a dataset)
-  common_male <- c("John", "William", "George", "Robert", "James", "Charles", "David", "Arthur", "Edward", "Henry", "Richard", "Thomas")
-  common_female <- c("Mary", "Elizabeth", "Victoria", "Anne", "Sarah", "Margaret", "Florence", "Edith", "Catherine", "Alice")
-  
-  if (first_name %in% common_male) return("male")
-  if (first_name %in% common_female) return("female")
-  
-  return("unknown")
+  tolower(classify_gender_from_subject(name, names = NA_character_))
 }
 
 #' Check if a subject is a "Man named John"
