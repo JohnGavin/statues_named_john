@@ -12,8 +12,11 @@ classify_gender(name, known_gender = NA)
 \item{known_gender}{Optional character string (e.g., from Wikidata)}
 }
 \value{
-"Male", "Female", or "Unknown"
+"male", "female", "unknown", "animal", or "mixed" (lower-case)
 }
 \description{
-A simple heuristic function. For robust analysis, relies on Wikidata 'gender' field.
+Delegates to \code{classify_gender_from_subject()} (Wikidata P21 priority,
+then a documented title/term override table, then a genderdata name-lookup
+cascade). \code{known_gender}, when supplied and not "unknown"/"", always
+wins outright and is returned unchanged.
 }
