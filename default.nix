@@ -37,12 +37,14 @@
 #  > "visNetwork",
 #  > "gender"),
 #  > system_pkgs = NULL,
-#  > git_pkgs = NULL,
+#  > git_pkgs = list(package_name = "genderdata",
+#  > repo_url = "https://github.com/lmullen/genderdata",
+#  >      commit = "df16017149a8adb9a75a2dcf734007cab12dd5da"),
 #  > ide = "none",
 #  > project_path = ".",
 #  > overwrite = TRUE,
 #  > print = TRUE,
-#  >      r_ver = "4.5.2")
+#  > r_ver = "4.5.2")
 # It uses the `rstats-on-nix` fork of `nixpkgs` which provides improved
 # compatibility with older R versions and R packages for Linux/WSL and
 # Apple Silicon computers.
@@ -88,6 +90,18 @@ let
       usethis
       visNetwork;
   };
+ 
+    genderdata = (pkgs.rPackages.buildRPackage {
+      name = "genderdata";
+      src = pkgs.fetchgit {
+        url = "https://github.com/lmullen/genderdata";
+        rev = "df16017149a8adb9a75a2dcf734007cab12dd5da";
+        sha256 = "sha256-8DAx6fSFRIEdwReK+h1jDvfjeMxlJNXc65+b1QT9C9U=";
+      };
+      propagatedBuildInputs = builtins.attrValues {
+        inherit (pkgs.rPackages) ;
+      };
+    });
       
   system_packages = builtins.attrValues {
     inherit (pkgs) 
@@ -108,7 +122,7 @@ let
     LC_PAPER = "en_US.UTF-8";
     LC_MEASUREMENT = "en_US.UTF-8";
     
-    buildInputs = [ rpkgs system_packages ];
+    buildInputs = [ genderdata rpkgs system_packages ];
     
   }; 
 in

@@ -47,7 +47,11 @@ rix(
     "gender"
   ),
   system_pkgs = NULL,
-  git_pkgs = NULL,
+  git_pkgs = list(
+    package_name = "genderdata",
+    repo_url = "https://github.com/lmullen/genderdata",
+    commit = "df16017149a8adb9a75a2dcf734007cab12dd5da"
+  ),
   ide = "none",
   project_path = ".",
   overwrite = TRUE,
