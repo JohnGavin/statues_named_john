@@ -1,7 +1,9 @@
 # Classify gender based on first name or available metadata
 
-A simple heuristic function. For robust analysis, relies on Wikidata
-'gender' field.
+Delegates to `classify_gender_from_subject()` (Wikidata P21 priority,
+then a documented title/term override table, then a genderdata
+name-lookup cascade). `known_gender`, when supplied and not
+"unknown"/"", always wins outright and is returned unchanged.
 
 ## Usage
 
@@ -21,4 +23,4 @@ classify_gender(name, known_gender = NA)
 
 ## Value
 
-"Male", "Female", or "Unknown"
+"male", "female", "unknown", "animal", or "mixed" (lower-case)

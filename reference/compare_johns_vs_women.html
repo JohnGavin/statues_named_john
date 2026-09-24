@@ -57,7 +57,13 @@ named John than women in the UK.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with comparison results</p>
+    <p>A list with comparison results:
+  - total_statues, john_statues, woman_statues, john_percent, woman_percent,
+    claim_validated, message (as before)
+  - unknown_statues, unknown_percent: statues whose gender could not be
+    confidently classified (see classify_gender_from_subject())
+  - gender_method: which classification sources were used, in priority
+    order (Wikidata P21, then the genderdata lookup cascade)</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
