@@ -214,14 +214,15 @@ lookup_first_name_gender <- function(names, threshold = 0.9) {
     # the gender::gender() call left this warning able to surface later,
     # e.g. when dplyr re-signals a warning captured while evaluating this
     # function inside a mutate() column expression.
+    # A lookup error is recorded here and re-signalled AFTER this block:
+    # a warning() raised inside suppressWarnings() would itself be muffled,
+    # silently turning a failed lookup into "Unknown" (#84).
+    lookup_error <- NULL
     suppressWarnings({
       preds <- tryCatch(
         gender::gender(remaining, years = m$years, method = m$method),
         error = function(e) {
-          warning(sprintf(
-            "gender lookup via method '%s' failed for %d name(s): %s",
-            m$method, length(remaining), conditionMessage(e)
-          ))
+          lookup_error <<- conditionMessage(e)
           NULL
         }
       )
@@ -235,6 +236,13 @@ lookup_first_name_gender <- function(names, threshold = 0.9) {
         }
       }
     })
+
+    if (!is.null(lookup_error)) {
+      warning(sprintf(
+        "gender lookup via method '%s' failed for %d name(s): %s",
+        m$method, length(remaining), lookup_error
+      ))
+    }
   }
 
   result

@@ -91,6 +91,26 @@ test_that("classify_gender_from_subject: a lookup failure warns and falls back t
   expect_equal(result, "Unknown")
 })
 
+test_that("lookup_first_name_gender: a gender::gender() error surfaces as a warning", {
+  skip_if_not_installed("gender")
+  testthat::local_mocked_bindings(
+    gender = function(...) stop("simulated genderdata failure"),
+    .package = "gender"
+  )
+  warns <- character(0)
+  result <- withCallingHandlers(
+    lookup_first_name_gender(c("Florence", "George")),
+    warning = function(w) {
+      warns <<- c(warns, conditionMessage(w))
+      invokeRestart("muffleWarning")
+    }
+  )
+  # One warning per cascade method (napp, ipums, ssa), none muffled.
+  expect_length(warns, 3)
+  expect_match(warns, "simulated genderdata failure", all = TRUE)
+  expect_true(all(is.na(result)))
+})
+
 test_that("classify_gender_from_subject: animal detection still works", {
   expect_equal(
     classify_gender_from_subject("Trafalgar Square Lion", names = NA_character_),
