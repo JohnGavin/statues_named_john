@@ -15,7 +15,6 @@ pkgs.rPackages.buildRPackage {
     tibble
     sf
     R_utils # R.utils
-    WikidataQueryServiceR
     osmdata
     leaflet
     jsonlite

@@ -30,7 +30,6 @@ rix(
     "tarchetypes",
     "sf",
     "arrow",
-    "WikidataQueryServiceR",
     "osmdata",
     "leaflet",
     "jsonlite",
@@ -47,7 +46,7 @@ rix(
     "visNetwork",
     "gender"
   ),
-  system_pkgs = c("llvmPackages.openmp"),
+  system_pkgs = NULL,
   git_pkgs = list(
     package_name = "genderdata",
     repo_url = "https://github.com/lmullen/genderdata",
