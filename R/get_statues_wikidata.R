@@ -142,6 +142,7 @@ query_wikidata_sparql <- function(sparql_query) {
     url = "https://query.wikidata.org/sparql",
     query = list(query = sparql_query),
     httr::add_headers(Accept = "application/sparql-results+json"),
+    httr::timeout(60), # fail fast instead of hanging on a dead connection (#90)
     httr::user_agent(
       "statuesnamedjohn R package (https://github.com/JohnGavin/statues_named_john)"
     )

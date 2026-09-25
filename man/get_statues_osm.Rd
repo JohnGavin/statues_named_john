@@ -9,7 +9,8 @@ get_statues_osm(
   tags = list(list(key = "memorial", value = "statue"), list(key = "memorial", value =
     "animal"), list(key = "historic", value = "memorial"), list(key = "man_made", value =
     "statue")),
-  cache_path = NULL
+  cache_path = NULL,
+  pause = 2
 )
 }
 \arguments{
@@ -20,14 +21,23 @@ Default is Greater London.}
 historic=memorial, man_made=statue}
 
 \item{cache_path}{Path to cache results (default: NULL)}
+
+\item{pause}{Seconds to wait between queries, to be polite to the
+Overpass API (default: 2)}
 }
 \value{
 A tibble with columns: osm_id, osm_type, name, subject, lat, lon,
-  memorial_type, historic_type, tags_list
+  memorial_type, historic_type, man_made_type, material, wikipedia, source
 }
 \description{
 Queries OpenStreetMap Overpass API for statues and memorials
 using multiple OSM tags to maximize coverage.
+
+Fails fast (#90): any query that cannot be completed aborts the whole
+call immediately, rather than being downgraded to a warning and
+returning partial data. Each request is bounded (see
+\code{osm_fetch_features()}), so a network outage surfaces in seconds,
+not after osmdata's internal ten-try retry loop.
 }
 \examples{
 \dontrun{
