@@ -133,3 +133,49 @@ test_that("osm_fetch_features does not retry a non-retryable HTTP error", {
   expect_error(osm_fetch_features(q_test(), backoff_base = 0), "400|Bad Request")
   expect_equal(n, 1)
 })
+
+test_that("check_overpass_remark catches a remark wrapped across lines", {
+  f <- withr::local_tempfile(fileext = ".osm")
+  writeLines(c('<osm version="0.6">', "<remark>", "  runtime error: Query timed out", "</remark>", "</osm>"), f)
+  expect_error(check_overpass_remark(f), "runtime error")
+})
+
+test_that("an upstream error message containing braces is reported verbatim", {
+  testthat::local_mocked_bindings(
+    osm_fetch_features = function(q, ...) stop("parse failed near {node id=1}")
+  )
+  expect_error(get_statues_osm(tags = tags4, pause = 0), "parse failed near \\{node id=1\\}")
+})
+
+test_that("a fractional backoff_base does not break the retry message", {
+  n <- 0
+  testthat::local_mocked_bindings(
+    POST = function(...) {
+      n <<- n + 1
+      structure(list(status_code = 503L, url = "https://overpass", headers = list()), class = "response")
+    },
+    .package = "httr"
+  )
+  expect_error(
+    suppressMessages(osm_fetch_features(q_test(), max_tries = 2, backoff_base = 0.001)),
+    "503|Service Unavailable"
+  )
+  expect_equal(n, 2)
+})
+
+test_that("osm_fetch_features posts to the configured Overpass URL", {
+  seen <- character(0)
+  testthat::local_mocked_bindings(
+    POST = function(url, ...) {
+      seen <<- c(seen, url)
+      stop("stop after recording the URL")
+    },
+    .package = "httr"
+  )
+  expect_error(osm_fetch_features(q_test()), "stop after recording")
+  expect_equal(seen, "https://overpass-api.de/api/interpreter")
+
+  withr::local_options(statuesnamedjohn.overpass_url = "https://overpass.example/api/interpreter")
+  expect_error(osm_fetch_features(q_test()), "stop after recording")
+  expect_equal(seen[2], "https://overpass.example/api/interpreter")
+})

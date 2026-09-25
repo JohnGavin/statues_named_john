@@ -70,7 +70,8 @@ get_statues_osm <- function(bbox = c(-0.510375, 51.28676, 0.334015, 51.691874),
         cli::cli_abort(
           c(
             "OSM query {i}/{length(tags)} ({tag_label}) failed; aborting without partial data.",
-            "x" = conditionMessage(e)
+            # interpolated, so braces in upstream messages are not parsed by cli
+            "x" = "{conditionMessage(e)}"
           ),
           call = NULL
         )
@@ -169,12 +170,17 @@ get_statues_osm <- function(bbox = c(-0.510375, 51.28676, 0.334015, 51.691874),
 #'   instance rather than \code{osmdata::get_overpass_url()}, whose default
 #'   mirror (overpass.kumi.systems) returned HTTP 504 after 66s for the
 #'   London memorial=statue query on 2026-09-25 while overpass-api.de
-#'   answered in 13s.
+#'   answered in 13s. Override per session with
+#'   \code{options(statuesnamedjohn.overpass_url = "...")} (e.g. a local
+#'   Overpass instance for CI).
 #'
 #' @return The \code{osmdata} object from \code{osmdata::osmdata_sf()}.
 #' @noRd
 osm_fetch_features <- function(q, timeout_s = 90, max_tries = 3, backoff_base = 5,
-                               url = "https://overpass-api.de/api/interpreter") {
+                               url = getOption(
+                                 "statuesnamedjohn.overpass_url",
+                                 "https://overpass-api.de/api/interpreter"
+                               )) {
   xml_path <- tempfile(fileext = ".osm")
   on.exit(unlink(xml_path), add = TRUE)
 
@@ -198,7 +204,7 @@ osm_fetch_features <- function(q, timeout_s = 90, max_tries = 3, backoff_base = 
     retryable <- status == 429L || status >= 500L
     if (!retryable || attempt == max_tries) break
     wait <- min(backoff_base * 2^(attempt - 1), 30)
-    message(sprintf("    Overpass HTTP %d; retry %d/%d in %ds",
+    message(sprintf("    Overpass HTTP %d; retry %d/%d in %.0fs",
                     status, attempt, max_tries - 1, wait))
     Sys.sleep(wait)
   }
@@ -217,13 +223,14 @@ osm_fetch_features <- function(q, timeout_s = 90, max_tries = 3, backoff_base = 
 #' @return \code{NULL}, invisibly, when no error remark is present.
 #' @noRd
 check_overpass_remark <- function(xml_path) {
-  lines <- readLines(xml_path, warn = FALSE)
-  remark <- grep("<remark>.*(runtime error|timed out|out of memory)", lines,
-                 value = TRUE, ignore.case = TRUE)
-  if (length(remark) > 0) {
+  # Whole file as one string, so a <remark> wrapped across lines still matches
+  text <- paste(readLines(xml_path, warn = FALSE), collapse = "\n")
+  remark <- regmatches(text, regexpr("(?s)<remark>.*?</remark>", text, perl = TRUE))
+  if (length(remark) > 0 &&
+      grepl("runtime error|timed out|out of memory", remark, ignore.case = TRUE)) {
+    msg <- trimws(gsub("</?remark>|\\s+", " ", remark))
     cli::cli_abort(
-      c("Overpass returned a truncated result.",
-        "x" = trimws(gsub("</?remark>", "", remark[1]))),
+      c("Overpass returned a truncated result.", "x" = "{msg}"),
       call = NULL
     )
   }
