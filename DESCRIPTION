@@ -24,9 +24,11 @@ Imports:
     leaflet,
     jsonlite,
     readr,
-    gender
+    gender,
+    cli
 Suggests:
     testthat (>= 3.0.0),
+    withr,
     knitr,
     rmarkdown,
     ggplot2,
