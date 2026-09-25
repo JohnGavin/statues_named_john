@@ -27,7 +27,8 @@ documentation_plan <- list(
         memorial_map_plot,
         memorial_interactive_map,
         johns_comparison,
-        findings
+        findings,
+        gender_analysis # read by the vignette; must trigger a re-render (#84)
       )
 
       # Ensure output directory exists for Quarto (project root)
@@ -80,8 +81,11 @@ documentation_plan <- list(
   tar_target(
     pkgdown_site,
     {
-      # Ensure vignettes are rendered first (explicit dependency)
-      stopifnot(file.exists("vignettes/memorial-analysis.html"))
+      # Referencing the vignette target makes targets render it BEFORE this
+      # step. A bare file.exists() check was always satisfied by the
+      # committed HTML, so the site could be built from a stale vignette.
+      vignette_html <- vignette_memorial_analysis_html
+      stopifnot(file.exists(vignette_html))
 
       # Clean docs/ directory to avoid permission issues
       if (dir.exists("docs")) {
@@ -106,7 +110,7 @@ documentation_plan <- list(
       dir.create("docs/articles", recursive = TRUE, showWarnings = FALSE)
       
       # Copy the pre-built vignette
-      file.copy("vignettes/memorial-analysis.html", "docs/articles/memorial-analysis.html", overwrite = TRUE)
+      file.copy(vignette_html, "docs/articles/memorial-analysis.html", overwrite = TRUE)
 
       # Create a minimal articles index.html (required by pkgdown_verification)
       writeLines(c(
