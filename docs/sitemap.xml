@@ -17,6 +17,7 @@
 <url><loc>https://johngavin.github.io/statues_named_john/reference/extract_coords_from_wkt.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/fetch_art_uk_data.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/fetch_historic_england_data.html</loc></url>
+<url><loc>https://johngavin.github.io/statues_named_john/reference/fetch_optional_source.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/fetch_osm_statues.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/fetch_page.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/fetch_wikidata_statues.html</loc></url>
@@ -35,6 +36,7 @@
 <url><loc>https://johngavin.github.io/statues_named_john/reference/lookup_first_name_gender.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/map_statues.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/search_memorials.html</loc></url>
+<url><loc>https://johngavin.github.io/statues_named_john/reference/source_row.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/standardize_statue_data.html</loc></url>
 </urlset>
 
