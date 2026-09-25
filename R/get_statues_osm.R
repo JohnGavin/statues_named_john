@@ -165,14 +165,19 @@ get_statues_osm <- function(bbox = c(-0.510375, 51.28676, 0.334015, 51.691874),
 #' @param max_tries Maximum attempts for retryable HTTP statuses.
 #' @param backoff_base Seconds before the first retry; doubles per retry,
 #'   capped at 30.
+#' @param url Overpass endpoint. Defaults to the main overpass-api.de
+#'   instance rather than \code{osmdata::get_overpass_url()}, whose default
+#'   mirror (overpass.kumi.systems) returned HTTP 504 after 66s for the
+#'   London memorial=statue query on 2026-09-25 while overpass-api.de
+#'   answered in 13s.
 #'
 #' @return The \code{osmdata} object from \code{osmdata::osmdata_sf()}.
 #' @noRd
-osm_fetch_features <- function(q, timeout_s = 90, max_tries = 3, backoff_base = 5) {
+osm_fetch_features <- function(q, timeout_s = 90, max_tries = 3, backoff_base = 5,
+                               url = "https://overpass-api.de/api/interpreter") {
   xml_path <- tempfile(fileext = ".osm")
   on.exit(unlink(xml_path), add = TRUE)
 
-  url <- osmdata::get_overpass_url()
   body <- osmdata::opq_string(q)
 
   # Explicit loop rather than httr::RETRY(): RETRY (httr 1.4.7) also retries
