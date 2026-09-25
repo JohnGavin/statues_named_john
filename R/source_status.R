@@ -43,6 +43,9 @@ fetch_optional_source <- function(source, expr) {
 #'   "empty"), \code{rows}, \code{reason} (\code{NA}).
 #' @export
 source_row <- function(source, data) {
+  if (!is.data.frame(data)) {
+    cli::cli_abort("{source}: fetch returned {.cls {class(data)}}, not a data frame.", call = NULL)
+  }
   rows <- nrow(data)
   tibble::tibble(
     source = source,
@@ -50,4 +53,20 @@ source_row <- function(source, data) {
     rows = as.integer(rows),
     reason = NA_character_
   )
+}
+
+#' Should the optional GLHER fetch be re-run?
+#'
+#' Used as a \code{tar_cue_force()} condition: TRUE when no stored
+#' \code{glher_fetch} exists or its status is anything but "ok", so an
+#' "unavailable" or "empty" result is retried on the next \code{tar_make()}
+#' rather than cached.
+#'
+#' @param store Path to the targets store.
+#' @return Logical scalar.
+#' @noRd
+glher_needs_refetch <- function(store = targets::tar_config_get("store")) {
+  prev <- tryCatch(targets::tar_read_raw("glher_fetch", store = store),
+                   error = function(e) NULL)
+  !identical(prev$status$status, "ok")
 }

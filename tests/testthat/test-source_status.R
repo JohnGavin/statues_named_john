@@ -35,3 +35,22 @@ test_that("source_row summarises a required source", {
   expect_equal(s$rows, 2L)
   expect_equal(source_row("osm", tibble::tibble())$status, "empty")
 })
+
+test_that("source_row gives a clear error for a non-data-frame", {
+  expect_error(source_row("glher", NULL), "not a data frame")
+})
+
+test_that("glher_needs_refetch is TRUE unless the stored status is ok", {
+  store <- withr::local_tempdir()
+  expect_true(glher_needs_refetch(store))  # nothing stored yet
+  testthat::local_mocked_bindings(
+    tar_read_raw = function(name, store) list(status = tibble::tibble(status = "unavailable")),
+    .package = "targets"
+  )
+  expect_true(glher_needs_refetch(store))
+  testthat::local_mocked_bindings(
+    tar_read_raw = function(name, store) list(status = tibble::tibble(status = "ok")),
+    .package = "targets"
+  )
+  expect_false(glher_needs_refetch(store))
+})

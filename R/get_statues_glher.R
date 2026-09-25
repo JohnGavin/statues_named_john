@@ -64,7 +64,13 @@ get_statues_glher <- function(concept = list(
     }
     j <- glher_get_page(page, term_filter)
     hits <- j$results$hits
-    if (is.na(reported_total)) reported_total <- as.integer(hits$total$value)
+    if (is.na(reported_total)) {
+      if (!is.numeric(hits$total$value) || length(hits$total$value) != 1) {
+        cli::cli_abort("GLHER search response has no results$hits$total$value; the API may have changed.",
+                       call = NULL)
+      }
+      reported_total <- as.integer(hits$total$value)
+    }
     pages[[page]] <- parse_glher_hits(hits$hits)
     if (!isTRUE(j$`paging-filter`$paginator$has_next)) break
     page <- page + 1

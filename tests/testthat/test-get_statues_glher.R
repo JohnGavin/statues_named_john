@@ -86,3 +86,25 @@ test_that("get_statues_glher fails with the HTTP status on an error response", {
   )
   expect_error(suppressMessages(get_statues_glher(pause = 0)), "403")
 })
+
+test_that("parse_glher_hits handles missing displayname, no ID bracket and mid-name parentheses", {
+  hits <- list(
+    list(`_source` = list(displayname = NULL, points = list(), resourceinstanceid = "a")),
+    list(`_source` = list(displayname = "Statue of Eros (Piccadilly) Fountain (Victorian Statue)",
+                          points = list(), resourceinstanceid = "b"))
+  )
+  res <- parse_glher_hits(hits)
+  expect_equal(nrow(res), 2)
+  expect_true(is.na(res$glher_id[1]) && is.na(res$name[1]))
+  expect_true(is.na(res$glher_id[2]))
+  expect_equal(res$name[2], "Statue of Eros (Piccadilly) Fountain")
+  expect_equal(res$type[2], "Victorian Statue")
+})
+
+test_that("get_statues_glher fails clearly when the response has no total", {
+  testthat::local_mocked_bindings(
+    GET = function(...) json_response('{"results": {"hits": {"hits": []}}, "paging-filter": {}}'),
+    .package = "httr"
+  )
+  expect_error(suppressMessages(get_statues_glher(pause = 0)), "no results\\$hits\\$total")
+})
