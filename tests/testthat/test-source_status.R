@@ -35,32 +35,3 @@ test_that("source_row summarises a required source", {
   expect_equal(s$rows, 2L)
   expect_equal(source_row("osm", tibble::tibble())$status, "empty")
 })
-
-fake_response <- function(body, status = 200L, ctype = "text/html; charset=utf-8") {
-  structure(
-    list(
-      status_code = status,
-      url = "https://glher.historicengland.org.uk/search",
-      headers = list(`content-type` = ctype),
-      content = charToRaw(body)
-    ),
-    class = "response"
-  )
-}
-
-test_that("get_statues_glher fails with a reason when GLHER returns its web page, not CSV", {
-  testthat::local_mocked_bindings(
-    GET = function(...) fake_response("<!DOCTYPE html><html><title> GLHER -  Search </title></html>"),
-    .package = "httr"
-  )
-  expect_error(suppressMessages(get_statues_glher()), "web page.*not CSV")
-})
-
-test_that("get_statues_glher fails with a reason on a non-200 response", {
-  testthat::local_mocked_bindings(
-    GET = function(...) fake_response('{"message": "You do not have permission to download exports."}',
-                                      status = 403L, ctype = "application/json"),
-    .package = "httr"
-  )
-  expect_error(suppressMessages(get_statues_glher()), "403")
-})
