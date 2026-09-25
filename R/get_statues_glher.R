@@ -86,52 +86,52 @@ get_statues_glher <- function(query_terms = c("person", "statue"),
   message("Search terms: ", paste(query_terms, collapse = ", "))
   message("Resource type: ", resource_type)
 
-  # Download CSV
-  tryCatch({
-    response <- httr::GET(base_url, query = params)
+  # Download CSV. Any failure is an error with its reason, never a silent
+  # empty tibble; get_statues_glher() callers that treat GLHER as optional
+  # wrap it in fetch_optional_source() (#94).
+  response <- httr::GET(base_url, query = params, httr::timeout(60))
 
-    if (httr::status_code(response) != 200) {
-      stop("GLHER request failed with status ", httr::status_code(response))
-    }
+  status <- httr::status_code(response)
+  if (status != 200) {
+    cli::cli_abort("GLHER request failed with HTTP {status}.", call = NULL)
+  }
 
-    # Parse CSV
-    content_text <- httr::content(response, as = "text", encoding = "UTF-8")
-    
-    # Check for HTML response (scraper blocked)
-    if (substr(content_text, 1, 1) == "<") {
-      warning("GLHER returned HTML instead of CSV. Direct download likely blocked or API changed.")
-      return(tibble::tibble())
-    }
+  content_text <- httr::content(response, as = "text", encoding = "UTF-8")
 
-    statues_glher_raw <- readr::read_csv(content_text, show_col_types = FALSE)
+  # /search serves the GLHER search web page, not a CSV export. The real
+  # export endpoint (/search/export_results) returns HTTP 403 without an
+  # account that has export permission. See #94.
+  if (startsWith(trimws(content_text), "<")) {
+    cli::cli_abort(
+      c("GLHER returned its search web page, not CSV.",
+        "i" = "/search is not an export endpoint; /search/export_results needs an account with export permission (#94)."),
+      call = NULL
+    )
+  }
 
-    message("Retrieved ", nrow(statues_glher_raw), " records from GLHER")
+  statues_glher_raw <- readr::read_csv(content_text, show_col_types = FALSE)
 
-    # Standardize column names and extract coordinates
-    statues_glher <- statues_glher_raw %>%
-      dplyr::transmute(
-        glher_id = `Monument ID`,  # Adjust based on actual column names
-        name = Name,
-        description = Description,
-        type = `Monument Type`,
-        lat = Latitude,
-        lon = Longitude,
-        period = Period,
-        url = sprintf("https://glher.historicengland.org.uk/monument/%s", `Monument ID`),
-        source = "glher"
-      )
+  message("Retrieved ", nrow(statues_glher_raw), " records from GLHER")
 
-    # Cache if requested
-    if (!is.null(cache_path)) {
-      saveRDS(statues_glher, cache_path)
-      message("Cached results to ", cache_path)
-    }
+  # Standardize column names and extract coordinates
+  statues_glher <- statues_glher_raw %>%
+    dplyr::transmute(
+      glher_id = `Monument ID`,  # Adjust based on actual column names
+      name = Name,
+      description = Description,
+      type = `Monument Type`,
+      lat = Latitude,
+      lon = Longitude,
+      period = Period,
+      url = sprintf("https://glher.historicengland.org.uk/monument/%s", `Monument ID`),
+      source = "glher"
+    )
 
-    return(statues_glher)
+  # Cache if requested
+  if (!is.null(cache_path)) {
+    saveRDS(statues_glher, cache_path)
+    message("Cached results to ", cache_path)
+  }
 
-  }, error = function(e) {
-    warning("Error retrieving GLHER data: ", e$message)
-    warning("Note: Column names may need adjustment based on actual GLHER CSV format")
-    return(tibble::tibble())
-  })
+  return(statues_glher)
 }

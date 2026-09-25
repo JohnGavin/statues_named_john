@@ -4,7 +4,20 @@ memorial_analysis_plan <- list(
   # Fetch data
   tar_target(wikidata_raw, get_statues_wikidata()),
   tar_target(osm_raw, get_statues_osm()),
-  tar_target(glher_raw, get_statues_glher()),
+  # GLHER is optional and currently unavailable (#94): record why, rather
+  # than letting it look like a source that simply has no statues.
+  tar_target(glher_fetch, fetch_optional_source("glher", get_statues_glher()), format = "rds"),
+  tar_target(glher_raw, glher_fetch$data),
+
+  # Per-source row counts and status (ok / empty / unavailable + reason)
+  tar_target(
+    source_status,
+    dplyr::bind_rows(
+      source_row("wikidata", wikidata_raw),
+      source_row("osm", osm_raw),
+      glher_fetch$status
+    )
+  ),
 
   # Standardize
   tar_target(wikidata_std, standardize_statue_data(wikidata_raw, "wikidata")),

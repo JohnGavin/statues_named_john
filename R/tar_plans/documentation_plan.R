@@ -13,6 +13,13 @@
 documentation_plan <- list(
   # ── Vignette Rendering ────────────────────────────────────────────────
 
+  # Track the vignette source itself, so editing the .qmd re-renders it
+  tar_target(
+    vignette_memorial_analysis_qmd,
+    "inst/qmd/memorial-analysis.qmd",
+    format = "file"
+  ),
+
   # Render memorial-analysis vignette to HTML
   # Explicitly depends on data targets by referencing them in command
   tar_target(
@@ -38,7 +45,7 @@ documentation_plan <- list(
       # Quarto outputs to the directory of the input file.
       # output_file is just the filename.
       quarto::quarto_render(
-        input = "inst/qmd/memorial-analysis.qmd",
+        input = vignette_memorial_analysis_qmd,
         output_file = "memorial-analysis.html", # This will create inst/qmd/memorial-analysis.html
         quiet = FALSE,
         execute_dir = getwd() # Still execute from root to find targets store
@@ -137,13 +144,15 @@ documentation_plan <- list(
   tar_target(
     pkgdown_verification,
     {
-      # Check key files exist
-      required_files <- c(
-        "docs/index.html",
-        "docs/reference/index.html",
-        "docs/articles/index.html",
-        "docs/articles/memorial-analysis.html"
-      )
+      # Referencing pkgdown_site makes this run AFTER the site is built;
+      # otherwise it checked whatever docs/ was already committed.
+      site_dir <- pkgdown_site
+      required_files <- file.path(site_dir, c(
+        "index.html",
+        "reference/index.html",
+        "articles/index.html",
+        "articles/memorial-analysis.html"
+      ))
 
       missing <- required_files[!file.exists(required_files)]
 
@@ -153,8 +162,8 @@ documentation_plan <- list(
       }
 
       message("✅ pkgdown site built successfully")
-      message("📄 Articles: ", length(list.files("docs/articles", pattern = "\\.html$")))
-      message("📚 Reference: ", length(list.files("docs/reference", pattern = "\\.html$")))
+      message("📄 Articles: ", length(list.files(file.path(site_dir, "articles"), pattern = "\\.html$")))
+      message("📚 Reference: ", length(list.files(file.path(site_dir, "reference"), pattern = "\\.html$")))
 
       data.frame(success = TRUE)
     }
