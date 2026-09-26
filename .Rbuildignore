@@ -30,3 +30,4 @@
 ^TESTING_LOG\.md$
 ^WIKI_CONTENT$
 ^inst/qmd/.*_files$
+^CHANGELOG\.md$
