@@ -1,0 +1,63 @@
+{
+ "paging-filter": {
+  "paginator": {
+   "current_page": 1,
+   "has_next": false,
+   "pages": [
+    1
+   ]
+  }
+ },
+ "results": {
+  "hits": {
+   "total": {
+    "relation": "eq",
+    "value": 3
+   },
+   "hits": [
+    {
+     "_source": {
+      "displayname": "[149436] West Norwood Memorial Park Tomb of Elizabeth King (Early 20th Century Tomb)",
+      "displaydescription": "Built in 1922 the tomb has a marble figure and is dedicated to Elizabeth King.",
+      "points": [
+       {
+        "nodegroup_id": "87d3872b-f44f-11eb-bd0c-a87eeabdefba",
+        "point": {
+         "lat": 51.43219985540678,
+         "lon": -0.099080832276619
+        },
+        "provisional": false
+       }
+      ],
+      "resourceinstanceid": "f49e8134-10a5-493d-89f6-736971a079bd"
+     }
+    },
+    {
+     "_source": {
+      "displayname": "[148001] Grimsdyke (Victorian Garden)",
+      "displaydescription": "Gardens and pleasure grounds laid out in the 1870s as the setting to a private residence, developed and extended in the 1890s and early 1900s.",
+      "points": [
+       {
+        "nodegroup_id": "87d3872b-f44f-11eb-bd0c-a87eeabdefba",
+        "point": {
+         "lat": 51.62285184149188,
+         "lon": -0.35347367954603603
+        },
+        "provisional": false
+       }
+      ],
+      "resourceinstanceid": "ee757d64-1757-4337-89c7-00af79f7f923"
+     }
+    },
+    {
+     "_source": {
+      "displayname": "[98867] The Guards Memorial (Early 20th Century War Memorial)",
+      "displaydescription": "War memorial by Gilbert Ledward (sculptor) and Harold Chalton Bradshaw (architect). Unveiled in 1926 by the Duke of Connaught (Senior Colonel of the Guards) and Gen. George Higginson, a Crimean veteran.",
+      "points": [],
+      "resourceinstanceid": "1290fc86-78e5-4eb3-a8f6-3f8049d1acf1"
+     }
+    }
+   ]
+  }
+ }
+}
