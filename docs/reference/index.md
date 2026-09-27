@@ -20,6 +20,8 @@
   : Fetch data from Art UK
 - [`fetch_historic_england_data()`](https://johngavin.github.io/statues_named_john/reference/fetch_historic_england_data.md)
   : Fetch data from Historic England
+- [`fetch_optional_source()`](https://johngavin.github.io/statues_named_john/reference/fetch_optional_source.md)
+  : Fetch an optional data source, recording its status explicitly
 - [`fetch_osm_statues()`](https://johngavin.github.io/statues_named_john/reference/fetch_osm_statues.md)
   : Fetch statues from OpenStreetMap
 - [`fetch_wikidata_statues()`](https://johngavin.github.io/statues_named_john/reference/fetch_wikidata_statues.md)
@@ -50,5 +52,7 @@
   : Create Interactive Map of Statues with Popup Information
 - [`search_memorials()`](https://johngavin.github.io/statues_named_john/reference/search_memorials.md)
   : Search for memorials
+- [`source_row()`](https://johngavin.github.io/statues_named_john/reference/source_row.md)
+  : One-row status summary for a fetched source
 - [`standardize_statue_data()`](https://johngavin.github.io/statues_named_john/reference/standardize_statue_data.md)
   : Standardize Statue Data to Common Schema

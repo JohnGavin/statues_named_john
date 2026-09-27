@@ -1,32 +1,43 @@
 # Retrieve Statue Data from Greater London HER
 
-Downloads CSV data from Greater London Historic Environment Record
-(GLHER) for monuments tagged as statues or person memorials.
+Retrieves monuments classified as *Statue* from the Greater London
+Historic Environment Record (GLHER) via its public Arches search API
+(`/search/resources`), paging through all results.
+
+The bulk CSV export (`/search/export_results`) requires an account with
+export permission and returns HTTP 403 otherwise; the public search API
+does not (#94). Any failure is an error with its reason: a non-200
+response, a non-JSON body, fewer records than GLHER reports, or more
+pages than `max_pages`.
 
 ## Usage
 
 ``` r
 get_statues_glher(
-  query_terms = c("person", "statue"),
-  resource_type = "Monument",
-  max_results = 500,
+  concept = list(value = "f5a0bff9-b5fc-346f-814f-036d5d38bed6", context =
+    "e2100069-d1ec-3a4d-88e8-a2b4c5a5c536", context_label =
+    "Gardens Parks And Urban Spaces", text = "Statue"),
+  max_pages = 100,
+  pause = 1,
   cache_path = NULL
 )
 ```
 
 ## Arguments
 
-- query_terms:
+- concept:
 
-  Search terms (default: c("person", "statue"))
+  Arches concept filter for the monument type. Defaults to GLHER's
+  "Statue" concept in the Gardens Parks And Urban Spaces thesaurus (302
+  records on 2026-09-25); "Equestrian Statue" maps to the same concept.
 
-- resource_type:
+- max_pages:
 
-  Resource type filter (default: "Monument")
+  Safety cap on pages requested (10 records per page).
 
-- max_results:
+- pause:
 
-  Maximum results to retrieve (default: 500)
+  Seconds to wait between page requests.
 
 - cache_path:
 
@@ -35,24 +46,12 @@ get_statues_glher(
 ## Value
 
 A tibble with columns: glher_id, name, description, type, lat, lon,
-period, url
-
-## Details
-
-GLHER provides professional heritage data with high quality metadata and
-precise coordinates. The CSV export is accessed via URL parameters.
+period, url, source
 
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
-# Get person statues from GLHER
 glher_statues <- get_statues_glher()
-
-# Get all monument types
-glher_monuments <- get_statues_glher(
-  query_terms = NULL,
-  max_results = 1000
-)
 } # }
 ```
