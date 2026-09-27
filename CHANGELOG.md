@@ -3,6 +3,36 @@
 Session log: what was done, what failed and why, measurable changes, and
 known limitations. Newest first.
 
+## 2026-09-27
+
+### Completed
+- Merged #96 (site re-rendered with GLHER) and #97 (this changelog).
+  Live vignette verified: 2,301 statues; Johns 74 (3.2%), women 251
+  (10.9%), unknown 833 (36.2%); no error text.
+- Removed 10 finished worktrees from the 2026-09-24/25 work.
+- Posted a reply on #61 explaining how the slow pkgdown build was
+  diagnosed (pak's per-package "Built" vs "Installed" lines).
+- Triaged the 3 open roborev reviews for this repo (10447, 10448, 10451,
+  on the original #84 commits). The High finding was already fixed
+  (127ef95); the still-valid Medium/Low findings are filed as #98 and the
+  reviews closed with a pointer to it. Repo roborev: 26/26 failed verdicts
+  addressed.
+
+### Failed Approaches
+- First post-merge fetch of the live vignette still showed the #93
+  numbers although gh-pages and the Pages build were already correct; a
+  re-fetch minutes later showed the new page. Poll the deployed page
+  for a headline string before concluding a deploy failed.
+- `roborev comment <id>` takes job IDs, not review IDs ("job not found");
+  map via `reviews.job_id` or use `--job`.
+
+### Known Limitations
+- #98: "Mixed" statues (9) are excluded from the women count and the
+  headline message; animal detection outranks person titles ("Duke of
+  Wellington on horse" -> Animal); the person-split regex misses
+  "A, B" and "A And B".
+- PR #83 (December #7/#8 vignette work) is still open against an old base.
+
 ## 2026-09-25
 
 ### Completed
