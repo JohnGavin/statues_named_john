@@ -12,7 +12,10 @@ compare_johns_vs_women(statue_data)
 \value{
 A list with comparison results:
   - total_statues, john_statues, woman_statues, john_percent, woman_percent,
-    claim_validated, message (as before)
+    claim_validated, message. \code{woman_statues} counts every statue
+    that depicts a woman: \code{woman_only_statues} (only women) plus
+    \code{mixed_statues} (a woman together with a man, e.g. "Queen
+    Victoria and Prince Albert").
   - unknown_statues, unknown_percent: statues whose gender could not be
     confidently classified (see classify_gender_from_subject())
   - gender_method: which classification sources were used, in priority
