@@ -181,3 +181,55 @@ test_that("compare_johns_vs_women reports unknown statues and the gender method 
   expect_equal(result$unknown_percent, round(100 * 1 / 6, 2))
   expect_match(result$message, "unknown", ignore.case = TRUE)
 })
+
+test_that("compare_johns_vs_women counts a woman paired with a man as a statue of a woman (#98)", {
+  testthat::local_mocked_bindings(
+    lookup_first_name_gender = function(names, threshold = 0.9) {
+      lookup <- c(john = "Male", mary = "Female")
+      stats::setNames(unname(lookup[tolower(names)]), names)
+    }
+  )
+
+  mock_data <- tibble::tibble(
+    subject = rep(NA_character_, 6),
+    name = c(
+      "John Smith", "Queen Victoria", "Mary Jones",
+      "Trafalgar Square Lion", "Xyzzyplonk Nonexistentname", "John and Mary"
+    ),
+    subject_gender = NA_character_,
+    type = "statue",
+    source = "test"
+  )
+
+  result <- compare_johns_vs_women(mock_data)
+
+  # Queen Victoria and Mary Jones are women-only; "John and Mary" is Mixed
+  expect_equal(result$woman_only_statues, 2L)
+  expect_equal(result$mixed_statues, 1L)
+  expect_equal(result$woman_statues, 3L)
+  expect_equal(result$woman_percent, round(100 * 3 / 6, 2))
+  expect_match(result$message, "3 women statues")
+  expect_match(result$message, "1 of a woman with a man")
+  # The Mixed statue also contains a John, so it still counts as a John statue
+  expect_equal(result$john_statues, 2L)
+  expect_false(result$claim_validated)
+})
+
+test_that("a statue of a man and an unresolved name is not counted as a woman", {
+  testthat::local_mocked_bindings(
+    lookup_first_name_gender = function(names, threshold = 0.9) {
+      lookup <- c(john = "Male")
+      stats::setNames(unname(lookup[tolower(names)]), names)
+    }
+  )
+  mock_data <- tibble::tibble(
+    subject = NA_character_,
+    name = "John Smith and Xyzzyplonk Nonexistentname",
+    subject_gender = NA_character_,
+    type = "statue",
+    source = "test"
+  )
+  result <- compare_johns_vs_women(mock_data)
+  expect_equal(result$mixed_statues, 0L)
+  expect_equal(result$woman_statues, 0L)
+})

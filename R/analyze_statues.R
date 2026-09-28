@@ -341,7 +341,10 @@ classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping 
 #'
 #' @return A list with comparison results:
 #'   - total_statues, john_statues, woman_statues, john_percent, woman_percent,
-#'     claim_validated, message (as before)
+#'     claim_validated, message. \code{woman_statues} counts every statue
+#'     that depicts a woman: \code{woman_only_statues} (only women) plus
+#'     \code{mixed_statues} (a woman together with a man, e.g. "Queen
+#'     Victoria and Prince Albert").
 #'   - unknown_statues, unknown_percent: statues whose gender could not be
 #'     confidently classified (see classify_gender_from_subject())
 #'   - gender_method: which classification sources were used, in priority
@@ -364,14 +367,19 @@ compare_johns_vs_women <- function(statue_data) {
     dplyr::filter(stringr::str_detect(extracted_names, "(?i)^(john|jon|jonathan|jean|jonny)$")) %>%
     nrow()
 
-  # Count women (using the row-level classification)
-  # Note: A statue with 2 women counts as 1 statue record in 'classified',
-  # but here we are comparing "statues of Johns" vs "statues of women".
-  # The claim is usually about *number of statues*, not *number of people*.
-  # So we count rows in 'classified' where gender is Female.
-  women <- classified %>%
+  # Count statues of women (row-level classification). The claim is about
+  # *number of statues*, not *number of people*, so a statue with 2 women
+  # counts once. A "Mixed" statue is one whose resolved people include both
+  # a woman and a man (e.g. "Queen Victoria and Prince Albert"); it depicts
+  # a woman, so it counts as a statue of a woman (#98). Johns are counted
+  # independently, so such a statue can also count as a John statue.
+  woman_only <- classified %>%
     dplyr::filter(inferred_gender == "Female") %>%
     nrow()
+  mixed <- classified %>%
+    dplyr::filter(inferred_gender == "Mixed") %>%
+    nrow()
+  women <- woman_only + mixed
 
   # Count statues whose gender could not be confidently classified at all.
   unknown_statues <- classified %>%
@@ -386,6 +394,8 @@ compare_johns_vs_women <- function(statue_data) {
     total_statues = total,
     john_statues = johns,
     woman_statues = women,
+    woman_only_statues = woman_only,
+    mixed_statues = mixed,
     john_percent = round(100 * johns / total, 2),
     woman_percent = round(100 * women / total, 2),
     unknown_statues = unknown_statues,
@@ -393,8 +403,8 @@ compare_johns_vs_women <- function(statue_data) {
     claim_validated = johns > women,
     gender_method = "wikidata_p21+genderdata_napp_ipums_ssa",
     message = sprintf(
-      "Found %d statues named John/Jon/Jean (%.1f%%) vs %d women statues (%.1f%%). %d statues (%.1f%%) have unknown gender.",
-      johns, 100 * johns / total, women, 100 * women / total, unknown_statues, unknown_percent
+      "Found %d statues named John/Jon/Jean (%.1f%%) vs %d women statues (%.1f%%, including %d of a woman with a man). %d statues (%.1f%%) have unknown gender.",
+      johns, 100 * johns / total, women, 100 * women / total, mixed, unknown_statues, unknown_percent
     )
   )
 
