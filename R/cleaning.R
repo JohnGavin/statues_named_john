@@ -153,7 +153,10 @@ join_and_clean_data <- function(wikidata_df, osm_df) {
   # OSM 'subject' might need gender inference
   osm_clean <- osm_df %>%
     dplyr::mutate(
-      gender = purrr::map_chr(subject, classify_gender),
+      # One vectorised call (lookup tables read once, names looked up in one
+      # batch) instead of classify_gender() per row (#98 item 9). Same
+      # result as classify_gender(): lower case, "unknown" for missing.
+      gender = tolower(classify_gender_from_subject(subject, names = NA_character_)),
       subject_category = purrr::map2_chr(subject, gender, classify_subject),
       date = NA_character_,
       creator = NA_character_

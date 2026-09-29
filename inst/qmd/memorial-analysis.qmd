@@ -88,7 +88,13 @@ if (dir.exists(store_path)) {
 
 ```{r summary-stats}
 knitr::kable(summary_table,
-             caption = "Gender Representation Summary")
+             caption = paste0(
+               "Gender Representation Summary. 'Mixed' statues depict a woman ",
+               "together with a man; the headline below counts them as statues ",
+               "of women (", johns_comparison$woman_only_statues, " Female + ",
+               johns_comparison$mixed_statues, " Mixed = ",
+               johns_comparison$woman_statues, ")."
+             ))
 ```
 
 ## Top Names by Gender
@@ -151,8 +157,10 @@ Our analysis of London-specific data finds:
 
 **Validation**: The claim that there are "more statues of men named John than of women" is **`r if(johns_comparison$claim_validated) "supported" else "refuted"`** by our current London dataset.
 
-* **Men named John**: `r johns_comparison$john_statues` (`r johns_comparison$john_percent`%)
-* **Women**: `r johns_comparison$woman_statues` (`r johns_comparison$woman_percent`%), of which `r johns_comparison$woman_only_statues` depict only women and `r johns_comparison$mixed_statues` depict a woman together with a man
+* **Men named John**: `r johns_comparison$john_statues` (`r sprintf("%.1f", johns_comparison$john_percent)`%)
+* **Women**: `r johns_comparison$woman_statues` (`r sprintf("%.1f", johns_comparison$woman_percent)`%), of which `r johns_comparison$woman_only_statues` depict only women and `r johns_comparison$mixed_statues` depict a woman together with a man
+
+The two counts can overlap: a statue of a John together with a woman, such as "Katherine Mansfield and John Middleton Murry", counts once as a John statue and once as a statue of a woman.
 
 *(Note: Percentages are relative to the total dataset of queried memorials).*
 

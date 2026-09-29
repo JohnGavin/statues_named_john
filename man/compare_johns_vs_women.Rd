@@ -19,7 +19,8 @@ A list with comparison results:
   - unknown_statues, unknown_percent: statues whose gender could not be
     confidently classified (see classify_gender_from_subject())
   - gender_method: which classification sources were used, in priority
-    order (Wikidata P21, then the genderdata lookup cascade)
+    order (Wikidata P21, title/term overrides, then the genderdata lookup
+    cascade when the gender and genderdata packages are available)
 }
 \description{
 Validates the "Statues for Equality" claim that there are more statues
