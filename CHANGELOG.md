@@ -3,6 +3,49 @@
 Session log: what was done, what failed and why, measurable changes, and
 known limitations. Newest first.
 
+## 2026-09-29
+
+### Completed
+
+- \#98 item 1 (#100): a statue of a woman together with a man (“Mixed”)
+  now counts as a statue of a woman in the headline. This resolves the
+  2026-09-27 limitation “Mixed statues are excluded from the women
+  count”.
+- \#98 items 2-15: classification corrections, including a fix to the
+  root cause of non-statues being counted as women. The genderdata name
+  lists resolve ordinary words as first names (“Site” = Female,
+  “Memorial” = Female, “Parish”/“Corpus”/“Tomb” = Male), so entries such
+  as “Site of Anchor Brewery” and “Memorial Bench” were counted as
+  statues of women. Candidate first names must now be capitalised and
+  not in `inst/extdata/non_name_words.csv`; church/school/college
+  dedications and “Site of …” segments are not people; a title (Duke,
+  Lady, …) beats an animal word; “and”/“&” split people in any case.
+- Headline, same 2,301 statues: women 260 -\> 229 (10.0%; 222 women only
+  - 7 with a man), Johns 74 -\> 73 (3.2%; “St John the Evangelist
+    Church” was counted as a John), unknown 833 -\> 886. Per-statue
+    diff: 53 changed, all towards Unknown (29 Female, 22 Male, 2 Mixed);
+    none gained a wrong label.
+
+### Failed Approaches
+
+- Splitting people on commas (#98 item 3 as written): in this data a
+  comma almost always introduces a location (“Statue of Hercules, Trent
+  Park”), so it turned place names into people (13 Unknown -\>
+  Male/Female, 4 new false Mixed). Reverted; commas are not person
+  separators.
+- Resolving people before animals whenever any name resolved: the lookup
+  also resolves animals’ names (“Hodge the Cat” -\> Male). Narrowed so
+  only an explicit title beats an animal word.
+
+### Known Limitations
+
+- Many real statues are titled “Statue of X” / “Tomb of X”; the first
+  word is taken as the candidate first name, so these stay Unknown
+  (e.g. “Tomb of Blanche Roosevelt Macchetta”). Stripping such prefixes
+  would reduce the 886 Unknown.
+- Ambiguous first names follow the name lists: “Camille Silvy” (a man)
+  resolves Female.
+
 ## 2026-09-27
 
 ### Completed
