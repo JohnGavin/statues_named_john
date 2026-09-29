@@ -88,12 +88,14 @@ analyze_by_gender <- function(statue_data, gender_mapping = NULL) {
 # Handles "Johnson and Boswell" -> "Boswell" (if Johnson is deemed surname)
 extract_first_names <- function(text) {
   if (is.na(text)) return(character(0))
-  
-  # Split by 'and', '&', or ','
-  parts <- stringr::str_split(text, "\\s+(and|&|,)\\s+")[[1]]
-  
+
+  # One person per segment (same rule as classification); segments that
+  # name a church/school dedication or a site are not people (#98).
+  parts <- split_into_person_parts(text)
+  parts <- parts[!is_non_person_part(parts)]
+
   first_names <- c()
-  
+
   for (part in parts) {
     # Remove clean
     clean_part <- stringr::str_trim(part)
@@ -123,9 +125,45 @@ extract_first_names <- function(text) {
     }
   }
   
-  # Clean up (remove punctuation)
+  # Clean up (remove punctuation). A first name must be capitalised and must
+  # not be a known non-name word: the genderdata lists resolve ordinary words
+  # ("Site", "Parish", "Corpus") as names (#98).
   first_names <- stringr::str_remove_all(first_names, "[^a-zA-Z-]")
-  return(first_names[first_names != ""])
+  keep <- first_names != "" &
+    stringr::str_detect(first_names, "^[A-Z]") &
+    !tolower(first_names) %in% load_non_name_words()
+  first_names[keep]
+}
+
+# Cache for the small lookup tables in inst/extdata, so per-row callers
+# (e.g. classify_gender()) do not re-read them from disk (#98 item 9).
+.lookup_cache <- new.env(parent = emptyenv())
+
+# Helper: words that must never be treated as first names. See
+# inst/extdata/non_name_words.csv (each entry states why).
+load_non_name_words <- function() {
+  if (is.null(.lookup_cache$non_name_words)) {
+    path <- system.file("extdata", "non_name_words.csv", package = "statuesnamedjohn")
+    .lookup_cache$non_name_words <- if (nzchar(path)) {
+      tolower(utils::read.csv(path, stringsAsFactors = FALSE)$word)
+    } else {
+      warning("non_name_words.csv not found; ordinary words may be looked up as names.")
+      character(0)
+    }
+  }
+  .lookup_cache$non_name_words
+}
+
+# Helper: is a person-segment really a dedication or a place? True when it
+# starts with "St"/"Saint"/"Site" AND names a church-type institution, e.g.
+# "St Mary Abbot's Church of England Primary School" or "Site of Laurence
+# Pountney Church". "St George" (no institution word) stays a person.
+is_non_person_part <- function(parts) {
+  starts <- stringr::str_detect(parts, "(?i)^(st\\.?|saint|site)\\b")
+  institution <- stringr::str_detect(
+    parts, "(?i)\\b(church|chapel|school|college|abbey|cathedral|parish|priory)\\b"
+  )
+  starts & institution
 }
 
 # Helper: load the small, documented table of gendered titles/terms used to
@@ -133,17 +171,24 @@ extract_first_names <- function(text) {
 # (e.g. "Queen Victoria", "Unknown Woman") without ever needing a name-based
 # lookup. See inst/extdata/gender_overrides.csv.
 load_gender_overrides <- function() {
-  path <- system.file("extdata", "gender_overrides.csv", package = "statuesnamedjohn")
-  if (!nzchar(path)) {
-    warning("gender_overrides.csv not found; no title/term overrides will be applied.")
-    return(data.frame(term = character(0), gender = character(0), stringsAsFactors = FALSE))
+  if (is.null(.lookup_cache$gender_overrides)) {
+    path <- system.file("extdata", "gender_overrides.csv", package = "statuesnamedjohn")
+    .lookup_cache$gender_overrides <- if (nzchar(path)) {
+      utils::read.csv(path, stringsAsFactors = FALSE)
+    } else {
+      warning("gender_overrides.csv not found; no title/term overrides will be applied.")
+      data.frame(term = character(0), gender = character(0), stringsAsFactors = FALSE)
+    }
   }
-  utils::read.csv(path, stringsAsFactors = FALSE)
+  .lookup_cache$gender_overrides
 }
 
-# Helper: split a subject string into one segment per person, on "and"/"&"/",".
+# Helper: split a subject string into one segment per person, on "and"/"&"
+# in any case (#98 item 3). Commas are deliberately NOT separators: in this
+# dataset a comma almost always introduces a location ("Statue of Hercules,
+# Trent Park"), and splitting there turned place names into people.
 split_into_person_parts <- function(text) {
-  parts <- stringr::str_split(text, "\\s+(and|&|,)\\s+")[[1]]
+  parts <- stringr::str_split(text, "(?i)\\s+(?:and|&)\\s+")[[1]]
   parts <- stringr::str_trim(parts)
   parts[nzchar(parts)]
 }
@@ -164,12 +209,14 @@ match_gender_override <- function(part, overrides) {
 #' (North Atlantic Population Project historical census data, covering the
 #' UK among other countries), "ipums" (US census 1789-1930), and "ssa"
 #' (US Social Security data 1880-2012) methods provided by the `gender`
-#' package, keeping the first method that returns a prediction for each
-#' name. A prediction is only accepted when its confidence
-#' (`max(proportion_male, 1 - proportion_male)`) is at least `threshold`;
-#' names with no record in any source, or whose best prediction is below
-#' the threshold (including "either"), are left unresolved (`NA`) so the
-#' caller reports them as "Unknown" rather than guessing.
+#' package. A prediction is only accepted when its confidence
+#' (`max(proportion_male, 1 - proportion_male)`) is at least `threshold`.
+#' A name whose prediction from one method is missing OR below the
+#' threshold falls through to the next method, so a name that is ambiguous
+#' in the UK historical data (napp) can still be resolved from US data
+#' (ipums, ssa) if it is unambiguous there. Names with no confident
+#' prediction from any method are left unresolved (`NA`) so the caller
+#' reports them as "Unknown" rather than guessing.
 #'
 #' Never fails silently: if the `gender` package is unavailable, or every
 #' lookup method errors, a `warning()` names how many lookups could not be
@@ -250,12 +297,14 @@ lookup_first_name_gender <- function(names, threshold = 0.9) {
 
 # Helper function: Classify gender
 #
-# Priority order: (1) an explicit gender_mapping always wins, (2) animal
-# detection, (3) a documented title/term override applied to the start of
-# each person-segment, (4) a genderdata name lookup (see
-# lookup_first_name_gender()), (5) "Unknown". A subject naming more than one
-# person returns "Mixed" when the resolved people disagree, or that shared
-# gender when they agree.
+# Priority order: (1) an explicit gender_mapping always wins, (2) a
+# documented title/term override at the start of a person-segment, which
+# also beats an animal word, so "Duke of Wellington on horse" is Male (#98
+# item 2), (3) animal detection, (4) a genderdata name lookup (see
+# lookup_first_name_gender()), (5) "Unknown". Segments that are church/school dedications or
+# sites are not people (see is_non_person_part()). A subject naming more
+# than one person returns "Mixed" when the resolved people disagree, or
+# that shared gender when they agree.
 classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping = NULL) {
   if (!is.null(gender_mapping)) {
     return(gender_mapping[subjects])
@@ -270,14 +319,16 @@ classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping 
 
   animal_regex <- "(?i)\\b(dog|horse|lion|animal|cat|bear|pigeon|dolphin|elephant|donkey|camel|animals? in war)\\b"
   is_animal <- !is_missing & stringr::str_detect(text_to_check, animal_regex)
-  classified[is_animal] <- "Animal"
 
   remaining_idx <- which(is.na(classified))
   if (length(remaining_idx) == 0) return(classified)
 
   overrides <- load_gender_overrides()
 
-  parts_list <- purrr::map(text_to_check[remaining_idx], split_into_person_parts)
+  parts_list <- purrr::map(text_to_check[remaining_idx], function(x) {
+    parts <- split_into_person_parts(x)
+    parts[!is_non_person_part(parts)]
+  })
   override_list <- purrr::map(parts_list, function(parts) {
     purrr::map_chr(parts, match_gender_override, overrides = overrides)
   })
@@ -303,13 +354,13 @@ classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping 
   }
 
   for (i in seq_along(remaining_idx)) {
-    parts <- parts_list[[i]]
-    og <- override_list[[i]]
-    resolved <- og
+    resolved <- override_list[[i]]
 
     unresolved_mask <- is.na(resolved)
     if (any(unresolved_mask)) {
-      looked_up_names <- purrr::map_chr(parts[unresolved_mask], extract_candidate_name)
+      # Reuse the candidates computed above (same order as the unresolved
+      # parts) rather than extracting them again (#98 item 10).
+      looked_up_names <- candidate_names[[i]]
       looked_up <- ifelse(
         !is.na(looked_up_names) & looked_up_names %in% names(name_gender_map),
         name_gender_map[looked_up_names],
@@ -319,7 +370,14 @@ classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping 
     }
 
     resolved <- resolved[!is.na(resolved)]
-    classified[remaining_idx[i]] <- if (length(resolved) == 0) {
+    j <- remaining_idx[i]
+    # An animal word loses only to an explicit title ("Duke of Wellington on
+    # horse"), not to a name lookup: the lookup also resolves animals' names
+    # ("Hodge the Cat" -> Male), as seen in the real data (#98 item 2).
+    has_title <- any(!is.na(override_list[[i]]))
+    classified[j] <- if (is_animal[j] && !has_title) {
+      "Animal"
+    } else if (length(resolved) == 0) {
       "Unknown"
     } else if (length(unique(resolved)) > 1) {
       "Mixed"
@@ -348,7 +406,8 @@ classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping 
 #'   - unknown_statues, unknown_percent: statues whose gender could not be
 #'     confidently classified (see classify_gender_from_subject())
 #'   - gender_method: which classification sources were used, in priority
-#'     order (Wikidata P21, then the genderdata lookup cascade)
+#'     order (Wikidata P21, title/term overrides, then the genderdata lookup
+#'     cascade when the gender and genderdata packages are available)
 #'
 #' @export
 compare_johns_vs_women <- function(statue_data) {
@@ -401,12 +460,25 @@ compare_johns_vs_women <- function(statue_data) {
     unknown_statues = unknown_statues,
     unknown_percent = unknown_percent,
     claim_validated = johns > women,
-    gender_method = "wikidata_p21+genderdata_napp_ipums_ssa",
+    # Records what actually ran, not what was intended (#98 item 4)
+    gender_method = if (genderdata_available()) {
+      "wikidata_p21+overrides+genderdata_napp_ipums_ssa"
+    } else {
+      "wikidata_p21+overrides (genderdata lookup unavailable)"
+    },
     message = sprintf(
-      "Found %d statues named John/Jon/Jean (%.1f%%) vs %d women statues (%.1f%%, including %d of a woman with a man). %d statues (%.1f%%) have unknown gender.",
-      johns, 100 * johns / total, women, 100 * women / total, mixed, unknown_statues, unknown_percent
+      "Found %d statues named John/Jon/Jean (%.1f%%) vs %d women statues (%.1f%%%s). %d statues (%.1f%%) have unknown gender.",
+      johns, 100 * johns / total, women, 100 * women / total,
+      if (mixed > 0) sprintf(", including %d of a woman with a man", mixed) else "",
+      unknown_statues, unknown_percent
     )
   )
 
   return(results)
+}
+
+# Helper (mockable): can the genderdata name-lookup cascade run?
+genderdata_available <- function() {
+  requireNamespace("gender", quietly = TRUE) &&
+    requireNamespace("genderdata", quietly = TRUE)
 }

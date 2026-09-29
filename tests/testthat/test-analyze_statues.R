@@ -58,10 +58,17 @@ test_that("classify_gender_from_subject: 'Sir John Soane' resolves via the title
   )
 })
 
-test_that("classify_gender_from_subject: 'Manchester dog' is Animal, never Male via a 'man' substring match", {
+test_that("classify_gender_from_subject: 'Manchester ...' never matches the 'man' override by substring (#98 item 6)", {
+  # No animal word, so only the override logic can decide; the lookup
+  # resolves nothing, so the result must be Unknown, not Male via "man".
+  testthat::local_mocked_bindings(
+    lookup_first_name_gender = function(names, threshold = 0.9) {
+      stats::setNames(rep(NA_character_, length(names)), names)
+    }
+  )
   expect_equal(
-    classify_gender_from_subject("Manchester dog", names = NA_character_),
-    "Animal"
+    classify_gender_from_subject("Manchester Unity Memorial", names = NA_character_),
+    "Unknown"
   )
 })
 
@@ -129,6 +136,7 @@ test_that("classify_gender_from_subject: gender_mapping argument is still honour
 })
 
 test_that("classify_gender_from_subject: real genderdata lookup resolves unambiguous historical names", {
+  skip_if_not_installed("gender")
   skip_if_not_installed("genderdata")
   result <- classify_gender_from_subject(
     c("Florence Nightingale", "William Shakespeare"),

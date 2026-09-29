@@ -1,0 +1,26 @@
+word,note
+site,"Resolved as Female by genderdata; 'Site of ...' names a place (#98)"
+parish,"Resolved as Male by genderdata; parish/church dedication (#98)"
+corpus,"Resolved as Male by genderdata; 'Corpus Christi College' (#98)"
+church,Building
+chapel,Building
+school,Institution
+college,Institution
+office,Building
+statue,Describes the object not a person
+memorial,Describes the object not a person
+monument,Describes the object not a person
+bust,Describes the object not a person
+plaque,Describes the object not a person
+fountain,Structure
+tomb,Structure
+grave,Structure
+garden,Place
+gardens,Place
+park,Place
+street,Place
+road,Place
+square,Place
+bridge,Structure
+house,Building
+hall,Building
