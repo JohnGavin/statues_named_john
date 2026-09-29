@@ -4,13 +4,14 @@ Internal helper (mockable in tests). Tries, in order, the "napp" (North
 Atlantic Population Project historical census data, covering the UK
 among other countries), "ipums" (US census 1789-1930), and "ssa" (US
 Social Security data 1880-2012) methods provided by the \`gender\`
-package, keeping the first method that returns a prediction for each
-name. A prediction is only accepted when its confidence
+package. A prediction is only accepted when its confidence
 (\`max(proportion_male, 1 - proportion_male)\`) is at least
-\`threshold\`; names with no record in any source, or whose best
-prediction is below the threshold (including "either"), are left
-unresolved (\`NA\`) so the caller reports them as "Unknown" rather than
-guessing.
+\`threshold\`. A name whose prediction from one method is missing OR
+below the threshold falls through to the next method, so a name that is
+ambiguous in the UK historical data (napp) can still be resolved from US
+data (ipums, ssa) if it is unambiguous there. Names with no confident
+prediction from any method are left unresolved (\`NA\`) so the caller
+reports them as "Unknown" rather than guessing.
 
 ## Usage
 
