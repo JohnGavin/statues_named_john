@@ -78,7 +78,7 @@ if (dir.exists(store_path)) {
   findings <- data.frame()
   category_plot <- ggplot()
   memorial_map_plot <- ggplot()
-  johns_comparison <- list(message = "Pipeline not run", claim_validated = FALSE, total_statues = NA_real_, john_statues = 0, john_percent = 0, john_percent_label = "n/a", woman_statues = 0, woman_only_statues = 0, mixed_statues = 0, woman_percent = 0, woman_percent_label = "n/a")
+  johns_comparison <- list(message = "Pipeline not run", claim_validated = FALSE, total_statues = NA_real_, john_statues = 0, john_percent = 0, john_percent_label = "n/a", woman_statues = 0, woman_only_statues = 0, mixed_statues = 0, woman_percent = 0, woman_percent_label = "n/a", classification_threshold = NA_real_)
   memorial_interactive_map <- leaflet()
   gender_analysis <- list(top_names_by_gender = data.frame())
 }
@@ -163,6 +163,14 @@ Our analysis of London-specific data finds:
 The two counts can overlap: a statue of a John together with a woman, such as "Katherine Mansfield and John Middleton Murry", counts once as a John statue and once as a statue of a woman.
 
 *(Note: Percentages are relative to the total dataset of queried memorials).*
+
+**How gender is decided.** Many records name the object, not the person: "Statue of Sir John Millais in North Forecourt of Tate Gallery".
+We first read the subject from that text (here "Sir John Millais").
+If first names and titles cannot decide it, we ask Wikidata whether the subject is a person and, if so, their sex.
+An exact name match scores 1.0 and a partial match 0.7.
+A gender is used only when its confidence is at least the classification threshold, currently `r johns_comparison$classification_threshold`.
+The same threshold applies to first-name predictions.
+It is set in one place, `inst/extdata/params.csv`; setting it to 1 keeps only certain answers, and the rest stay Unknown.
 
 ## Session Info
 

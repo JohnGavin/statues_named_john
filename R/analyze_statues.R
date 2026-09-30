@@ -6,6 +6,11 @@
 #'
 #' @param statue_data Standardized statue data tibble
 #' @param gender_mapping Optional named vector mapping subject names to genders
+#' @param person_lookup Optional tibble from [lookup_wikidata_people()]
+#'   (\code{x}, \code{sex}, \code{confidence}) used for text such as
+#'   "Statue of X".
+#' @param threshold Minimum confidence to accept a gender; defaults to the
+#'   single project setting \code{get_param("classification_threshold")}.
 #'
 #' @return A list containing:
 #'   - summary: tibble with gender counts and percentages
@@ -16,13 +21,15 @@
 #'
 #' @importFrom stats setNames
 #' @export
-analyze_by_gender <- function(statue_data, gender_mapping = NULL) {
+analyze_by_gender <- function(statue_data, gender_mapping = NULL, person_lookup = NULL,
+                              threshold = get_param("classification_threshold")) {
 
   # Attempt to classify gender
   # Priority: 1. Existing subject_gender (from Wikidata), 2. Heuristic from subject, 3. Heuristic from name
   classified <- statue_data %>%
     dplyr::mutate(
-      heuristic_gender = classify_gender_from_subject(subject, name, gender_mapping),
+      heuristic_gender = classify_gender_from_subject(subject, name, gender_mapping,
+                                                      person_lookup, threshold),
       inferred_gender = dplyr::case_when(
         !is.na(subject_gender) & tolower(subject_gender) %in% c("male", "female") ~ stringr::str_to_title(subject_gender),
         !is.na(subject_gender) ~ "Other", # Transgender, non-binary, etc. mapped to Other for high-level summary
@@ -94,9 +101,10 @@ analyze_by_gender <- function(statue_data, gender_mapping = NULL) {
 extract_first_names <- function(text) {
   if (is.na(text)) return(character(0))
 
-  # One person per segment (same rule as classification); segments that
-  # name a church/school dedication or a site are not people (#98).
-  parts <- split_into_person_parts(text)
+  # Read X in "Statue of X in ..." (not "Statue"). One person per segment
+  # (same rule as classification); segments that name a church/school
+  # dedication or a site are not people (#98).
+  parts <- split_into_person_parts(extract_subject(text))
   parts <- parts[!is_non_person_part(parts)]
 
   first_names <- c()
@@ -233,7 +241,7 @@ match_gender_override <- function(part, overrides) {
 #'   valued "Male", "Female", or `NA_character_` when unresolved.
 #' @keywords internal
 #' @importFrom stats setNames
-lookup_first_name_gender <- function(names, threshold = 0.9) {
+lookup_first_name_gender <- function(names, threshold = get_param("classification_threshold")) {
   unique_names <- unique(names[!is.na(names) & nzchar(names)])
   if (length(unique_names) == 0) {
     return(stats::setNames(character(0), character(0)))
@@ -302,7 +310,10 @@ lookup_first_name_gender <- function(names, threshold = 0.9) {
 
 # Helper function: Classify gender
 #
-# Priority order: (1) an explicit gender_mapping always wins, (2) a
+# The text is first reduced to its subject X ("Statue of X in ..." -> X, see
+# extract_subject()). Priority order: (1) an explicit gender_mapping always
+# wins, (1b) a Wikidata person match for X (person_lookup) whose confidence
+# is at least `threshold`, (2) a
 # documented title/term override at the start of a person-segment, which
 # also beats an animal word, so "Duke of Wellington on horse" is Male (#98
 # item 2), (3) animal detection, (4) a genderdata name lookup (see
@@ -310,17 +321,28 @@ lookup_first_name_gender <- function(names, threshold = 0.9) {
 # sites are not people (see is_non_person_part()). A subject naming more
 # than one person returns "Mixed" when the resolved people disagree, or
 # that shared gender when they agree.
-classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping = NULL) {
+classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping = NULL,
+                                         person_lookup = NULL,
+                                         threshold = get_param("classification_threshold")) {
   if (!is.null(gender_mapping)) {
     return(gender_mapping[subjects])
   }
 
-  text_to_check <- dplyr::coalesce(subjects, names)
+  text_to_check <- extract_subject(dplyr::coalesce(subjects, names))
   n <- length(text_to_check)
   classified <- rep(NA_character_, n)
 
   is_missing <- is.na(text_to_check) | !nzchar(stringr::str_trim(dplyr::coalesce(text_to_check, "")))
   classified[is_missing] <- "Unknown"
+
+  # A Wikidata person match for X at or above the threshold decides it.
+  if (!is.null(person_lookup) && nrow(person_lookup) > 0) {
+    accepted <- person_lookup[!is.na(person_lookup$sex) &
+                                person_lookup$confidence >= threshold, , drop = FALSE]
+    wd_sex <- accepted$sex[match(text_to_check, accepted$x)]
+    use <- is.na(classified) & !is.na(wd_sex)
+    classified[use] <- wd_sex[use]
+  }
 
   animal_regex <- "(?i)\\b(dog|horse|lion|animal|cat|bear|pigeon|dolphin|elephant|donkey|camel|animals? in war)\\b"
   is_animal <- !is_missing & stringr::str_detect(text_to_check, animal_regex)
@@ -353,7 +375,7 @@ classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping 
   all_candidates <- all_candidates[!is.na(all_candidates) & nzchar(all_candidates)]
 
   name_gender_map <- if (length(all_candidates) > 0) {
-    lookup_first_name_gender(all_candidates)
+    lookup_first_name_gender(all_candidates, threshold = threshold)
   } else {
     stats::setNames(character(0), character(0))
   }
@@ -401,6 +423,7 @@ classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping 
 #' named John than women in the UK.
 #'
 #' @param statue_data Standardized statue data tibble
+#' @inheritParams analyze_by_gender
 #'
 #' @return A list with comparison results:
 #'   - total_statues, john_statues, woman_statues, john_percent, woman_percent,
@@ -418,8 +441,10 @@ classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping 
 #'     cascade when the gender and genderdata packages are available)
 #'
 #' @export
-compare_johns_vs_women <- function(statue_data) {
-  classified <- analyze_by_gender(statue_data)$data
+compare_johns_vs_women <- function(statue_data, person_lookup = NULL,
+                                   threshold = get_param("classification_threshold")) {
+  classified <- analyze_by_gender(statue_data, person_lookup = person_lookup,
+                                  threshold = threshold)$data
 
   # Extract all names using the robust logic
   all_names <- classified %>%
@@ -473,11 +498,13 @@ compare_johns_vs_women <- function(statue_data) {
     unknown_percent = unknown_percent,
     claim_validated = johns > women,
     # Records what actually ran, not what was intended (#98 item 4)
-    gender_method = if (genderdata_available()) {
-      "wikidata_p21+overrides+genderdata_napp_ipums_ssa"
-    } else {
-      "wikidata_p21+overrides (genderdata lookup unavailable)"
-    },
+    gender_method = paste0(
+      "wikidata_p21",
+      if (!is.null(person_lookup) && nrow(person_lookup) > 0) "+wikidata_subject_lookup" else "",
+      "+overrides",
+      if (genderdata_available()) "+genderdata_napp_ipums_ssa" else " (genderdata lookup unavailable)"
+    ),
+    classification_threshold = threshold,
     message = sprintf(
       "Found %d statues named John/Jon/Jean (%s) vs %d women statues (%s%s). %d statues (%s) have unknown gender.",
       johns, format_percent(johns, total), women, format_percent(women, total),

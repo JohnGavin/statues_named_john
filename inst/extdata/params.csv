@@ -1,0 +1,2 @@
+name,value,note
+classification_threshold,0.9,"Minimum confidence (0-1) to accept a gender: a genderdata first-name prediction (max(proportion_male, 1 - proportion_male)) or a Wikidata person match (1.0 exact label/alias, 0.7 partial). Below it a statue stays Unknown. Set to 1 to accept only certain answers."

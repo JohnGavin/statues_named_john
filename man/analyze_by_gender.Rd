@@ -4,12 +4,24 @@
 \alias{analyze_by_gender}
 \title{Analyze Statue Data by Gender}
 \usage{
-analyze_by_gender(statue_data, gender_mapping = NULL)
+analyze_by_gender(
+  statue_data,
+  gender_mapping = NULL,
+  person_lookup = NULL,
+  threshold = get_param("classification_threshold")
+)
 }
 \arguments{
 \item{statue_data}{Standardized statue data tibble}
 
 \item{gender_mapping}{Optional named vector mapping subject names to genders}
+
+\item{person_lookup}{Optional tibble from [lookup_wikidata_people()]
+(\code{x}, \code{sex}, \code{confidence}) used for text such as
+"Statue of X".}
+
+\item{threshold}{Minimum confidence to accept a gender; defaults to the
+single project setting \code{get_param("classification_threshold")}.}
 }
 \value{
 A list containing:

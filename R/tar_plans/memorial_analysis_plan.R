@@ -22,7 +22,8 @@ memorial_analysis_plan <- list(
     dplyr::bind_rows(
       source_row("wikidata", wikidata_raw),
       source_row("osm", osm_raw),
-      glher_fetch$status
+      glher_fetch$status,
+      wikidata_people_fetch$status
     )
   ),
 
@@ -40,16 +41,47 @@ memorial_analysis_plan <- list(
     )
   ),
 
+  # Single classification threshold (inst/extdata/params.csv). A file
+  # target, so editing the threshold re-runs the analysis.
+  tar_target(params_file, params_path(), format = "file"),
+  tar_target(classification_threshold, {
+    params_file
+    get_param("classification_threshold")
+  }, format = "rds"),
+
+  # "Statue of X": subjects of statues the name rules leave Unknown, looked
+  # up on Wikidata (is X a person, and which sex?). Optional: if Wikidata
+  # is unreachable the lookup is recorded as unavailable in source_status
+  # and retried on the next run, and classification carries on without it.
+  tar_target(
+    people_candidates,
+    {
+      base <- analyze_by_gender(all_memorials, threshold = classification_threshold)$data
+      unknown <- base[base$inferred_gender == "Unknown", ]
+      candidate_subjects(dplyr::coalesce(unknown$subject, unknown$name))
+    },
+    format = "rds"
+  ),
+  tar_target(
+    wikidata_people_fetch,
+    fetch_optional_source("wikidata_people", lookup_wikidata_people(people_candidates)),
+    format = "rds",
+    cue = tarchetypes::tar_cue_force(optional_needs_refetch("wikidata_people_fetch"))
+  ),
+  tar_target(wikidata_people, wikidata_people_fetch$data),
+
   # Analysis
   tar_target(
     gender_analysis,
-    analyze_by_gender(all_memorials),
+    analyze_by_gender(all_memorials, person_lookup = wikidata_people,
+                      threshold = classification_threshold),
     format = "rds"
   ),
   
   tar_target(
     johns_comparison,
-    compare_johns_vs_women(all_memorials),
+    compare_johns_vs_women(all_memorials, person_lookup = wikidata_people,
+                           threshold = classification_threshold),
     format = "rds"
   ),
 

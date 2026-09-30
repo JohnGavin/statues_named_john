@@ -13,3 +13,7 @@ woman,Female,Generic descriptor for an unnamed female subject
 women,Female,Generic descriptor for unnamed female subjects (plural)
 man,Male,Generic descriptor for an unnamed male subject
 men,Male,Generic descriptor for unnamed male subjects (plural)
+mrs,Female,"Honorific always denoting a female subject; without it the surname is read as a first name ('Mrs Siddons' -> Male)"
+miss,Female,Honorific always denoting a female subject
+ms,Female,Honorific always denoting a female subject
+mr,Male,Honorific always denoting a male subject
