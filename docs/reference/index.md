@@ -4,6 +4,8 @@
 
 - [`analyze_by_gender()`](https://johngavin.github.io/statues_named_john/reference/analyze_by_gender.md)
   : Analyze Statue Data by Gender
+- [`candidate_subjects()`](https://johngavin.github.io/statues_named_john/reference/candidate_subjects.md)
+  : Subjects worth looking up on Wikidata
 - [`classify_gender()`](https://johngavin.github.io/statues_named_john/reference/classify_gender.md)
   : Classify gender based on first name or available metadata
 - [`classify_subject()`](https://johngavin.github.io/statues_named_john/reference/classify_subject.md)
@@ -16,6 +18,8 @@
   : Compare John Statues vs Women Statues
 - [`extract_coords_from_wkt()`](https://johngavin.github.io/statues_named_john/reference/extract_coords_from_wkt.md)
   : Extract coordinates from WKT Point
+- [`extract_subject()`](https://johngavin.github.io/statues_named_john/reference/extract_subject.md)
+  : Extract the subject X from text such as "Statue of X"
 - [`fetch_art_uk_data()`](https://johngavin.github.io/statues_named_john/reference/fetch_art_uk_data.md)
   : Fetch data from Art UK
 - [`fetch_historic_england_data()`](https://johngavin.github.io/statues_named_john/reference/fetch_historic_england_data.md)
@@ -26,12 +30,16 @@
   : Fetch statues from OpenStreetMap
 - [`fetch_wikidata_statues()`](https://johngavin.github.io/statues_named_john/reference/fetch_wikidata_statues.md)
   : Fetch statues from Wikidata
+- [`format_percent()`](https://johngavin.github.io/statues_named_john/reference/format_percent.md)
+  : Format a percentage for display
 - [`generate_qa_sample()`](https://johngavin.github.io/statues_named_john/reference/generate_qa_sample.md)
   : Generate QA Sample for Manual Validation
 - [`get_memorial()`](https://johngavin.github.io/statues_named_john/reference/get_memorial.md)
   : Get detailed information about a specific memorial
 - [`get_memorials_latest()`](https://johngavin.github.io/statues_named_john/reference/get_memorials_latest.md)
   : Get latest memorials from London Remembers
+- [`get_param()`](https://johngavin.github.io/statues_named_john/reference/get_param.md)
+  : Read a project parameter from the single parameters file
 - [`get_statues_glher()`](https://johngavin.github.io/statues_named_john/reference/get_statues_glher.md)
   : Retrieve Statue Data from Greater London HER
 - [`get_statues_osm()`](https://johngavin.github.io/statues_named_john/reference/get_statues_osm.md)
@@ -48,6 +56,8 @@
   : Check if a subject is a "Man named John"
 - [`join_and_clean_data()`](https://johngavin.github.io/statues_named_john/reference/join_and_clean_data.md)
   : Normalize and Merge Data Sources
+- [`lookup_wikidata_people()`](https://johngavin.github.io/statues_named_john/reference/lookup_wikidata_people.md)
+  : Look up subjects on Wikidata: is X a person, and of which sex?
 - [`map_statues()`](https://johngavin.github.io/statues_named_john/reference/map_statues.md)
   : Create Interactive Map of Statues with Popup Information
 - [`search_memorials()`](https://johngavin.github.io/statues_named_john/reference/search_memorials.md)
@@ -56,3 +66,9 @@
   : One-row status summary for a fetched source
 - [`standardize_statue_data()`](https://johngavin.github.io/statues_named_john/reference/standardize_statue_data.md)
   : Standardize Statue Data to Common Schema
+- [`target_code_markdown()`](https://johngavin.github.io/statues_named_john/reference/target_code_markdown.md)
+  : Markdown blocks showing the code of pipeline targets
+- [`target_commands()`](https://johngavin.github.io/statues_named_john/reference/target_commands.md)
+  : Read the command of every target defined in plan files
+- [`wikidata_confidence()`](https://johngavin.github.io/statues_named_john/reference/wikidata_confidence.md)
+  : Confidence scores for a Wikidata person match

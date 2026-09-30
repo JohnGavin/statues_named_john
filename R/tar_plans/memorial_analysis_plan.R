@@ -43,11 +43,21 @@ memorial_analysis_plan <- list(
 
   # Single classification threshold (inst/extdata/params.csv). A file
   # target, so editing the threshold re-runs the analysis.
-  tar_target(params_file, params_path(), format = "file"),
+  # Relative path, so the store does not depend on which checkout built it
+  tar_target(params_file, file.path("inst", "extdata", "params.csv"), format = "file"),
   tar_target(classification_threshold, {
     params_file
     get_param("classification_threshold")
   }, format = "rds"),
+
+  # The other lookup tables the classifiers read (#105). Package code reads
+  # them through system.file(), which targets cannot see, so each target
+  # that classifies lists this file target to re-run when a table changes.
+  tar_target(
+    lookup_files,
+    file.path("inst", "extdata", c("gender_overrides.csv", "non_name_words.csv")),
+    format = "file"
+  ),
 
   # "Statue of X": subjects of statues the name rules leave Unknown, looked
   # up on Wikidata (is X a person, and which sex?). Optional: if Wikidata
@@ -56,15 +66,20 @@ memorial_analysis_plan <- list(
   tar_target(
     people_candidates,
     {
+      lookup_files
       base <- analyze_by_gender(all_memorials, threshold = classification_threshold)$data
       unknown <- base[base$inferred_gender == "Unknown", ]
       candidate_subjects(dplyr::coalesce(unknown$subject, unknown$name))
     },
     format = "rds"
   ),
+  # params_file: the match confidences (wikidata_confidence()) live there too
   tar_target(
     wikidata_people_fetch,
-    fetch_optional_source("wikidata_people", lookup_wikidata_people(people_candidates)),
+    {
+      params_file
+      fetch_optional_source("wikidata_people", lookup_wikidata_people(people_candidates))
+    },
     format = "rds",
     cue = tarchetypes::tar_cue_force(optional_needs_refetch("wikidata_people_fetch"))
   ),
@@ -73,15 +88,21 @@ memorial_analysis_plan <- list(
   # Analysis
   tar_target(
     gender_analysis,
-    analyze_by_gender(all_memorials, person_lookup = wikidata_people,
-                      threshold = classification_threshold),
+    {
+      lookup_files
+      analyze_by_gender(all_memorials, person_lookup = wikidata_people,
+                        threshold = classification_threshold)
+    },
     format = "rds"
   ),
-  
+
   tar_target(
     johns_comparison,
-    compare_johns_vs_women(all_memorials, person_lookup = wikidata_people,
-                           threshold = classification_threshold),
+    {
+      lookup_files
+      compare_johns_vs_women(all_memorials, person_lookup = wikidata_people,
+                             threshold = classification_threshold)
+    },
     format = "rds"
   ),
 

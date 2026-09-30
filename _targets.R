@@ -24,6 +24,11 @@ tar_option_set(
     "pkgdown",     # For site building
     "sf"           # For spatial data in vignettes
   ),
+  # Track the package's own functions as dependencies (#105). Without this,
+  # editing a function in R/ left every target "up to date" and results
+  # went stale until someone ran tar_invalidate() by hand. load_all() above
+  # stays: under it, system.file() finds inst/extdata in the source tree.
+  imports = "statuesnamedjohn",
   format = "parquet"
 )
 
