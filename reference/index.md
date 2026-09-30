@@ -66,5 +66,9 @@
   : One-row status summary for a fetched source
 - [`standardize_statue_data()`](https://johngavin.github.io/statues_named_john/reference/standardize_statue_data.md)
   : Standardize Statue Data to Common Schema
+- [`target_code_markdown()`](https://johngavin.github.io/statues_named_john/reference/target_code_markdown.md)
+  : Markdown blocks showing the code of pipeline targets
+- [`target_commands()`](https://johngavin.github.io/statues_named_john/reference/target_commands.md)
+  : Read the command of every target defined in plan files
 - [`wikidata_confidence()`](https://johngavin.github.io/statues_named_john/reference/wikidata_confidence.md)
   : Confidence scores for a Wikidata person match
