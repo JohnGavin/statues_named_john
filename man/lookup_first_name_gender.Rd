@@ -4,7 +4,10 @@
 \alias{lookup_first_name_gender}
 \title{Look up gender for first names via the genderdata cascade}
 \usage{
-lookup_first_name_gender(names, threshold = 0.9)
+lookup_first_name_gender(
+  names,
+  threshold = get_param("classification_threshold")
+)
 }
 \arguments{
 \item{names}{Character vector of first names (NA/"" are ignored).}

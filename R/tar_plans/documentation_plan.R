@@ -65,6 +65,18 @@ documentation_plan <- list(
       file.copy(source_file, destination_file, overwrite = TRUE)
       file.remove(source_file) # Remove from inst/qmd/
 
+      # The HTML links its figures (memorial-analysis_files/...), and the
+      # deploy publishes vignettes/memorial-analysis_files. Copy them too,
+      # or the site shows stale charts beside current tables.
+      figures_src <- file.path(getwd(), "inst/qmd/memorial-analysis_files")
+      if (!dir.exists(figures_src)) {
+        cli::cli_abort("Quarto wrote no figure directory at {.path {figures_src}}.")
+      }
+      copied <- file.copy(figures_src, target_vignettes_dir, recursive = TRUE, overwrite = TRUE)
+      if (!all(copied)) {
+        cli::cli_abort("Could not copy {.path {figures_src}} to {.path {target_vignettes_dir}}.")
+      }
+
       # Return path to generated HTML (now in vignettes/)
       normalizePath(destination_file)
     },

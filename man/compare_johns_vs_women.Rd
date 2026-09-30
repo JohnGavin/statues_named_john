@@ -4,10 +4,21 @@
 \alias{compare_johns_vs_women}
 \title{Compare John Statues vs Women Statues}
 \usage{
-compare_johns_vs_women(statue_data)
+compare_johns_vs_women(
+  statue_data,
+  person_lookup = NULL,
+  threshold = get_param("classification_threshold")
+)
 }
 \arguments{
 \item{statue_data}{Standardized statue data tibble}
+
+\item{person_lookup}{Optional tibble from [lookup_wikidata_people()]
+(\code{x}, \code{sex}, \code{confidence}) used for text such as
+"Statue of X".}
+
+\item{threshold}{Minimum confidence to accept a gender; defaults to the
+single project setting \code{get_param("classification_threshold")}.}
 }
 \value{
 A list with comparison results:

@@ -55,18 +55,23 @@ source_row <- function(source, data) {
   )
 }
 
-#' Should the optional GLHER fetch be re-run?
+#' Should an optional fetch be re-run?
 #'
-#' Used as a \code{tar_cue_force()} condition: TRUE when no stored
-#' \code{glher_fetch} exists or its status is anything but "ok", so an
+#' Used as a \code{tar_cue_force()} condition: TRUE when no stored result
+#' of the fetch target exists or its status is anything but "ok", so an
 #' "unavailable" or "empty" result is retried on the next \code{tar_make()}
 #' rather than cached.
 #'
+#' @param target Name of a target built by [fetch_optional_source()].
 #' @param store Path to the targets store.
 #' @return Logical scalar.
 #' @noRd
-glher_needs_refetch <- function(store = targets::tar_config_get("store")) {
-  prev <- tryCatch(targets::tar_read_raw("glher_fetch", store = store),
+optional_needs_refetch <- function(target, store = targets::tar_config_get("store")) {
+  prev <- tryCatch(targets::tar_read_raw(target, store = store),
                    error = function(e) NULL)
   !identical(prev$status$status, "ok")
+}
+
+glher_needs_refetch <- function(store = targets::tar_config_get("store")) {
+  optional_needs_refetch("glher_fetch", store = store)
 }

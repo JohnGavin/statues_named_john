@@ -1,0 +1,5 @@
+name,value,note
+classification_threshold,0.9,"Minimum confidence (0-1) to accept a gender: a genderdata first-name prediction (max(proportion_male, 1 - proportion_male)) or a Wikidata person match (scores below). Below it a statue stays Unknown. Set to 1 to accept only certain answers."
+wikidata_exact_confidence,1,"Wikidata human whose label or matched alias equals the subject X (ignoring titles and punctuation)"
+wikidata_partial_confidence,0.7,"Wikidata human whose label contains X, or X contains the label"
+wikidata_weak_confidence,0.4,"Wikidata human found by the search, but the names differ"
