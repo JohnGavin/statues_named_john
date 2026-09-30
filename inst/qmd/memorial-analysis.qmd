@@ -78,7 +78,7 @@ if (dir.exists(store_path)) {
   findings <- data.frame()
   category_plot <- ggplot()
   memorial_map_plot <- ggplot()
-  johns_comparison <- list(message = "Pipeline not run", claim_validated = FALSE, total_statues = NA_real_, john_statues = 0, john_percent = 0, woman_statues = 0, woman_only_statues = 0, mixed_statues = 0, woman_percent = 0)
+  johns_comparison <- list(message = "Pipeline not run", claim_validated = FALSE, total_statues = NA_real_, john_statues = 0, john_percent = 0, john_percent_label = "n/a", woman_statues = 0, woman_only_statues = 0, mixed_statues = 0, woman_percent = 0, woman_percent_label = "n/a")
   memorial_interactive_map <- leaflet()
   gender_analysis <- list(top_names_by_gender = data.frame())
 }
@@ -108,7 +108,7 @@ We extracted the first names from the memorials to identify the most common name
 ```{r top-names-female}
 top_names_f <- gender_analysis$top_names_by_gender %>%
   dplyr::filter(inferred_gender == "Female") %>%
-  dplyr::select(Name = extracted_names, Count = n, Percent = percent) %>%
+  dplyr::select(Name = extracted_names, Count = n, Percent = percent_label) %>%
   dplyr::arrange(desc(Count))
 
 knitr::kable(top_names_f, caption = "Most Common Female Names")
@@ -119,7 +119,7 @@ knitr::kable(top_names_f, caption = "Most Common Female Names")
 ```{r top-names-male}
 top_names_m <- gender_analysis$top_names_by_gender %>%
   dplyr::filter(inferred_gender == "Male") %>%
-  dplyr::select(Name = extracted_names, Count = n, Percent = percent) %>%
+  dplyr::select(Name = extracted_names, Count = n, Percent = percent_label) %>%
   dplyr::arrange(desc(Count))
 
 knitr::kable(top_names_m, caption = "Most Common Male Names")
@@ -157,8 +157,8 @@ Our analysis of London-specific data finds:
 
 **Validation**: The claim that there are "more statues of men named John than of women" is **`r if(johns_comparison$claim_validated) "supported" else "refuted"`** by our current London dataset.
 
-* **Men named John**: `r johns_comparison$john_statues` (`r sprintf("%.1f", 100 * johns_comparison$john_statues / johns_comparison$total_statues)`%)
-* **Women**: `r johns_comparison$woman_statues` (`r sprintf("%.1f", 100 * johns_comparison$woman_statues / johns_comparison$total_statues)`%), of which `r johns_comparison$woman_only_statues` depict only women and `r johns_comparison$mixed_statues` depict a woman together with a man
+* **Men named John**: `r johns_comparison$john_statues` (`r johns_comparison$john_percent_label`)
+* **Women**: `r johns_comparison$woman_statues` (`r johns_comparison$woman_percent_label`), of which `r johns_comparison$woman_only_statues` depict only women and `r johns_comparison$mixed_statues` depict a woman together with a man
 
 The two counts can overlap: a statue of a John together with a woman, such as "Katherine Mansfield and John Middleton Murry", counts once as a John statue and once as a statue of a woman.
 

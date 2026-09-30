@@ -32,10 +32,13 @@ analyze_by_gender <- function(statue_data, gender_mapping = NULL) {
     )
 
   # Overall summary
+  # Stored percentages keep 2 dp; percent_label is the whole-percent text
+  # shown to readers (format_percent(), #102).
   summary <- classified %>%
     dplyr::count(inferred_gender) %>%
     dplyr::mutate(
-      percent = round(100 * n / sum(n), 1)
+      percent = round(100 * n / sum(n), 2),
+      percent_label = format_percent(n, sum(n))
     ) %>%
     dplyr::arrange(desc(n))
 
@@ -44,7 +47,8 @@ analyze_by_gender <- function(statue_data, gender_mapping = NULL) {
     dplyr::count(source, inferred_gender) %>%
     dplyr::group_by(source) %>%
     dplyr::mutate(
-      percent = round(100 * n / sum(n), 1)
+      percent = round(100 * n / sum(n), 2),
+      percent_label = format_percent(n, sum(n))
     ) %>%
     dplyr::ungroup()
 
@@ -70,7 +74,8 @@ analyze_by_gender <- function(statue_data, gender_mapping = NULL) {
     dplyr::group_by(inferred_gender) %>%
     dplyr::mutate(
       total_gender = sum(n),
-      percent = round(100 * n / total_gender, 1)
+      percent = round(100 * n / total_gender, 2),
+      percent_label = format_percent(n, total_gender)
     ) %>%
     dplyr::slice_head(n = 5) %>%
     dplyr::ungroup()
@@ -405,6 +410,9 @@ classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping 
 #'     Victoria and Prince Albert").
 #'   - unknown_statues, unknown_percent: statues whose gender could not be
 #'     confidently classified (see classify_gender_from_subject())
+#'   - john_percent_label, woman_percent_label, unknown_percent_label:
+#'     whole-percent display text from format_percent(). The numeric
+#'     *_percent fields keep 2 decimal places.
 #'   - gender_method: which classification sources were used, in priority
 #'     order (Wikidata P21, title/term overrides, then the genderdata lookup
 #'     cascade when the gender and genderdata packages are available)
@@ -457,6 +465,10 @@ compare_johns_vs_women <- function(statue_data) {
     mixed_statues = mixed,
     john_percent = round(100 * johns / total, 2),
     woman_percent = round(100 * women / total, 2),
+    # Whole-percent display text, formatted from the raw counts (#102)
+    john_percent_label = format_percent(johns, total),
+    woman_percent_label = format_percent(women, total),
+    unknown_percent_label = format_percent(unknown_statues, total),
     unknown_statues = unknown_statues,
     unknown_percent = unknown_percent,
     claim_validated = johns > women,
@@ -467,10 +479,10 @@ compare_johns_vs_women <- function(statue_data) {
       "wikidata_p21+overrides (genderdata lookup unavailable)"
     },
     message = sprintf(
-      "Found %d statues named John/Jon/Jean (%.1f%%) vs %d women statues (%.1f%%%s). %d statues (%.1f%%) have unknown gender.",
-      johns, 100 * johns / total, women, 100 * women / total,
+      "Found %d statues named John/Jon/Jean (%s) vs %d women statues (%s%s). %d statues (%s) have unknown gender.",
+      johns, format_percent(johns, total), women, format_percent(women, total),
       if (mixed > 0) sprintf(", including %d of a woman with a man", mixed) else "",
-      unknown_statues, unknown_percent
+      unknown_statues, format_percent(unknown_statues, total)
     )
   )
 

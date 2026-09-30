@@ -53,9 +53,11 @@ memorial_analysis_plan <- list(
     format = "rds"
   ),
 
+  # Display table: whole-percent labels (stored percent keeps 2 dp, #102)
   tar_target(
     summary_table,
-    gender_analysis$summary
+    gender_analysis$summary %>%
+      dplyr::select(Category = inferred_gender, Count = n, Percent = percent_label)
   ),
 
   tar_target(
@@ -69,7 +71,7 @@ memorial_analysis_plan <- list(
     category_plot,
     ggplot(gender_analysis$summary, aes(x = inferred_gender, y = n, fill = inferred_gender)) +
       geom_col() +
-      geom_text(aes(label = sprintf("%d (%.1f%%)", n, percent)), vjust = -0.5) +
+      geom_text(aes(label = sprintf("%d (%s)", n, percent_label)), vjust = -0.5) +
       labs(
         title = "Gender Representation in London Statues",
         x = "Gender",
