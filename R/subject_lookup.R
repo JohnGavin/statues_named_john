@@ -17,7 +17,8 @@
 #' Wikidata person match. Set it to 1 to accept only certain answers.
 #'
 #' @param name Parameter name.
-#' @return The parameter value, converted to numeric when it is numeric.
+#' @return The parameter value as a number. Aborts if the value is not a
+#'   number, or if a threshold or confidence is outside 0-1.
 #' @export
 #' @examples
 #' get_param("classification_threshold")
@@ -27,9 +28,29 @@ get_param <- function(name) {
   if (is.na(idx)) {
     cli::cli_abort("Unknown parameter {.val {name}}; see inst/extdata/params.csv.", call = NULL)
   }
-  value <- params$value[idx]
-  num <- suppressWarnings(as.numeric(value))
-  if (is.na(num)) value else num
+  value <- trimws(as.character(params$value[idx]))
+  if (!grepl("^[0-9]*\\.?[0-9]+$", value)) {
+    cli::cli_abort("Parameter {.val {name}} is {.val {value}}, not a number; see inst/extdata/params.csv.",
+                   call = NULL)
+  }
+  num <- as.numeric(value)
+  if (grepl("threshold|confidence", name) && num > 1) {
+    cli::cli_abort("Parameter {.val {name}} is {num}; it must be between 0 and 1.", call = NULL)
+  }
+  num
+}
+
+#' Confidence scores for a Wikidata person match
+#'
+#' @return Named numeric vector: \code{exact} (label or alias equals the
+#'   subject), \code{partial} (one contains the other) and \code{weak}
+#'   (a human, but the names differ). Read from
+#'   \code{inst/extdata/params.csv}, their single home.
+#' @export
+wikidata_confidence <- function() {
+  c(exact = get_param("wikidata_exact_confidence"),
+    partial = get_param("wikidata_partial_confidence"),
+    weak = get_param("wikidata_weak_confidence"))
 }
 
 # Path to the parameters file (also a targets file input, so editing the
@@ -137,9 +158,11 @@ normalise_person_name <- function(s) {
 #'
 #' @description
 #' For each X, searches Wikidata and takes the first result that is a human
-#' (P31 = Q5), reading its sex (P21). Confidence: 1 when the result's label
-#' or the matched alias equals X (ignoring titles and punctuation), 0.7 when
-#' one contains the other, 0.4 otherwise, and 0 when no human was found.
+#' (P31 = Q5), reading its sex (P21). Confidence comes from
+#' [wikidata_confidence()]: \code{exact} when the result's label or the
+#' matched alias equals X (ignoring titles and punctuation), \code{partial}
+#' when one contains the other, \code{weak} otherwise, and 0 when no human
+#' was found.
 #' Errors are not caught, so an unreachable Wikidata fails fast; the
 #' pipeline wraps this in [fetch_optional_source()].
 #'
@@ -168,9 +191,10 @@ lookup_wikidata_people <- function(x, pause = 0.2) {
         (!is.null(h$match$text) && normalise_person_name(h$match$text) == nx)
       partial <- nzchar(nl) && nzchar(nx) &&
         (grepl(nl, nx, fixed = TRUE) || grepl(nx, nl, fixed = TRUE))
+      conf <- wikidata_confidence()
       return(tibble::tibble(
         x = xi, label = label, qid = h$id, sex = sex,
-        confidence = if (exact) 1 else if (partial) 0.7 else 0.4
+        confidence = unname(if (exact) conf["exact"] else if (partial) conf["partial"] else conf["weak"])
       ))
     }
     none

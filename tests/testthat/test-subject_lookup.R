@@ -21,6 +21,18 @@ test_that("extract_subject strips object prefixes and trailing locations", {
 test_that("classification_threshold comes from the single params file", {
   expect_equal(get_param("classification_threshold"), 0.9)
   expect_error(get_param("no_such_param"), "no_such_param")
+  expect_equal(wikidata_confidence(), c(exact = 1, partial = 0.7, weak = 0.4))
+})
+
+test_that("get_param rejects a value that is not a number, or a threshold above 1", {
+  old <- .lookup_cache$params
+  on.exit(.lookup_cache$params <- old, add = TRUE)
+  .lookup_cache$params <- data.frame(
+    name = c("classification_threshold", "x_threshold"),
+    value = c("0,9", "1.5"), stringsAsFactors = FALSE
+  )
+  expect_error(get_param("classification_threshold"), "not a number")
+  expect_error(get_param("x_threshold"), "between 0 and 1")
 })
 
 test_that("extract_first_names reads the name after 'Statue of', so the John count sees it", {

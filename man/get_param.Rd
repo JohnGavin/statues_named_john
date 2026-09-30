@@ -10,7 +10,8 @@ get_param(name)
 \item{name}{Parameter name.}
 }
 \value{
-The parameter value, converted to numeric when it is numeric.
+The parameter value as a number. Aborts if the value is not a
+  number, or if a threshold or confidence is outside 0-1.
 }
 \description{
 Parameters live in one place, \code{inst/extdata/params.csv}

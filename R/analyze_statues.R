@@ -505,6 +505,7 @@ compare_johns_vs_women <- function(statue_data, person_lookup = NULL,
       if (genderdata_available()) "+genderdata_napp_ipums_ssa" else " (genderdata lookup unavailable)"
     ),
     classification_threshold = threshold,
+    wikidata_confidence = wikidata_confidence(),
     message = sprintf(
       "Found %d statues named John/Jon/Jean (%s) vs %d women statues (%s%s). %d statues (%s) have unknown gender.",
       johns, format_percent(johns, total), women, format_percent(women, total),

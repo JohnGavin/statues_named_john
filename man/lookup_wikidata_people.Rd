@@ -17,9 +17,11 @@ A tibble: \code{x}, \code{label}, \code{qid}, \code{sex}
 }
 \description{
 For each X, searches Wikidata and takes the first result that is a human
-(P31 = Q5), reading its sex (P21). Confidence: 1 when the result's label
-or the matched alias equals X (ignoring titles and punctuation), 0.7 when
-one contains the other, 0.4 otherwise, and 0 when no human was found.
+(P31 = Q5), reading its sex (P21). Confidence comes from
+[wikidata_confidence()]: \code{exact} when the result's label or the
+matched alias equals X (ignoring titles and punctuation), \code{partial}
+when one contains the other, \code{weak} otherwise, and 0 when no human
+was found.
 Errors are not caught, so an unreachable Wikidata fails fast; the
 pipeline wraps this in [fetch_optional_source()].
 }
