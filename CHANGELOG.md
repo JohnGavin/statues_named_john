@@ -3,6 +3,58 @@
 Session log: what was done, what failed and why, measurable changes, and
 known limitations. Newest first.
 
+## 2026-09-30
+
+### Completed
+
+- \#102 items 1 and 3 (#103): displayed percentages are whole numbers
+  everywhere via
+  [`format_percent()`](https://johngavin.github.io/statues_named_john/reference/format_percent.md)
+  (“\<1%” for small non-zero groups, “n/a” for a missing total); stored
+  values keep 2 dp.
+- “Statue of X”:
+  [`extract_subject()`](https://johngavin.github.io/statues_named_john/reference/extract_subject.md)
+  reads X from text such as “Statue of Sir John Millais in North
+  Forecourt of Tate Gallery” before the name rules run, so they see “Sir
+  John Millais”, not “Statue”. Also used for the John count.
+- Wikidata person lookup for the X that the name rules still cannot
+  decide:
+  [`lookup_wikidata_people()`](https://johngavin.github.io/statues_named_john/reference/lookup_wikidata_people.md)
+  (is X a human, and which sex; confidence 1.0 exact / 0.7 partial). An
+  optional pipeline step (`wikidata_people_fetch`), recorded in
+  `source_status`, retried when not “ok”.
+- One classification threshold in `inst/extdata/params.csv`
+  (`classification_threshold`, 0.9), read by
+  [`get_param()`](https://johngavin.github.io/statues_named_john/reference/get_param.md)
+  and used by both the first-name predictions and the Wikidata matches.
+  Set it to 1 to keep only certain answers. A file target, so editing it
+  re-runs the analysis.
+- Mrs/Miss/Ms/Mr added as titles (“Mrs Siddons” and “Mrs Ramsay
+  Macdonald” were Male: the surname was read as a first name); “siege”
+  added to non-name words.
+- Headline, same 2,301 statues: women 229 -\> 239 (10%), Johns 73 -\> 76
+  (3%), unknown 886 -\> 845 (37%). Per-statue diff: 44 changed (Unknown
+  -\> Male 33, Unknown -\> Female 9, Male -\> Female 1, Male -\> Unknown
+  1).
+
+### Failed Approaches
+
+- The Wikidata lookup, as built, resolves none of the statues: once X is
+  read, titles and first names already decide the 27 people the
+  prototype found on Wikidata. The 10 subjects left are not people
+  (Hercules, Neptune, the Bali bombings, …) except “Eighth Duke of
+  Devonshire”, which the Wikidata search does not find. It stays as the
+  fallback for people without a known first name.
+
+### Known Limitations
+
+- targets does not see edits to package code (loaded with
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)),
+  so results can be stale after a code change until the affected targets
+  are invalidated.
+- Mythical figures and personifications are gendered like people: “Diana
+  with Fawn” is Female, “Father Thames” is Male.
+
 ## 2026-09-29
 
 ### Completed

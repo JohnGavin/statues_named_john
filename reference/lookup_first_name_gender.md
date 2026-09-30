@@ -16,7 +16,10 @@ reports them as "Unknown" rather than guessing.
 ## Usage
 
 ``` r
-lookup_first_name_gender(names, threshold = 0.9)
+lookup_first_name_gender(
+  names,
+  threshold = get_param("classification_threshold")
+)
 ```
 
 ## Arguments

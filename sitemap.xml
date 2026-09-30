@@ -9,6 +9,7 @@
 <url><loc>https://johngavin.github.io/statues_named_john/authors.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/index.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/analyze_by_gender.html</loc></url>
+<url><loc>https://johngavin.github.io/statues_named_john/reference/candidate_subjects.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/classify_gender.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/classify_subject.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/clean_names.html</loc></url>
@@ -16,6 +17,7 @@
 <url><loc>https://johngavin.github.io/statues_named_john/reference/combine_statue_sources.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/compare_johns_vs_women.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/extract_coords_from_wkt.html</loc></url>
+<url><loc>https://johngavin.github.io/statues_named_john/reference/extract_subject.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/fetch_art_uk_data.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/fetch_historic_england_data.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/fetch_optional_source.html</loc></url>
@@ -26,6 +28,7 @@
 <url><loc>https://johngavin.github.io/statues_named_john/reference/generate_qa_sample.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/get_memorial.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/get_memorials_latest.html</loc></url>
+<url><loc>https://johngavin.github.io/statues_named_john/reference/get_param.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/get_statues_glher.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/get_statues_osm.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/get_statues_wikidata.html</loc></url>
@@ -36,9 +39,11 @@
 <url><loc>https://johngavin.github.io/statues_named_john/reference/is_man_named_john.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/join_and_clean_data.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/lookup_first_name_gender.html</loc></url>
+<url><loc>https://johngavin.github.io/statues_named_john/reference/lookup_wikidata_people.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/map_statues.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/search_memorials.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/source_row.html</loc></url>
 <url><loc>https://johngavin.github.io/statues_named_john/reference/standardize_statue_data.html</loc></url>
+<url><loc>https://johngavin.github.io/statues_named_john/reference/wikidata_confidence.html</loc></url>
 </urlset>
 

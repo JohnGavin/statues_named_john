@@ -38,9 +38,30 @@
 
 <p>Session log: what was done, what failed and why, measurable changes, and known limitations. Newest first.</p>
 <div class="section level2">
-<h2 id="id_2026-09-29">2026-09-29<a class="anchor" aria-label="anchor" href="#id_2026-09-29"></a></h2>
+<h2 id="id_2026-09-30">2026-09-30<a class="anchor" aria-label="anchor" href="#id_2026-09-30"></a></h2>
 <div class="section level3">
 <h3 id="completed">Completed<a class="anchor" aria-label="anchor" href="#completed"></a></h3>
+<ul><li>#102 items 1 and 3 (#103): displayed percentages are whole numbers everywhere via <code><a href="reference/format_percent.html">format_percent()</a></code> (“&lt;1%” for small non-zero groups, “n/a” for a missing total); stored values keep 2 dp.</li>
+<li>“Statue of X”: <code><a href="reference/extract_subject.html">extract_subject()</a></code> reads X from text such as “Statue of Sir John Millais in North Forecourt of Tate Gallery” before the name rules run, so they see “Sir John Millais”, not “Statue”. Also used for the John count.</li>
+<li>Wikidata person lookup for the X that the name rules still cannot decide: <code><a href="reference/lookup_wikidata_people.html">lookup_wikidata_people()</a></code> (is X a human, and which sex; confidence 1.0 exact / 0.7 partial). An optional pipeline step (<code>wikidata_people_fetch</code>), recorded in <code>source_status</code>, retried when not “ok”.</li>
+<li>One classification threshold in <code>inst/extdata/params.csv</code> (<code>classification_threshold</code>, 0.9), read by <code><a href="reference/get_param.html">get_param()</a></code> and used by both the first-name predictions and the Wikidata matches. Set it to 1 to keep only certain answers. A file target, so editing it re-runs the analysis.</li>
+<li>Mrs/Miss/Ms/Mr added as titles (“Mrs Siddons” and “Mrs Ramsay Macdonald” were Male: the surname was read as a first name); “siege” added to non-name words.</li>
+<li>Headline, same 2,301 statues: women 229 -&gt; 239 (10%), Johns 73 -&gt; 76 (3%), unknown 886 -&gt; 845 (37%). Per-statue diff: 44 changed (Unknown -&gt; Male 33, Unknown -&gt; Female 9, Male -&gt; Female 1, Male -&gt; Unknown 1).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="failed-approaches">Failed Approaches<a class="anchor" aria-label="anchor" href="#failed-approaches"></a></h3>
+<ul><li>The Wikidata lookup, as built, resolves none of the statues: once X is read, titles and first names already decide the 27 people the prototype found on Wikidata. The 10 subjects left are not people (Hercules, Neptune, the Bali bombings, …) except “Eighth Duke of Devonshire”, which the Wikidata search does not find. It stays as the fallback for people without a known first name.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="known-limitations">Known Limitations<a class="anchor" aria-label="anchor" href="#known-limitations"></a></h3>
+<ul><li>targets does not see edits to package code (loaded with <code><a href="https://pkgload.r-lib.org/reference/load_all.html" class="external-link">pkgload::load_all()</a></code>), so results can be stale after a code change until the affected targets are invalidated.</li>
+<li>Mythical figures and personifications are gendered like people: “Diana with Fawn” is Female, “Father Thames” is Male.</li>
+</ul></div>
+</div>
+<div class="section level2">
+<h2 id="id_2026-09-29">2026-09-29<a class="anchor" aria-label="anchor" href="#id_2026-09-29"></a></h2>
+<div class="section level3">
+<h3 id="completed-1">Completed<a class="anchor" aria-label="anchor" href="#completed-1"></a></h3>
 <ul><li>#98 item 1 (#100): a statue of a woman together with a man (“Mixed”) now counts as a statue of a woman in the headline. This resolves the 2026-09-27 limitation “Mixed statues are excluded from the women count”.</li>
 <li>#98 items 2-15: classification corrections, including a fix to the root cause of non-statues being counted as women. The genderdata name lists resolve ordinary words as first names (“Site” = Female, “Memorial” = Female, “Parish”/“Corpus”/“Tomb” = Male), so entries such as “Site of Anchor Brewery” and “Memorial Bench” were counted as statues of women. Candidate first names must now be capitalised and not in <code>inst/extdata/non_name_words.csv</code>; church/school/college dedications and “Site of …” segments are not people; a title (Duke, Lady, …) beats an animal word; “and”/“&amp;” split people in any case.</li>
 <li>Headline, same 2,301 statues: women 260 -&gt; 229 (10.0%; 222 women only
@@ -48,12 +69,12 @@
 </ul></li>
 </ul></div>
 <div class="section level3">
-<h3 id="failed-approaches">Failed Approaches<a class="anchor" aria-label="anchor" href="#failed-approaches"></a></h3>
+<h3 id="failed-approaches-1">Failed Approaches<a class="anchor" aria-label="anchor" href="#failed-approaches-1"></a></h3>
 <ul><li>Splitting people on commas (#98 item 3 as written): in this data a comma almost always introduces a location (“Statue of Hercules, Trent Park”), so it turned place names into people (13 Unknown -&gt; Male/Female, 4 new false Mixed). Reverted; commas are not person separators.</li>
 <li>Resolving people before animals whenever any name resolved: the lookup also resolves animals’ names (“Hodge the Cat” -&gt; Male). Narrowed so only an explicit title beats an animal word.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="known-limitations">Known Limitations<a class="anchor" aria-label="anchor" href="#known-limitations"></a></h3>
+<h3 id="known-limitations-1">Known Limitations<a class="anchor" aria-label="anchor" href="#known-limitations-1"></a></h3>
 <ul><li>Many real statues are titled “Statue of X” / “Tomb of X”; the first word is taken as the candidate first name, so these stay Unknown (e.g. “Tomb of Blanche Roosevelt Macchetta”). Stripping such prefixes would reduce the 886 Unknown.</li>
 <li>Ambiguous first names follow the name lists: “Camille Silvy” (a man) resolves Female.</li>
 </ul></div>
@@ -61,20 +82,20 @@
 <div class="section level2">
 <h2 id="id_2026-09-27">2026-09-27<a class="anchor" aria-label="anchor" href="#id_2026-09-27"></a></h2>
 <div class="section level3">
-<h3 id="completed-1">Completed<a class="anchor" aria-label="anchor" href="#completed-1"></a></h3>
+<h3 id="completed-2">Completed<a class="anchor" aria-label="anchor" href="#completed-2"></a></h3>
 <ul><li>Merged #96 (site re-rendered with GLHER) and #97 (this changelog). Live vignette verified: 2,301 statues; Johns 74 (3.2%), women 251 (10.9%), unknown 833 (36.2%); no error text.</li>
 <li>Removed 10 finished worktrees from the 2026-09-24/25 work.</li>
 <li>Posted a reply on #61 explaining how the slow pkgdown build was diagnosed (pak’s per-package “Built” vs “Installed” lines).</li>
 <li>Triaged the 3 open roborev reviews for this repo (10447, 10448, 10451, on the original #84 commits). The High finding was already fixed (127ef95); the still-valid Medium/Low findings are filed as #98 and the reviews closed with a pointer to it. Repo roborev: 26/26 failed verdicts addressed.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="failed-approaches-1">Failed Approaches<a class="anchor" aria-label="anchor" href="#failed-approaches-1"></a></h3>
+<h3 id="failed-approaches-2">Failed Approaches<a class="anchor" aria-label="anchor" href="#failed-approaches-2"></a></h3>
 <ul><li>First post-merge fetch of the live vignette still showed the #93 numbers although gh-pages and the Pages build were already correct; a re-fetch minutes later showed the new page. Poll the deployed page for a headline string before concluding a deploy failed.</li>
 <li>
 <code>roborev comment &lt;id&gt;</code> takes job IDs, not review IDs (“job not found”); map via <code>reviews.job_id</code> or use <code>--job</code>.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="known-limitations-1">Known Limitations<a class="anchor" aria-label="anchor" href="#known-limitations-1"></a></h3>
+<h3 id="known-limitations-2">Known Limitations<a class="anchor" aria-label="anchor" href="#known-limitations-2"></a></h3>
 <ul><li>#98: “Mixed” statues (9) are excluded from the women count and the headline message; animal detection outranks person titles (“Duke of Wellington on horse” -&gt; Animal); the person-split regex misses “A, B” and “A And B”.</li>
 <li>PR #83 (December #7/#8 vignette work) is still open against an old base.</li>
 </ul></div>
@@ -82,7 +103,7 @@
 <div class="section level2">
 <h2 id="id_2026-09-25">2026-09-25<a class="anchor" aria-label="anchor" href="#id_2026-09-25"></a></h2>
 <div class="section level3">
-<h3 id="completed-2">Completed<a class="anchor" aria-label="anchor" href="#completed-2"></a></h3>
+<h3 id="completed-3">Completed<a class="anchor" aria-label="anchor" href="#completed-3"></a></h3>
 <ul><li>#84: gender classification via the <code>gender</code> package + <code>genderdata</code>, with a small documented override table; unknown genders are now reported instead of silently guessed (#89; #88 closed as superseded).</li>
 <li>Nix: dropped WikidataQueryServiceR and <code>llvmPackages.openmp</code>, added <code>genderdata</code> (#87).</li>
 <li>#90: OSM fetch fails fast — bounded per-request timeout, only HTTP 429/5xx retried, DNS/connection errors not retried, any failed query aborts (no partial data), queries overpass-api.de (#91).</li>
@@ -108,7 +129,7 @@
 <td>833 (36.2%)</td>
 </tr></tbody></table></div>
 <div class="section level3">
-<h3 id="failed-approaches-2">Failed Approaches<a class="anchor" aria-label="anchor" href="#failed-approaches-2"></a></h3>
+<h3 id="failed-approaches-3">Failed Approaches<a class="anchor" aria-label="anchor" href="#failed-approaches-3"></a></h3>
 <ul><li>
 <code><a href="https://httr.r-lib.org/reference/RETRY.html" class="external-link">httr::RETRY()</a></code> for Overpass: it also retries request errors, so a dead host took 24.9 s. Replaced by an explicit loop that retries only 429/5xx.</li>
 <li>osmdata’s default Overpass mirror (overpass.kumi.systems): HTTP 504 after 66 s for the London <code>memorial=statue</code> query; overpass-api.de answered in 13 s. Now the default (override with option <code>statuesnamedjohn.overpass_url</code>).</li>
@@ -122,7 +143,7 @@
 <li>Data sources: wikidata 52, osm 3,900, glher 0 -&gt; 302.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="known-limitations-2">Known Limitations<a class="anchor" aria-label="anchor" href="#known-limitations-2"></a></h3>
+<h3 id="known-limitations-3">Known Limitations<a class="anchor" aria-label="anchor" href="#known-limitations-3"></a></h3>
 <ul><li>roborev merge-gate script cannot read schema-v2 reviews, so it returns indeterminate on every PR (JohnGavin/llm#1267); its findings table crashes with a SyntaxError (JohnGavin/llm#1263).</li>
 <li>One GLHER name arrives double-encoded at source (“La Délivrance”).</li>
 <li>Historic England’s reuse terms for automated GLHER queries not checked.</li>

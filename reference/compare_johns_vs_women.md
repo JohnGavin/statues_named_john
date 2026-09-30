@@ -6,7 +6,11 @@ named John than women in the UK.
 ## Usage
 
 ``` r
-compare_johns_vs_women(statue_data)
+compare_johns_vs_women(
+  statue_data,
+  person_lookup = NULL,
+  threshold = get_param("classification_threshold")
+)
 ```
 
 ## Arguments
@@ -14,6 +18,16 @@ compare_johns_vs_women(statue_data)
 - statue_data:
 
   Standardized statue data tibble
+
+- person_lookup:
+
+  Optional tibble from \[lookup_wikidata_people()\] (`x`, `sex`,
+  `confidence`) used for text such as "Statue of X".
+
+- threshold:
+
+  Minimum confidence to accept a gender; defaults to the single project
+  setting `get_param("classification_threshold")`.
 
 ## Value
 
