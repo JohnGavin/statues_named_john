@@ -59,7 +59,8 @@ Summarise the themes, topics and contents by similarity, and
 suggest which parts  might be better migrated to a 
 wiki page on that topic or theme on the GH repo or to a FAQs wiki page and raise a GH issue for any outstanding issues/todo/features.
 *   **Wiki FAQs**: Create and maintain a "FAQs" page on the GitHub Wiki documenting tasks logged in `./R/setup/`. Each entry should summarize the task and provide a direct link to the corresponding R script in the repository (e.g., link `R/setup/task_name.R` for `task_name`).
-*   **README Maintenance**: The top-level `README.md` should be generated from `inst/qmd/README.qmd`. Any content updates should be made in the `.qmd` file and then rendered to `README.md` using Quarto (e.g., `quarto render inst/qmd/README.qmd --to gfm --output README.md`).
+*   **README Maintenance**: The top-level `README.md` should be generated from `inst/qmd/README.qmd`. Any content updates should be made in the `.qmd` file; `targets::tar_make()` then re-renders `README.md` (targets `readme_qmd` → `readme_md` in `R/tar_plans/documentation_plan.R`). Never edit `README.md` by hand: the next `tar_make()` overwrites it.
+*   **Pipeline tracks package code**: `_targets.R` sets `tar_option_set(imports = "statuesnamedjohn")`, and every `inst/extdata` table the analysis reads is a `format = "file"` target. Editing a function in `R/` or a lookup table re-runs exactly the affected targets; no manual `tar_invalidate()` is needed (#105). `tests/testthat/test-pipeline_tracking.R` checks this.
 
 ## 5. Version Control & GitHub Workflow
 

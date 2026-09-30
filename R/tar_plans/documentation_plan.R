@@ -11,6 +11,39 @@
 # - No manual commits of HTML needed (CI handles it)
 
 documentation_plan <- list(
+  # ── README ────────────────────────────────────────────────────────────
+
+  # README.md is generated from inst/qmd/README.qmd (#79). Both are file
+  # targets: editing the .qmd, or hand-editing README.md, re-renders it.
+  tar_target(readme_qmd, file.path("inst", "qmd", "README.qmd"), format = "file"),
+  tar_target(
+    readme_md,
+    {
+      quarto::quarto_render(input = readme_qmd, output_format = "gfm", quiet = TRUE)
+      rendered <- file.path(dirname(readme_qmd), "README.md")
+      if (!file.exists(rendered)) {
+        cli::cli_abort("Quarto wrote no {.path {rendered}}.")
+      }
+      if (!file.copy(rendered, "README.md", overwrite = TRUE)) {
+        cli::cli_abort("Could not copy {.path {rendered}} to {.path README.md}.")
+      }
+      file.remove(rendered)
+      "README.md"
+    },
+    format = "file"
+  ),
+
+  # ── Target Source Code ────────────────────────────────────────────────
+
+  # The code behind each target, read from the plan files, so the vignette
+  # can show it next to each result (#81).
+  tar_target(
+    plan_files,
+    list.files(file.path("R", "tar_plans"), pattern = "\\.R$", full.names = TRUE),
+    format = "file"
+  ),
+  tar_target(target_code, target_code_markdown(target_commands(plan_files)), format = "rds"),
+
   # ── Vignette Rendering ────────────────────────────────────────────────
 
   # Track the vignette source itself, so editing the .qmd re-renders it
@@ -35,7 +68,8 @@ documentation_plan <- list(
         memorial_interactive_map,
         johns_comparison,
         findings,
-        gender_analysis # read by the vignette; must trigger a re-render (#84)
+        gender_analysis, # read by the vignette; must trigger a re-render (#84)
+        target_code # shown under each result (#81)
       )
 
       # Ensure output directory exists for Quarto (project root)
@@ -105,6 +139,7 @@ documentation_plan <- list(
       # committed HTML, so the site could be built from a stale vignette.
       vignette_html <- vignette_memorial_analysis_html
       stopifnot(file.exists(vignette_html))
+      readme_md # the site's home page is built from README.md
 
       # Clean docs/ directory to avoid permission issues
       if (dir.exists("docs")) {

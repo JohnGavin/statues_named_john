@@ -44,7 +44,11 @@ named John than women in the UK.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compare_johns_vs_women</span><span class="op">(</span><span class="va">statue_data</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compare_johns_vs_women</span><span class="op">(</span></span>
+<span>  <span class="va">statue_data</span>,</span>
+<span>  person_lookup <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  threshold <span class="op">=</span> <span class="fu"><a href="get_param.html">get_param</a></span><span class="op">(</span><span class="st">"classification_threshold"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -53,6 +57,17 @@ named John than women in the UK.</p>
 
 <dl><dt id="arg-statue-data">statue_data<a class="anchor" aria-label="anchor" href="#arg-statue-data"></a></dt>
 <dd><p>Standardized statue data tibble</p></dd>
+
+
+<dt id="arg-person-lookup">person_lookup<a class="anchor" aria-label="anchor" href="#arg-person-lookup"></a></dt>
+<dd><p>Optional tibble from [lookup_wikidata_people()]
+(<code>x</code>, <code>sex</code>, <code>confidence</code>) used for text such as
+"Statue of X".</p></dd>
+
+
+<dt id="arg-threshold">threshold<a class="anchor" aria-label="anchor" href="#arg-threshold"></a></dt>
+<dd><p>Minimum confidence to accept a gender; defaults to the
+single project setting <code>get_param("classification_threshold")</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -65,6 +80,9 @@ named John than women in the UK.</p>
     Victoria and Prince Albert").
   - unknown_statues, unknown_percent: statues whose gender could not be
     confidently classified (see classify_gender_from_subject())
+  - john_percent_label, woman_percent_label, unknown_percent_label:
+    whole-percent display text from format_percent(). The numeric
+    *_percent fields keep 2 decimal places.
   - gender_method: which classification sources were used, in priority
     order (Wikidata P21, title/term overrides, then the genderdata lookup
     cascade when the gender and genderdata packages are available)</p>
