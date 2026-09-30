@@ -12,16 +12,21 @@ format_percent(count, total)
 \item{total}{Numeric vector of totals (recycled against `count`).}
 }
 \value{
-Character vector such as "10%", or "n/a" when the total is
-  missing or zero.
+Character vector such as "10%" or "<1%", or "n/a" when the
+  total is missing or zero.
 }
 \description{
 The single place where displayed percentages are rounded (#102). Stored
 values keep 2 decimal places; everything shown to readers (headline,
 vignette text, table columns, plot labels) is rounded to the nearest
-whole percent. The label is always computed from the raw counts, never
-from an already-rounded percentage, so a value is never rounded twice.
+whole percent, with halves rounded up (12.5% -> "13%"). The label is
+always computed from the raw counts, never from an already-rounded
+percentage, so a value is never rounded twice.
+
+A non-zero share that would round to 0 is shown as "<1%", so a small
+but real group (e.g. 7 of 2,301) is never displayed as "0%".
 }
 \examples{
 format_percent(229, 2301)
+format_percent(7, 2301)
 }

@@ -51,3 +51,18 @@ test_that("analyze_by_gender stores 2 dp and adds a whole-percent label", {
   expect_true(all(s$percent == 33.33))
   expect_true(all(s$percent_label == "33%"))
 })
+
+test_that("a small non-zero share shows as '<1%', never '0%' (review 10687)", {
+  expect_equal(format_percent(7, 2301), "<1%")
+  expect_equal(format_percent(1, 2301), "<1%")
+  expect_equal(format_percent(0, 2301), "0%")
+})
+
+test_that("halves round up, not to even (review 10687)", {
+  expect_equal(format_percent(1, 8), "13%")   # 12.5
+  expect_equal(format_percent(1, 40), "3%")   # 2.5
+})
+
+test_that("zero-length input returns character(0)", {
+  expect_identical(format_percent(numeric(0), numeric(0)), character(0))
+})

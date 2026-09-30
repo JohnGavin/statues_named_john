@@ -87,7 +87,7 @@ if (dir.exists(store_path)) {
 ## Data Overview
 
 ```{r summary-stats}
-knitr::kable(summary_table,
+knitr::kable(summary_table, align = "lrr",
              caption = paste0(
                "Gender Representation Summary. 'Mixed' statues depict a woman ",
                "together with a man; the headline below counts them as statues ",
@@ -111,7 +111,7 @@ top_names_f <- gender_analysis$top_names_by_gender %>%
   dplyr::select(Name = extracted_names, Count = n, Percent = percent_label) %>%
   dplyr::arrange(desc(Count))
 
-knitr::kable(top_names_f, caption = "Most Common Female Names")
+knitr::kable(top_names_f, align = "lrr", caption = "Most Common Female Names")
 ```
 
 ## Male
@@ -122,7 +122,7 @@ top_names_m <- gender_analysis$top_names_by_gender %>%
   dplyr::select(Name = extracted_names, Count = n, Percent = percent_label) %>%
   dplyr::arrange(desc(Count))
 
-knitr::kable(top_names_m, caption = "Most Common Male Names")
+knitr::kable(top_names_m, align = "lrr", caption = "Most Common Male Names")
 ```
 
 :::
