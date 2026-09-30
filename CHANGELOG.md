@@ -38,10 +38,21 @@ known limitations. Newest first.
   Devonshire", which the Wikidata search does not find. It stays as the
   fallback for people without a known first name.
 
+- #104 review fixes: the render target now copies the figure directory
+  as well as the HTML, so the published chart no longer shows "Unknown
+  2057 (100%)" next to current tables. The Wikidata match scores now have
+  one home (`params.csv`, `wikidata_confidence()`), and `get_param()`
+  rejects non-numbers and thresholds above 1.
+- Filed #105 (this repo) and JohnGavin/llm#1295 (all projects): pipelines
+  must track their own package code and parameter files as targets.
+
 ### Known Limitations
 - targets does not see edits to package code (loaded with
   `pkgload::load_all()`), so results can be stale after a code change
-  until the affected targets are invalidated.
+  until the affected targets are invalidated (#105).
+- Editing `wikidata_*_confidence` in `params.csv` does not re-run the
+  Wikidata lookup: no target depends on those values (roborev 13840).
+  Covered by #105.
 - Mythical figures and personifications are gendered like people:
   "Diana with Fawn" is Female, "Father Thames" is Male.
 
