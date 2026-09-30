@@ -26,6 +26,8 @@
   : Fetch statues from OpenStreetMap
 - [`fetch_wikidata_statues()`](https://johngavin.github.io/statues_named_john/reference/fetch_wikidata_statues.md)
   : Fetch statues from Wikidata
+- [`format_percent()`](https://johngavin.github.io/statues_named_john/reference/format_percent.md)
+  : Format a percentage for display
 - [`generate_qa_sample()`](https://johngavin.github.io/statues_named_john/reference/generate_qa_sample.md)
   : Generate QA Sample for Manual Validation
 - [`get_memorial()`](https://johngavin.github.io/statues_named_john/reference/get_memorial.md)
