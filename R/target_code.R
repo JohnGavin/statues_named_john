@@ -10,7 +10,9 @@
 #' @description
 #' Parses each plan file and returns the command of every
 #' \code{tar_target()} call, as written in the file (comments and layout
-#' kept), with the line it starts on.
+#' kept), with the line it starts on. The only change is that the
+#' indentation of the line the command starts on is removed from its later
+#' lines; lines inside multi-line strings are left untouched.
 #'
 #' @param files Paths to plan files, e.g.
 #'   \code{list.files("R/tar_plans", full.names = TRUE)}.
@@ -45,6 +47,11 @@ target_commands <- function(files) {
 target_commands_one <- function(file) {
   exprs <- parse(file, keep.source = TRUE)
   pd <- utils::getParseData(exprs, includeText = TRUE)
+  src <- readLines(file, warn = FALSE)
+  # Lines that continue a multi-line string: their leading whitespace is
+  # part of the string, so dedent() must not touch it (#108).
+  strs <- pd[pd$token == "STR_CONST" & pd$line2 > pd$line1, ]
+  in_string <- unlist(Map(function(a, b) seq(a + 1, b), strs$line1, strs$line2))
   # Each tar_target() call: the call expression is the grandparent of the
   # SYMBOL_FUNCTION_CALL token (token -> function-name expr -> call expr).
   fn_tokens <- pd[pd$token == "SYMBOL_FUNCTION_CALL" & pd$text == "tar_target", ]
@@ -61,9 +68,12 @@ target_commands_one <- function(file) {
       cli::cli_abort("Cannot read a tar_target() call in {.path {file}}.", call = NULL)
     }
     cmd_row <- pd[pd$id == cmd_id, ]
+    keep <- seq(cmd_row$line1 + 1, length.out = cmd_row$line2 - cmd_row$line1) %in% in_string
     data.frame(
       name = utils::getParseText(pd, name_id),
-      command = dedent(utils::getParseText(pd, cmd_id), cmd_row$col1),
+      command = dedent(utils::getParseText(pd, cmd_id),
+                       indent = sub("\\S.*$", "", src[cmd_row$line1]),
+                       keep = keep),
       file = file,
       line = cmd_row$line1
     )
@@ -95,18 +105,28 @@ call_args <- function(kids) {
   data.frame(id = ids, name = nms)
 }
 
-# Remove the indentation the command had in its plan file. The first line
-# starts at `col` (its indentation is not part of the parse text); later
-# lines keep theirs, so strip the common leading whitespace from those.
-dedent <- function(text, col) {
+# Remove the indentation the command had in its plan file. The parse text
+# of the first line has none; later lines carry the indentation of the
+# source line the command starts on (`indent`, the literal whitespace, so
+# tabs work), and that is what is stripped. Deeper indentation, such as an
+# argument aligned under its call, is kept. Lines flagged in `keep` are
+# inside a multi-line string and are left exactly as written (#108).
+dedent <- function(text, indent, keep = logical(0)) {
   lines <- strsplit(text, "\n", fixed = TRUE)[[1]]
-  if (length(lines) < 2) {
+  if (length(lines) < 2 || !nzchar(indent)) {
     return(text)
   }
   rest <- lines[-1]
-  body <- rest[grepl("\\S", rest)]
-  indent <- min(nchar(body) - nchar(sub("^ +", "", body)), col - 1)
-  rest <- ifelse(grepl("\\S", rest), substring(rest, indent + 1), "")
+  keep <- rep_len(c(keep, logical(length(rest))), length(rest))
+  ind <- strsplit(indent, "")[[1]]
+  rest[!keep] <- vapply(rest[!keep], function(line) {
+    chars <- strsplit(line, "")[[1]]
+    n <- 0L
+    while (n < length(ind) && n < length(chars) && chars[n + 1] == ind[n + 1]) {
+      n <- n + 1L
+    }
+    substring(line, n + 1)
+  }, character(1), USE.NAMES = FALSE)
   paste(c(lines[1], rest), collapse = "\n")
 }
 
@@ -119,7 +139,12 @@ dedent <- function(text, col) {
 #'
 #' @param code Data frame from \code{target_commands()}.
 #' @param repo_url Base URL for links to the plan files, or \code{NULL} for
-#'   no links.
+#'   no links. Links point at \code{main} on purpose (#108): line numbers
+#'   come from the working tree at render time, and the re-rendered
+#'   vignette is committed together with the plan edit, so the deployed
+#'   site (built from \code{main}) links to the right lines. Pinning the
+#'   current commit SHA instead would point at the commit before the edit.
+#'   Links from a branch render match only once that branch is merged.
 #' @return Named character vector of markdown, one element per target.
 #' @export
 target_code_markdown <- function(code,

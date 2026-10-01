@@ -36,11 +36,14 @@ documentation_plan <- list(
   # ── Target Source Code ────────────────────────────────────────────────
 
   # The code behind each target, read from the plan files, so the vignette
-  # can show it next to each result (#81).
+  # can show it next to each result (#81). Always re-list, so a new plan
+  # file is picked up (#108); the file hashes still stop target_code from
+  # re-running when no plan file changed.
   tar_target(
     plan_files,
     list.files(file.path("R", "tar_plans"), pattern = "\\.R$", full.names = TRUE),
-    format = "file"
+    format = "file",
+    cue = tar_cue(mode = "always")
   ),
   tar_target(target_code, target_code_markdown(target_commands(plan_files)), format = "rds"),
 

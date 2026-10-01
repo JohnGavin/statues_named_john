@@ -3,6 +3,54 @@
 Session log: what was done, what failed and why, measurable changes, and
 known limitations. Newest first.
 
+## 2026-09-30 (pipeline tracking: \#105, \#79, \#81)
+
+### Completed
+
+- \#105: `_targets.R` sets
+  `tar_option_set(imports = "statuesnamedjohn")`, so editing a function
+  in `R/` re-runs the targets that use it. The lookup tables
+  (`gender_overrides.csv`, `non_name_words.csv`) are a file target
+  (`lookup_files`) listed by the classifying targets;
+  `wikidata_people_fetch` now also depends on `params.csv` (its match
+  confidences live there). `params_file` uses a relative path.
+- New `tests/testthat/test-pipeline_tracking.R`: on a scratch copy of
+  the project and store, edits
+  [`analyze_by_gender()`](https://johngavin.github.io/statues_named_john/reference/analyze_by_gender.md)
+  and then `gender_overrides.csv`, and asserts `gender_analysis` and
+  `johns_comparison` become outdated. Skips (does not pass) when no
+  store exists or the analysis is already outdated.
+- \#79: `README.md` is rendered from `inst/qmd/README.qmd` by targets
+  `readme_qmd` -\> `readme_md`; `pkgdown_site` depends on it.
+- \#81:
+  [`target_commands()`](https://johngavin.github.io/statues_named_john/reference/target_commands.md)
+  reads each `tar_target()` command from the plan files as written;
+  [`target_code_markdown()`](https://johngavin.github.io/statues_named_john/reference/target_code_markdown.md)
+  turns them into collapsed “Show code for target” blocks with a `#L<n>`
+  link. The vignette shows one under five results (summary table, top
+  names, plot, map, Johns-vs-women).
+
+### Verification
+
+- `tar_make()` run 1: 30 completed, 1 skipped. Run 2 with no changes: 29
+  skipped; only `pkgdown_site` (cue always) and `pkgdown_verification`
+  ran.
+- Headline unchanged: 76 Johns (3%) vs 239 women (10%), 845 unknown
+  (37%).
+- Tests: `[ FAIL 0 | WARN 4 | SKIP 0 | PASS 240 ]` (3 warnings from the
+  existing network tests; 1 from recording the new snapshot).
+- Falsified the tracking test: in a scratch copy with `imports` removed
+  and a store built that way, the code-edit check failed (line 47) while
+  the lookup-table check still passed. With `imports` removed from an
+  existing tracked store, the test skips rather than passing.
+
+### Known limitations
+
+- `vignettes/_targets.yaml` still points at an old absolute store path
+  (`/Users/johngavin/docs_gh/claude_rix/...`); not changed here.
+- The companion rule/check in `JohnGavin/llm` (#105 “Mandatory
+  everywhere”) is not part of this change.
+
 ## 2026-09-30
 
 ### Completed

@@ -63,7 +63,12 @@ link to where it is defined. A vignette prints one with
 
 <dt id="arg-repo-url">repo_url<a class="anchor" aria-label="anchor" href="#arg-repo-url"></a></dt>
 <dd><p>Base URL for links to the plan files, or <code>NULL</code> for
-no links.</p></dd>
+no links. Links point at <code>main</code> on purpose (#108): line numbers
+come from the working tree at render time, and the re-rendered
+vignette is committed together with the plan edit, so the deployed
+site (built from <code>main</code>) links to the right lines. Pinning the
+current commit SHA instead would point at the commit before the edit.
+Links from a branch render match only once that branch is merged.</p></dd>
 
 </dl></div>
     <div class="section level2">

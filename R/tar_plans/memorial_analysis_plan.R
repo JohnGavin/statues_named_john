@@ -73,11 +73,17 @@ memorial_analysis_plan <- list(
     },
     format = "rds"
   ),
-  # params_file: the match confidences (wikidata_confidence()) live there too
+  # The match confidences that lookup_wikidata_people() reads from
+  # params.csv. A value target, so the live fetch re-runs only when these
+  # values change, not on every params.csv edit (#108).
+  tar_target(wikidata_match_confidence, {
+    params_file
+    wikidata_confidence()
+  }, format = "rds"),
   tar_target(
     wikidata_people_fetch,
     {
-      params_file
+      wikidata_match_confidence
       fetch_optional_source("wikidata_people", lookup_wikidata_people(people_candidates))
     },
     format = "rds",

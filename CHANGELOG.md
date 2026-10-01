@@ -3,6 +3,48 @@
 Session log: what was done, what failed and why, measurable changes, and
 known limitations. Newest first.
 
+## 2026-10-01 (#108: follow-ups to #107 from roborev 13861)
+
+### Completed
+- **Item 1:** `plan_files` has `cue = tar_cue(mode = "always")`, so a new file in
+  `R/tar_plans/` reaches `target_code`. The file hashes still stop
+  `target_code` from re-running when nothing changed.
+- **Item 2:** a new value target `wikidata_match_confidence`
+  (`wikidata_confidence()`) replaces `params_file` as the dependency of
+  `wikidata_people_fetch`. Editing `classification_threshold` no longer
+  re-runs the live Wikidata fetch; editing a confidence still does.
+- **Item 3:** `dedent()` strips only the leading whitespace of the line the
+  command starts on, as literal characters, so tab indentation works.
+  - Lines inside multi-line strings are left exactly as written.
+  - Arguments aligned under their call keep their alignment. Before, they
+    lost it (`"  b)"`), a bug the new test found.
+- **Item 4:** links stay on `blob/main`; documented why in
+  `target_code_markdown()`. The re-rendered vignette is committed together
+  with the plan edit, so a SHA pinned at render time would point at the
+  commit *before* the edit. The deployed site (built from `main`) links
+  correctly.
+
+### Verification
+- Scratch copy of project and store:
+  - Item 2: a threshold edit re-ran the analysis but not the fetch. Control:
+    a `wikidata_partial_confidence` edit re-ran the fetch.
+  - Item 1: a new plan file's target appears in `target_code`. Without the
+    cue, it does not (falsified).
+- New `target_code` tests failed first, as expected (3 failures), then
+  passed: `[ FAIL 0 | PASS 16 ]`.
+- Full suite: `[ FAIL 0 | WARN 3 | SKIP 0 | PASS 243 ]` (the 3 warnings come
+  from the existing network tests).
+- `tar_make()`: 7 completed, 25 skipped. `wikidata_people` was unchanged, so
+  the analysis did not re-run. Headline unchanged.
+- The rendered vignette's 5 line links moved +6 (the new target); each was
+  checked against the plan file.
+
+### Failed Approaches
+- The first falsification script edited the plan file with a broad line
+  filter. It left a trailing comma and also changed the `pkgdown_site`
+  block, which broke the scratch copy only. Redone on a fresh copy with one
+  exact edit.
+
 ## 2026-09-30 (pipeline tracking: #105, #79, #81)
 
 ### Completed
