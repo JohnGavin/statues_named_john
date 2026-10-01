@@ -17,7 +17,9 @@ A data frame with columns \code{name}, \code{command},
 \description{
 Parses each plan file and returns the command of every
 \code{tar_target()} call, as written in the file (comments and layout
-kept), with the line it starts on.
+kept), with the line it starts on. The only change is that the
+indentation of the line the command starts on is removed from its later
+lines; lines inside multi-line strings are left untouched.
 }
 \examples{
 plan <- tempfile(fileext = ".R")

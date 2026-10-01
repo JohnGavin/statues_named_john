@@ -26,6 +26,34 @@ test_that("target_commands() reads positional and named commands as written", {
   expect_equal(code$line, c(2L, 5L, 10L))
 })
 
+test_that("target_commands() leaves multi-line strings alone and handles tabs (#108)", {
+  plan <- write_plan(c(
+    "plan <- list(",
+    "  tar_target(s, {",
+    "    x <- \"line one",
+    "keep this unindented\"",
+    "    x",
+    "  }),",
+    "\ttar_target(t, {",
+    "\t\ty",
+    "\t})",
+    ")"
+  ))
+  code <- target_commands(plan)
+  expect_equal(code$command[1], "{\n  x <- \"line one\nkeep this unindented\"\n  x\n}")
+  expect_equal(code$command[2], "{\n\ty\n}")
+})
+
+test_that("target_commands() keeps continuation lines aligned under the call", {
+  plan <- write_plan(c(
+    "list(",
+    "  tar_target(z, f(a,",
+    "                  b))",
+    ")"
+  ))
+  expect_equal(target_commands(plan)$command, "f(a,\n                b)")
+})
+
 test_that("target_commands() rejects a target defined twice", {
   plan <- write_plan(c("list(tar_target(x, 1), tar_target(x, 2))"))
   expect_snapshot(error = TRUE, target_commands(plan))

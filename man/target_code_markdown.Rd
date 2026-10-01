@@ -13,7 +13,12 @@ target_code_markdown(
 \item{code}{Data frame from \code{target_commands()}.}
 
 \item{repo_url}{Base URL for links to the plan files, or \code{NULL} for
-no links.}
+no links. Links point at \code{main} on purpose (#108): line numbers
+come from the working tree at render time, and the re-rendered
+vignette is committed together with the plan edit, so the deployed
+site (built from \code{main}) links to the right lines. Pinning the
+current commit SHA instead would point at the commit before the edit.
+Links from a branch render match only once that branch is merged.}
 }
 \value{
 Named character vector of markdown, one element per target.
