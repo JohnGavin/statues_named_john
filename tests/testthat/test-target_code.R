@@ -51,7 +51,19 @@ test_that("target_commands() keeps continuation lines aligned under the call", {
     "                  b))",
     ")"
   ))
-  expect_equal(target_commands(plan)$command, "f(a,\n                b)")
+  # `b` stays under `a` (#110: #108 wrongly expected "f(a,\n                b)")
+  expect_equal(target_commands(plan)$command, "f(a,\n  b)")
+})
+
+test_that("target_commands() keeps relative indentation when a block starts mid-line", {
+  plan <- write_plan(c(
+    "list(",
+    "  tar_target(w, g(x,",
+    "                  h(y,",
+    "                    z)))",
+    ")"
+  ))
+  expect_equal(target_commands(plan)$command, "g(x,\n  h(y,\n    z))")
 })
 
 test_that("target_commands() rejects a target defined twice", {
