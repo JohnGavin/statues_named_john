@@ -22,7 +22,13 @@ target_code_markdown(
 
 - repo_url:
 
-  Base URL for links to the plan files, or `NULL` for no links.
+  Base URL for links to the plan files, or `NULL` for no links. Links
+  point at `main` on purpose (#108): line numbers come from the working
+  tree at render time, and the re-rendered vignette is committed
+  together with the plan edit, so the deployed site (built from `main`)
+  links to the right lines. Pinning the current commit SHA instead would
+  point at the commit before the edit. Links from a branch render match
+  only once that branch is merged.
 
 ## Value
 
