@@ -40,6 +40,6 @@ writeLines(c(
 ), plan)
 target_commands(plan)
 #>   name                    command                               file line
-#> 1    x                      1 + 1 /tmp/RtmpZPaRW8/file20f42e339de7.R    2
-#> 2    y {\n  x * 2  # double it\n} /tmp/RtmpZPaRW8/file20f42e339de7.R    3
+#> 1    x                      1 + 1 /tmp/RtmpnCs9OB/file20d1570833f7.R    2
+#> 2    y {\n  x * 2  # double it\n} /tmp/RtmpnCs9OB/file20d1570833f7.R    3
 ```
