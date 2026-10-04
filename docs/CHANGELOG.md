@@ -3,6 +3,87 @@
 Session log: what was done, what failed and why, measurable changes, and
 known limitations. Newest first.
 
+## 2026-10-04 (session end: roborev 13908 on \#112)
+
+### Known Limitations
+
+- roborev 13908 on \#112 failed. Finding 1, confirmed against the code:
+  `source` is NA for every record (`standardize_statue_data.R:55`:
+  `mutate(source = source)` reads the NA column added by
+  `ensure_standard_columns()`, not the argument). De-duplication
+  therefore ignores the glher \> wikidata \> osm preference, and the “By
+  source” counts (osm 2123 / glher 160 / wikidata 18) reflect bind
+  order. Pre-existing; \#112 only worked around it in
+  `memorial_map_plot`. Tracked in \#114.
+- Findings 2-6 (Top Names captions describe name-token counts as
+  memorial counts; incomplete John variants; hard-coded source list;
+  zoom fires from Code tabs; duplicate `inst/qmd/*_files` committed) and
+  a fixed-width interactive map: \#115.
+- Live check of the deployed dashboard: the plain URL served the old
+  page for up to 10 minutes after deploy (CDN `max-age=600`); `gh-pages`
+  and a cache-busted fetch had the dashboard.
+
+## 2026-10-04 (vignette → Quarto dashboard: pages and tabsets, no TOC)
+
+### Completed
+
+- **`inst/qmd/memorial-analysis.qmd` is now `format: dashboard`**,
+  modelled on irishbuoys’ `dashboard_static.qmd`. Pages: Overview, Top
+  Names, Map, Johns vs Women, Reference. No table of contents.
+  - Every card with more than one item is a tabset; each output card has
+    a **Code** tab with that target’s pipeline code (#81).
+  - Each output and its caption share one explicit `::: {.card}`. In a
+    dashboard, text after a chunk otherwise becomes a separate card that
+    competes for height; charts shrank to thumbnails or vanished.
+  - Captions state a question, and their figures are inline R from
+    targets. No hand-typed counts.
+- **Static map fixed** (`memorial_map_plot`): it coloured by `source`,
+  which is NA for all 2,301 combined rows, so every point was grey. It
+  now colours by `source_name` (osm 2,123, glher 160, wikidata 18),
+  legend at the bottom. It was loaded by the old vignette but never
+  shown; it is now a tab on the Map page.
+- **Re-render bug fixed** (`documentation_plan.R`): the dashboard
+  libraries Quarto copies from the nix store are read-only.
+  [`file.copy()`](https://rdrr.io/r/base/files.html) kept that mode, so
+  the *second* render failed with “Permission denied”. The copy step now
+  deletes the generated `vignettes/memorial-analysis_files` and copies
+  with `copy.mode = FALSE`.
+
+### Verification
+
+- Rendered: 5 pages, 22 tab controls, no TOC element; 0 error patterns
+  (`Error`, `NA%`, `#>`, “Pipeline not run”).
+- Inline values checked in the rendered HTML: Mary (13) most common
+  female name, John ranks 1 (73), sources glher 160 / osm 2123 /
+  wikidata 18.
+- Headless Chrome screenshots at 1400×700, ×1000 and ×1400; a DOM probe
+  at 700px shows the Overview page scrolls (last row ends at 1283px in a
+  613px viewport).
+- Re-render with read-only files present now succeeds (it failed before
+  the fix).
+- `check_dark_contrast.sh`: no light inline backgrounds. Tests
+  `[ FAIL 0 | WARN 3 | SKIP 0 | PASS 246 ]`.
+
+### Failed Approaches
+
+- `scrolling: true` alone did not stop rows shrinking to the window, and
+  removing `{height=..}` made the chart vanish. Both fail because each
+  page grid splits the viewport between rows. Fixed with one explicit
+  card per output and `grid-auto-rows: minmax(600px, auto)` on the page
+  grid.
+- First-draft captions asserted “royal names dominate” and
+  “OpenStreetMap supplies most records; others mostly central”. The data
+  showed the first was false (Mary, Margaret, Marie, Edith, “World”),
+  and the second was unchecked. Replaced by computed values.
+
+### Known Limitations
+
+- Tables use [`knitr::kable`](https://rdrr.io/pkg/knitr/man/kable.html):
+  DT is not in the nix shell. Adding it needs `default.R` + a nix
+  rebuild (project AGENTS.md says to ask first).
+- Top-name tables show non-names: “The” (60) as a male name and “World”
+  5.  as a female one. Classification issues for group 2 (#102).
+
 ## 2026-10-01 (fix \#110’s dedent regression; roborev 13889)
 
 ### Completed

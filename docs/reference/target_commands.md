@@ -42,7 +42,7 @@ target_commands(plan)
 #>   name                    command
 #> 1    x                      1 + 1
 #> 2    y {\n  x * 2  # double it\n}
-#>                                                            file line
-#> 1 /private/tmp/nix-shell-90761-0/RtmpMuWuPG/file162ae5ef20d3c.R    2
-#> 2 /private/tmp/nix-shell-90761-0/RtmpMuWuPG/file162ae5ef20d3c.R    3
+#>                                                           file line
+#> 1 /private/tmp/nix-shell-24694-0/RtmpK7VDPK/file63795abe0311.R    2
+#> 2 /private/tmp/nix-shell-24694-0/RtmpK7VDPK/file63795abe0311.R    3
 ```

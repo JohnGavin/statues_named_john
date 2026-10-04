@@ -34,29 +34,26 @@ analyze_by_gender <- function(statue_data, gender_mapping = NULL, person_lookup 
         !is.na(subject_gender) & tolower(subject_gender) %in% c("male", "female") ~ stringr::str_to_title(subject_gender),
         !is.na(subject_gender) ~ "Other", # Transgender, non-binary, etc. mapped to Other for high-level summary
         type == "animal" | stringr::str_detect(type, "(?i)animal") ~ "Animal",
+        # No name, no subject: nothing identifies whom it honours (#117)
+        is.na(name) & is.na(subject) ~ "Unnamed",
         TRUE ~ heuristic_gender
       )
     )
 
   # Overall summary
   # Stored percentages keep 2 dp; percent_label is the whole-percent text
-  # shown to readers (format_percent(), #102).
+  # shown to readers (format_percent(), #102). Shares are of identifiable
+  # records: Unnamed rows are counted but left out of every share (#117).
   summary <- classified %>%
     dplyr::count(inferred_gender) %>%
-    dplyr::mutate(
-      percent = round(100 * n / sum(n), 2),
-      percent_label = format_percent(n, sum(n))
-    ) %>%
+    share_of_identifiable() %>%
     dplyr::arrange(desc(n))
 
   # By source
   by_source <- classified %>%
     dplyr::count(source, inferred_gender) %>%
     dplyr::group_by(source) %>%
-    dplyr::mutate(
-      percent = round(100 * n / sum(n), 2),
-      percent_label = format_percent(n, sum(n))
-    ) %>%
+    share_of_identifiable() %>%
     dplyr::ungroup()
 
   # Top subjects
@@ -146,6 +143,21 @@ extract_first_names <- function(text) {
     stringr::str_detect(first_names, "^[A-Z]") &
     !tolower(first_names) %in% load_non_name_words()
   first_names[keep]
+}
+
+# Helper: add percent / percent_label to counted rows (per group, if
+# grouped), as shares of identifiable records. "Unnamed" rows keep their
+# count, with percent NA and the label "not counted" (#117).
+share_of_identifiable <- function(counts) {
+  counts %>%
+    dplyr::mutate(
+      identifiable = sum(n[inferred_gender != "Unnamed"]),
+      percent = dplyr::if_else(inferred_gender == "Unnamed", NA_real_,
+                               round(100 * n / identifiable, 2)),
+      percent_label = dplyr::if_else(inferred_gender == "Unnamed", "not counted",
+                                     format_percent(n, identifiable))
+    ) %>%
+    dplyr::select(-identifiable)
 }
 
 # Cache for the small lookup tables in inst/extdata, so per-row callers
@@ -426,7 +438,10 @@ classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping 
 #' @inheritParams analyze_by_gender
 #'
 #' @return A list with comparison results:
-#'   - total_statues, john_statues, woman_statues, john_percent, woman_percent,
+#'   - total_statues: identifiable statues (with a name or subject), the
+#'     denominator of every share; unnamed_statues: records with neither,
+#'     which are not counted (#117)
+#'   - john_statues, woman_statues, john_percent, woman_percent,
 #'     claim_validated, message. \code{woman_statues} counts every statue
 #'     that depicts a woman: \code{woman_only_statues} (only women) plus
 #'     \code{mixed_statues} (a woman together with a man, e.g. "Queen
@@ -478,12 +493,15 @@ compare_johns_vs_women <- function(statue_data, person_lookup = NULL,
     dplyr::filter(inferred_gender == "Unknown") %>%
     nrow()
 
-  # Calculate percentage of total statues
-  total <- nrow(classified)
+  # Shares are of identifiable statues: records with no name and no subject
+  # cannot be about John or a woman, so they would only dilute them (#117).
+  unnamed <- sum(classified$inferred_gender == "Unnamed")
+  total <- nrow(classified) - unnamed
   unknown_percent <- round(100 * unknown_statues / total, 2)
 
   results <- list(
     total_statues = total,
+    unnamed_statues = unnamed,
     john_statues = johns,
     woman_statues = women,
     woman_only_statues = woman_only,
@@ -507,10 +525,11 @@ compare_johns_vs_women <- function(statue_data, person_lookup = NULL,
     classification_threshold = threshold,
     wikidata_confidence = wikidata_confidence(),
     message = sprintf(
-      "Found %d statues named John/Jon/Jean (%s) vs %d women statues (%s%s). %d statues (%s) have unknown gender.",
+      "Found %d statues named John/Jon/Jean (%s) vs %d women statues (%s%s). %d statues (%s) have unknown gender. Shares are of %d identifiable statues; %d records with no name or subject are not counted.",
       johns, format_percent(johns, total), women, format_percent(women, total),
       if (mixed > 0) sprintf(", including %d of a woman with a man", mixed) else "",
-      unknown_statues, format_percent(unknown_statues, total)
+      unknown_statues, format_percent(unknown_statues, total),
+      total, unnamed
     )
   )
 

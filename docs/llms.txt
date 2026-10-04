@@ -248,6 +248,8 @@ MIT
   : Look up subjects on Wikidata: is X a person, and of which sex?
 - [`map_statues()`](https://johngavin.github.io/statues_named_john/reference/map_statues.md)
   : Create Interactive Map of Statues with Popup Information
+- [`same_subject()`](https://johngavin.github.io/statues_named_john/reference/same_subject.md)
+  : Do two texts name the same subject?
 - [`search_memorials()`](https://johngavin.github.io/statues_named_john/reference/search_memorials.md)
   : Search for memorials
 - [`source_row()`](https://johngavin.github.io/statues_named_john/reference/source_row.md)
