@@ -55,14 +55,15 @@ combine_statue_sources <- function(source_list,
     dplyr::filter(!is.na(lat), !is.na(lon)) %>%
     sf::st_as_sf(coords = c("lon", "lat"), crs = 4326)
 
-  # Find duplicates based on spatial proximity
-  message("Identifying duplicates within ", distance_threshold, "m...")
+  # Duplicates: records within distance_threshold that describe the same
+  # subject (#117). Proximity alone merged distinct statues standing together.
+  message("Identifying duplicates within ", distance_threshold, "m with the same subject...")
 
   # Create distance matrix (this can be slow for large datasets)
   distances <- sf::st_distance(all_records_sf)
 
-  # Find groups of nearby points
-  duplicate_groups <- find_duplicate_groups(distances, distance_threshold)
+  subject_text <- dplyr::coalesce(all_records_sf$subject, all_records_sf$name)
+  duplicate_groups <- find_duplicate_groups(distances, distance_threshold, subject_text)
 
   message("Found ", length(duplicate_groups), " groups of potential duplicates")
 
@@ -88,27 +89,97 @@ combine_statue_sources <- function(source_list,
   return(merged_records_tibble)
 }
 
-# Helper function: Find groups of duplicates
-find_duplicate_groups <- function(distance_matrix, threshold) {
+# Helper function: Find groups of duplicates. A pair is a duplicate when the
+# records are within `threshold` metres AND same_subject() holds; groups are
+# the connected components of those pairs (#117).
+find_duplicate_groups <- function(distance_matrix, threshold, subject_text) {
   n <- nrow(distance_matrix)
-  visited <- rep(FALSE, n)
-  groups <- list()
-  group_id <- 1
-
-  for (i in 1:n) {
-    if (visited[i]) next
-
-    # Find all points within threshold of point i
-    nearby <- which(as.numeric(distance_matrix[i, ]) <= threshold)
-
-    if (length(nearby) > 1) {
-      groups[[group_id]] <- nearby
-      visited[nearby] <- TRUE
-      group_id <- group_id + 1
-    }
+  d <- matrix(as.numeric(distance_matrix), n, n)
+  pairs <- which(d <= threshold & upper.tri(d), arr.ind = TRUE)
+  if (nrow(pairs) == 0) {
+    return(list())
+  }
+  keys <- subject_tokens(subject_text)
+  is_dup <- mapply(function(i, j) tokens_match(keys[[i]], keys[[j]]),
+                   pairs[, 1], pairs[, 2])
+  pairs <- pairs[is_dup, , drop = FALSE]
+  if (nrow(pairs) == 0) {
+    return(list())
   }
 
-  return(groups)
+  # Connected components (union-find with path halving)
+  parent <- seq_len(n)
+  find <- function(x) {
+    while (parent[x] != x) {
+      parent[x] <<- parent[parent[x]]
+      x <- parent[x]
+    }
+    x
+  }
+  for (k in seq_len(nrow(pairs))) {
+    a <- find(pairs[k, 1])
+    b <- find(pairs[k, 2])
+    if (a != b) parent[max(a, b)] <- min(a, b)
+  }
+  roots <- vapply(seq_len(n), find, integer(1))
+  groups <- split(seq_len(n), roots)
+  unname(groups[lengths(groups) > 1])
+}
+
+# Words that do not identify a subject: object words, titles, articles and
+# prepositions. "Statue of Queen Victoria" and "Queen Victoria" both reduce
+# to {victoria}.
+subject_stopwords <- c(
+  "the", "a", "an", "of", "to", "for", "and", "in", "at", "on", "with", "by",
+  "statue", "statues", "bust", "sculpture", "figure", "effigy", "tomb", "grave",
+  "headstone", "monument", "memorial", "plaque", "tablet", "marker",
+  "sir", "dame", "lord", "lady", "queen", "king", "prince", "princess",
+  "mrs", "mr", "dr", "st", "saint"
+)
+
+# Identifying words of each subject: extract_subject(), lower case, letters
+# only, generic words dropped. A list of character vectors (empty when the
+# text is NA or only generic words).
+subject_tokens <- function(text) {
+  x <- tolower(extract_subject(text))
+  x <- gsub("[^a-z ]", " ", x)
+  lapply(strsplit(x, "\\s+"), function(w) {
+    w <- w[!is.na(w) & nzchar(w)]
+    unique(w[!w %in% subject_stopwords])
+  })
+}
+
+# Two token sets describe the same subject when one contains the other or
+# they share at least half of their combined words. Empty sets never match.
+tokens_match <- function(a, b) {
+  if (length(a) == 0 || length(b) == 0) {
+    return(FALSE)
+  }
+  shared <- length(intersect(a, b))
+  shared == length(a) || shared == length(b) ||
+    shared / length(union(a, b)) >= 0.5
+}
+
+#' Do two texts name the same subject?
+#'
+#' @description
+#' Used by [combine_statue_sources()] to decide whether two nearby records
+#' are the same memorial. Each text is reduced with [extract_subject()] to
+#' its identifying words (object words such as "statue" or "memorial",
+#' titles and articles are dropped). The subjects match when one word set
+#' contains the other, or they share at least half of their combined words.
+#'
+#' @param a,b Character vectors of subject or name text, recycled together.
+#' @return Logical vector; \code{FALSE} when either text is \code{NA} or has
+#'   no identifying words.
+#' @export
+#' @examples
+#' same_subject("Edith Cavell Memorial", "The Edith Cavell Memorial")
+#' same_subject("Statue of Lord Herbert of Lea", "Florence Nightingale")
+same_subject <- function(a, b) {
+  ka <- subject_tokens(a)
+  kb <- subject_tokens(b)
+  mapply(tokens_match, ka, kb, USE.NAMES = FALSE)
 }
 
 # Helper function: Merge duplicate groups
@@ -125,10 +196,12 @@ merge_duplicate_groups <- function(sf_data, groups, prefer_sources) {
     merge_group(group_records, prefer_sources)
   })
 
-  merged <- dplyr::bind_rows(merged_groups)
-
-  # Combine non-duplicates with merged duplicates
-  result <- dplyr::bind_rows(non_duplicates, merged)
+  # Combine non-duplicates with merged duplicates (none when no group formed)
+  result <- if (length(merged_groups) == 0) {
+    non_duplicates
+  } else {
+    dplyr::bind_rows(non_duplicates, dplyr::bind_rows(merged_groups))
+  }
 
   return(result)
 }

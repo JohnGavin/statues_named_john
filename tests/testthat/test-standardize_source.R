@@ -15,12 +15,15 @@ test_that("standardize_statue_data() records the source on every row (#114)", {
 
 test_that("de-duplication keeps the record from the preferred source (#114)", {
   raw <- raw_sample()
-  osm <- standardize_statue_data(raw$osm[1, ], "osm")
+  osm <- standardize_statue_data(raw$osm[2, ], "osm")  # row 1 has no name
   glher <- standardize_statue_data(raw$glher[1, ], "glher")
-  # Put the GLHER record at the OSM record's location, so they are duplicates;
-  # bind order puts OSM first, so only the preference can pick GLHER.
+  # Make the GLHER record a duplicate of the OSM one: same place and same
+  # subject (#117 merges only those). Bind order puts OSM first, so only
+  # the preference can pick GLHER.
   glher$lat <- osm$lat
   glher$lon <- osm$lon
+  glher$subject <- osm$subject
+  glher$name <- osm$name
   combined <- suppressMessages(
     combine_statue_sources(list(osm = osm, glher = glher), distance_threshold = 50)
   )
