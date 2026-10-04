@@ -2,9 +2,11 @@
 
 Parses each plan file and returns the command of every `tar_target()`
 call, as written in the file (comments and layout kept), with the line
-it starts on. The only change is that the indentation of the line the
-command starts on is removed from its later lines; lines inside
-multi-line strings are left untouched.
+it starts on. The only change is to indentation: the whitespace its
+later lines share is removed, up to the width of the text before the
+command on its first line, so code inside `{` and arguments aligned
+under a call both keep their relative layout. Lines inside multi-line
+strings are left untouched.
 
 ## Usage
 
@@ -37,7 +39,7 @@ writeLines(c(
   ")"
 ), plan)
 target_commands(plan)
-#>   name                    command                               file line
-#> 1    x                      1 + 1 /tmp/RtmprWR7t7/file222c77f08d02.R    2
-#> 2    y {\n  x * 2  # double it\n} /tmp/RtmprWR7t7/file222c77f08d02.R    3
+#>   name                    command                              file line
+#> 1    x                      1 + 1 /tmp/RtmpAn6k66/file208a9da56c1.R    2
+#> 2    y {\n  x * 2  # double it\n} /tmp/RtmpAn6k66/file208a9da56c1.R    3
 ```

@@ -3,6 +3,45 @@
 Session log: what was done, what failed and why, measurable changes, and
 known limitations. Newest first.
 
+## 2026-10-01 (fix \#110’s dedent regression; roborev 13889)
+
+### Completed
+
+- **`dedent()` regression from \#110 fixed.** \#110 stripped only the
+  leading whitespace of the line a command starts on. A command starting
+  mid-line, such as `tar_target(z, f(a,`, then lost the alignment of
+  arguments under its call. The \#110 test asserted that broken output.
+  - New rule: strip the whitespace the continuation lines share, capped
+    at the number of characters before the command on its first line.
+    This is the pre-#110 algorithm, keeping \#110’s tab handling
+    (literal characters, plus a tab-aware column → character conversion)
+    and its multi-line-string protection.
+- **Automated test for \#108 item 2** in `test-pipeline_tracking.R`, on
+  a scratch copy of the project and store:
+  - A `params.csv` edit that changes no value must not make
+    `wikidata_people_fetch` outdated.
+  - A confidence edit must make it outdated.
+
+### Verification
+
+- `target_code` tests: 17 pass. Against the \#110 code, both alignment
+  tests fail.
+- On the 32 real targets, the commands match pre-#110 output exactly.
+  \#110 had differed on whitespace-only lines in 3 commands.
+- Item-2 test passes. It fails at the note-only edit
+  (`Expected fetch_outdated() to be FALSE`) in a scratch project with
+  the pre-#108 dependency (`params_file`) and a store built that way.
+- Full suite: `[ FAIL 0 | WARN 3 | SKIP 0 | PASS 246 ]` (3 existing
+  network-test warnings). `r_code_check.sh`: clean, `PASS tracked`.
+
+### Failed Approaches
+
+- \#110 replaced the common-indent-capped-by-column algorithm with
+  “strip the start line’s indentation”. That handles `{` bodies but
+  breaks arguments aligned under a call. Neither “start line’s
+  indentation” nor “full width before the command” works for both cases;
+  the minimum of the two does.
+
 ## 2026-10-01 (#108: follow-ups to \#107 from roborev 13861)
 
 ### Completed
@@ -19,8 +58,10 @@ known limitations. Newest first.
   the command starts on, as literal characters, so tab indentation
   works.
   - Lines inside multi-line strings are left exactly as written.
-  - Arguments aligned under their call keep their alignment. Before,
-    they lost it (`" b)"`), a bug the new test found.
+  - **Wrong (corrected in the entry above):** this claimed arguments
+    aligned under their call now keep their alignment, and that the old
+    output (`" b)"`) was a bug the new test found. The old output was
+    correct. \#110 broke it, and its test asserted the broken output.
 - **Item 4:** links stay on `blob/main`; documented why in
   [`target_code_markdown()`](https://johngavin.github.io/statues_named_john/reference/target_code_markdown.md).
   The re-rendered vignette is committed together with the plan edit, so
