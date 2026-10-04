@@ -1,212 +1,409 @@
 ---
-title: "Comparing London Memorials: Johns, Women, and Dogs (Updated)"
+title: "Statues Named John: London Memorials"
 format:
-  html:
-    code-fold: true
-    code-summary: "Show code"
-    toc: true
+  dashboard:
+    orientation: rows
+    # Rows keep their natural height and the page scrolls, instead of every
+    # row being squeezed into the window (charts shrank to thumbnails)
+    scrolling: true
+    theme: cosmo
+    include-in-header:
+      - text: |
+          <style>
+          /* Tab content scrolls instead of being squashed */
+          .tab-pane {
+            overflow-y: auto !important;
+            max-height: 80vh;
+          }
+          .tab-pane .cell-output-display {
+            overflow: auto !important;
+          }
+          /* Each page grid splits the window height between its rows, so on
+             short windows charts became thumbnails and tables lost their rows.
+             Give every row a floor and let it grow; the page scrolls instead. */
+          .dashboard-scrolling .dashboard-page > .bslib-grid {
+            grid-template-rows: none !important;
+            grid-auto-rows: minmax(600px, auto) !important;
+          }
+          .dashboard-scrolling .cell-output-display img {
+            min-height: 380px;
+            object-fit: contain;
+          }
+          .dashboard-scrolling .card-body > table,
+          .dashboard-scrolling .cell-output-display table {
+            flex-shrink: 0;
+          }
+          /* Click-to-zoom fullscreen overlay for maps and charts */
+          .fullscreen-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999 !important;
+            background: #ffffff !important;
+            padding: 20px !important;
+            overflow: auto !important;
+            cursor: zoom-out !important;
+            box-sizing: border-box !important;
+          }
+          .fullscreen-overlay .leaflet {
+            height: calc(100vh - 80px) !important;
+          }
+          .fullscreen-overlay img {
+            max-height: calc(100vh - 80px);
+            width: auto;
+          }
+          .card:has(.leaflet),
+          .card:has(.cell-output-display img) {
+            cursor: zoom-in;
+          }
+          .cell-output-display .bslib-full-screen-enter {
+            display: none !important;
+          }
+          </style>
+          <script>
+          document.addEventListener('click', function(e) {
+            var overlay = e.target.closest('.fullscreen-overlay');
+            if (overlay) {
+              // Leaflet keeps handling clicks inside the map itself
+              if (e.target.closest('.leaflet')) return;
+              overlay.classList.remove('fullscreen-overlay');
+              window.dispatchEvent(new Event('resize'));
+              return;
+            }
+            if (e.target.closest('.leaflet')) return;
+            if (e.target.closest('.bslib-full-screen-enter')) return;
+            if (e.target.closest('.nav-link, details, summary, a')) return;
+            var card = e.target.closest('.card');
+            if (!card) return;
+            if (!card.querySelector('.leaflet, .cell-output-display img')) return;
+            card.classList.add('fullscreen-overlay');
+            setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 100);
+          });
+          </script>
+execute:
+  echo: false
+  warning: false
+  message: false
 vignette: >
   %\VignetteIndexEntry{Comparing London Memorials: Johns, Women, and Dogs}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.width = 7,
-  fig.height = 5,
-  warning = FALSE,
-  message = FALSE
-)
-```
-
-> In England’s grand capital, dear,
-> More Johns than dames, it appears.
-> For each woman of might,
-> A John’s in plain sight,
-> Confirming our gendered-statue fears.
-
-## Introduction
-
-This vignette compares and contrasts memorials in London honoring three distinct groups:
-
-1. **Men named John** - to examine how common male figures are commemorated
-2. **Women** (of any name) - to assess gender representation in public memorials
-3. **Dogs** (any gender) - as a quirky baseline to highlight commemoration patterns
-
-**Data Sources**: 
-* **Wikidata**: Structured data for statues and public art in London.
-* **OpenStreetMap**: Crowdsourced data for memorials and statues.
-
-## Load Data
-
-We use the `targets` package to manage the data pipeline.
-
-```{r packages}
-# Note: statuesnamedjohn not loaded - vignette uses pre-computed targets objects
-# devtools::load_all()  # Uncomment if package functions are needed
+```{r setup}
 library(dplyr)
 library(ggplot2)
 library(sf)
 library(targets)
 library(leaflet)
-```
 
-```{r load-data}
-# Load data from targets pipeline
-# We assume targets::tar_make() has been run previously
-# Absolute store path: Quarto may execute this chunk from inst/qmd/, where a
-# relative "_targets" does not exist.
-store_path <- file.path(rprojroot::find_root(rprojroot::is_r_package), "_targets")
+# All results come from the targets pipeline; run targets::tar_make() first.
+# Absolute store path: Quarto may execute this from inst/qmd/.
+root <- rprojroot::find_root(rprojroot::is_r_package)
+store_path <- file.path(root, "_targets")
 if (dir.exists(store_path)) {
-  all_memorials <- targets::tar_read(all_memorials, store = store_path)
-  summary_table <- targets::tar_read(summary_table, store = store_path)
-  findings <- targets::tar_read(findings, store = store_path)
-  category_plot <- targets::tar_read(category_plot, store = store_path)
-  memorial_map_plot <- targets::tar_read(memorial_map_plot, store = store_path)
-  johns_comparison <- targets::tar_read(johns_comparison, store = store_path)
-  memorial_interactive_map <- targets::tar_read(memorial_interactive_map, store = store_path)
-
-  gender_analysis <- targets::tar_read(gender_analysis, store = store_path)
+  all_memorials <- tar_read(all_memorials, store = store_path)
+  summary_table <- tar_read(summary_table, store = store_path)
+  category_plot <- tar_read(category_plot, store = store_path)
+  memorial_map_plot <- tar_read(memorial_map_plot, store = store_path)
+  memorial_interactive_map <- tar_read(memorial_interactive_map, store = store_path)
+  johns_comparison <- tar_read(johns_comparison, store = store_path)
+  gender_analysis <- tar_read(gender_analysis, store = store_path)
+  source_status <- tar_read(source_status, store = store_path)
   # Code behind each target, read from the plan files (#81)
-  target_code <- targets::tar_read(target_code, store = store_path)
+  target_code <- tar_read(target_code, store = store_path)
 } else {
-  message("Targets pipeline store not found. Please run targets::tar_make() to generate data.")
-  # Create dummy data for rendering if pipeline not run
+  message("Targets pipeline store not found. Run targets::tar_make() first.")
   all_memorials <- data.frame()
   summary_table <- data.frame()
-  findings <- data.frame()
   category_plot <- ggplot()
   memorial_map_plot <- ggplot()
-  johns_comparison <- list(message = "Pipeline not run", claim_validated = FALSE, total_statues = NA_real_, john_statues = 0, john_percent = 0, john_percent_label = "n/a", woman_statues = 0, woman_only_statues = 0, mixed_statues = 0, woman_percent = 0, woman_percent_label = "n/a", classification_threshold = "n/a", wikidata_confidence = c(exact = "n/a", partial = "n/a"))
   memorial_interactive_map <- leaflet()
+  johns_comparison <- list(message = "Pipeline not run", claim_validated = FALSE,
+                           total_statues = NA_real_, john_statues = 0,
+                           john_percent_label = "n/a", woman_statues = 0,
+                           woman_only_statues = 0, mixed_statues = 0,
+                           woman_percent_label = "n/a", unknown_statues = 0,
+                           unknown_percent_label = "n/a",
+                           classification_threshold = "n/a",
+                           wikidata_confidence = c(exact = "n/a", partial = "n/a"))
   gender_analysis <- list(top_names_by_gender = data.frame())
+  source_status <- data.frame()
   target_code <- list()
 }
+
+pkg_version <- read.dcf(file.path(root, "DESCRIPTION"), fields = "Version")[1, 1]
+generated_time <- format(Sys.time(), "%Y-%m-%d %H:%M %Z")
+n_mapped <- sum(!is.na(all_memorials$lat) & !is.na(all_memorials$lon))
+
+top_names <- function(gender) {
+  gender_analysis$top_names_by_gender %>%
+    dplyr::filter(inferred_gender == gender) %>%
+    dplyr::select(Name = extracted_names, Count = n, Percent = percent_label) %>%
+    dplyr::arrange(dplyr::desc(Count))
+}
+top_f <- top_names("Female")
+top_m <- top_names("Male")
+john_rank <- match("John", top_m$Name)
+by_source <- if (nrow(all_memorials) > 0) table(all_memorials$source_name) else table(character(0))
 ```
 
-## Data Overview
+# Overview
 
-```{r summary-stats}
-knitr::kable(summary_table, align = "lrr",
-             caption = paste0(
-               "Gender Representation Summary. 'Mixed' statues depict a woman ",
-               "together with a man; the headline below counts them as statues ",
-               "of women (", johns_comparison$woman_only_statues, " Female + ",
-               johns_comparison$mixed_statues, " Mixed = ",
-               johns_comparison$woman_statues, ")."
-             ))
+## Row
+
+### Headline {.tabset width=40%}
+
+#### Finding
+
+**Are there more statues of men named John than of women in London?**
+In this dataset of `r johns_comparison$total_statues` memorials: **`r johns_comparison$john_statues` Johns (`r johns_comparison$john_percent_label`)** vs **`r johns_comparison$woman_statues` statues of women (`r johns_comparison$woman_percent_label`)**.
+The claim is **`r if (isTRUE(johns_comparison$claim_validated)) "supported" else "refuted"`** for London.
+`r johns_comparison$unknown_statues` memorials (`r johns_comparison$unknown_percent_label`) have no gender that clears the confidence threshold.
+
+#### Limerick
+
+| In England's grand capital, dear,
+| More Johns than dames, it appears.
+| For each woman of might,
+| A John's in plain sight,
+| Confirming our gendered-statue fears.
+
+### Gender Summary {.tabset width=60%}
+
+#### Table
+
+::: {.card title="Memorials by inferred gender"}
+
+```{r}
+knitr::kable(summary_table, align = "lrr")
 ```
 
-```{r summary-stats-code}
-#| echo: false
+**Caption:** How are London's memorials split by the gender of who they commemorate?
+One row per category, from `r johns_comparison$total_statues` memorials combined from Wikidata, OpenStreetMap and Historic England after de-duplication.
+"Mixed" statues show a woman together with a man; the headline counts them as statues of women (`r johns_comparison$woman_only_statues` Female + `r johns_comparison$mixed_statues` Mixed = `r johns_comparison$woman_statues`).
+"Unknown" means no gender reached the confidence threshold (see Reference).
+
+:::
+
+#### Code
+
+```{r}
 #| results: asis
 cat(target_code[["summary_table"]])
 ```
 
-## Top Names by Gender
+## Row
 
-We extracted the first names from the memorials to identify the most common names for each gender group.
+### Representation {.tabset}
 
-::: {.panel-tabset}
+#### Chart
 
-## Female
+::: {.card title="Memorials by inferred gender"}
 
-```{r top-names-female}
-top_names_f <- gender_analysis$top_names_by_gender %>%
-  dplyr::filter(inferred_gender == "Female") %>%
-  dplyr::select(Name = extracted_names, Count = n, Percent = percent_label) %>%
-  dplyr::arrange(desc(Count))
-
-knitr::kable(top_names_f, align = "lrr", caption = "Most Common Female Names")
-```
-
-## Male
-
-```{r top-names-male}
-top_names_m <- gender_analysis$top_names_by_gender %>%
-  dplyr::filter(inferred_gender == "Male") %>%
-  dplyr::select(Name = extracted_names, Count = n, Percent = percent_label) %>%
-  dplyr::arrange(desc(Count))
-
-knitr::kable(top_names_m, align = "lrr", caption = "Most Common Male Names")
-```
-
-:::
-
-```{r gender-analysis-code}
-#| echo: false
-#| results: asis
-cat(target_code[["gender_analysis"]])
-```
-
-## Representation Analysis
-
-```{r visualization}
+```{r}
+#| fig-width: 9
+#| fig-height: 5
 category_plot
 ```
 
-```{r visualization-code}
-#| echo: false
+**Caption:** How large is the gap between statues of men and of women?
+Bar heights are counts of memorials per inferred gender, labelled with count and share.
+Statues of women, including mixed ones, are `r johns_comparison$woman_percent_label` of the total.
+The Unknown bar (`r johns_comparison$unknown_percent_label`) is the main uncertainty: if many of those are women, the gap narrows.
+
+:::
+
+#### Code
+
+```{r}
 #| results: asis
 cat(target_code[["category_plot"]])
 ```
 
-## Geographic Distribution
+# Top Names
 
-We can map the location of these memorials to see spatial patterns.
+## Row
 
-### Interactive Map
+### Most Common First Names {.tabset}
 
-Explore the memorials interactively. Click clusters to zoom in, and click markers to see details.
+#### Female
 
-```{r interactive-map}
+::: {.card title="Most common first names: women"}
+
+```{r}
+knitr::kable(top_f, align = "lrr")
+```
+
+**Caption:** Which first names recur among statues of women?
+Counts are memorials whose subject's first name is the given name, among those classified Female; percentages are of all statues of women.
+The most common is `r top_f$Name[1]` (`r top_f$Count[1]`).
+The list comes from the name rules, so a word that is not a name can slip in.
+
+:::
+
+#### Male
+
+::: {.card title="Most common first names: men"}
+
+```{r}
+knitr::kable(top_m, align = "lrr")
+```
+
+**Caption:** Is John really the most common name among statues of men?
+Counts are memorials whose subject's first name is the given name, among those classified Male; percentages are of all statues of men.
+John ranks `r if (is.na(john_rank)) "outside this list" else paste0("number ", john_rank, " (", top_m$Count[john_rank], ")")`.
+This count is of the name John only; the Overview headline also counts Jon and Jean.
+The list comes from the name rules, so a word that is not a name can slip in.
+
+:::
+
+#### Code
+
+```{r}
+#| results: asis
+cat(target_code[["gender_analysis"]])
+```
+
+# Map
+
+## Row
+
+### Memorial Locations {.tabset}
+
+#### Interactive
+
+::: {.card title="London memorials (click a cluster to zoom; click the card to enlarge)"}
+
+```{r}
+#| out-height: 550px
 memorial_interactive_map
 ```
 
-```{r interactive-map-code}
-#| echo: false
-#| results: asis
-cat(target_code[["memorial_interactive_map"]])
+**Caption:** Where in London are the memorials, and which source records each one?
+`r n_mapped` of `r nrow(all_memorials)` memorials have coordinates; clusters show counts and split as you zoom in.
+Click a marker for that memorial's details.
+
+:::
+
+#### By source
+
+::: {.card title="Memorials in London by source"}
+
+```{r}
+#| fig-width: 9
+#| fig-height: 7
+memorial_map_plot
 ```
 
-## Comparison with External Studies
+**Caption:** Do the three sources cover the same parts of London?
+Each point is one memorial, coloured by the source whose record was kept after de-duplication.
+Counts by source: `r paste(names(by_source), by_source, sep = " ", collapse = ", ")`.
+
+:::
+
+#### Code
+
+```{r}
+#| results: asis
+cat(target_code[["memorial_interactive_map"]])
+cat(target_code[["memorial_map_plot"]])
+```
+
+# Johns vs Women
+
+## Row
+
+### The Claim {.tabset}
+
+#### Finding
 
 The campaign [Statues for Equality](https://statuesforequality.com/pages/london) claims that:
-* "The percentage of women’s statues in the UK that aren’t mythical or royal is approximately 3%"
-* "More statues of men named John dotted around the country than of women!"
 
-Our analysis of London-specific data finds:
+- "The percentage of women's statues in the UK that aren't mythical or royal is approximately 3%"
+- "More statues of men named John dotted around the country than of women!"
 
-* **`r johns_comparison$message`**
+Our London data: **`r johns_comparison$message`**
 
-**Validation**: The claim that there are "more statues of men named John than of women" is **`r if(johns_comparison$claim_validated) "supported" else "refuted"`** by our current London dataset.
+**Validation:** the claim that there are "more statues of men named John than of women" is **`r if (isTRUE(johns_comparison$claim_validated)) "supported" else "refuted"`** by this London dataset.
 
-* **Men named John**: `r johns_comparison$john_statues` (`r johns_comparison$john_percent_label`)
-* **Women**: `r johns_comparison$woman_statues` (`r johns_comparison$woman_percent_label`), of which `r johns_comparison$woman_only_statues` depict only women and `r johns_comparison$mixed_statues` depict a woman together with a man
+- **Men named John:** `r johns_comparison$john_statues` (`r johns_comparison$john_percent_label`)
+- **Women:** `r johns_comparison$woman_statues` (`r johns_comparison$woman_percent_label`), of which `r johns_comparison$woman_only_statues` depict only women and `r johns_comparison$mixed_statues` a woman together with a man
 
-```{r johns-comparison-code}
-#| echo: false
+Percentages are of all `r johns_comparison$total_statues` memorials in the dataset.
+The campaign's claim is UK-wide; this dataset covers London only.
+
+#### Overlap
+
+The two counts can overlap.
+A statue of a John together with a woman, such as "Katherine Mansfield and John Middleton Murry", counts once as a John statue and once as a statue of a woman.
+
+#### Code
+
+```{r}
 #| results: asis
 cat(target_code[["johns_comparison"]])
 ```
 
-The two counts can overlap: a statue of a John together with a woman, such as "Katherine Mansfield and John Middleton Murry", counts once as a John statue and once as a statue of a woman.
+# Reference
 
-*(Note: Percentages are relative to the total dataset of queried memorials).*
+## Row
 
-**How gender is decided.** Many records name the object, not the person: "Statue of Sir John Millais in North Forecourt of Tate Gallery".
+### Reference Details {.tabset}
+
+#### How Gender Is Decided
+
+Many records name the object, not the person: "Statue of Sir John Millais in North Forecourt of Tate Gallery".
 We first read the subject from that text (here "Sir John Millais").
+
 If first names and titles cannot decide it, we ask Wikidata whether the subject is a person and, if so, their sex.
 An exact name match scores `r johns_comparison$wikidata_confidence[["exact"]]` and a partial match `r johns_comparison$wikidata_confidence[["partial"]]`.
+
 A gender is used only when its confidence is at least the classification threshold, currently `r johns_comparison$classification_threshold`.
 The same threshold applies to first-name predictions.
 It is set in one place, `inst/extdata/params.csv`; setting it to 1 keeps only certain answers, and the rest stay Unknown.
 
-## Session Info
+#### Data Sources
 
-```{r session-info}
+::: {.card title="Rows fetched per source"}
+
+```{r}
+knitr::kable(source_status, align = "lrrl")
+```
+
+**Caption:** Did every data source respond, and how many rows did each return?
+`ok` means the fetch succeeded; an unavailable source is recorded with its reason rather than counted as empty.
+`wikidata_people` is the person lookup used to decide gender for subjects the name rules cannot (see How Gender Is Decided).
+
+- [Wikidata](https://www.wikidata.org/): statues and public art in London, via SPARQL.
+- [OpenStreetMap](https://www.openstreetmap.org/): memorials and statues, via the Overpass API.
+- [Historic England / GLHER](https://historicengland.org.uk/): heritage records.
+- Code: [statuesnamedjohn on GitHub](https://github.com/JohnGavin/statues_named_john), pipeline in `R/tar_plans/`.
+
+:::
+
+#### About
+
+This dashboard compares memorials in London honouring three groups:
+
+1. **Men named John**: how common one male first name is among commemorated figures.
+2. **Women** of any name: gender representation in public memorials.
+3. **Dogs**, and animals generally: a quirky baseline.
+
+Every number on these pages is computed by the `targets` pipeline; the **Code** tab on each card shows the pipeline step that produced it.
+
+#### Session Info
+
+```{r}
 sessionInfo()
 ```
+
+---
+
+*Dashboard generated `r generated_time` using statuesnamedjohn v`r pkg_version`.*
+
+::: {.callout-note appearance="minimal"}
+**Disclaimer:** `statuesnamedjohn` is an independent open-source project ([website](https://johngavin.github.io/statues_named_john/), [GitHub](https://github.com/JohnGavin/statues_named_john)). It is not affiliated with or endorsed by [Statues for Equality](https://statuesforequality.com/).
+:::
