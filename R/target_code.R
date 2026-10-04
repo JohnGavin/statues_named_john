@@ -10,9 +10,11 @@
 #' @description
 #' Parses each plan file and returns the command of every
 #' \code{tar_target()} call, as written in the file (comments and layout
-#' kept), with the line it starts on. The only change is that the
-#' indentation of the line the command starts on is removed from its later
-#' lines; lines inside multi-line strings are left untouched.
+#' kept), with the line it starts on. The only change is to indentation:
+#' the whitespace its later lines share is removed, up to the width of the
+#' text before the command on its first line, so code inside \code{\{} and
+#' arguments aligned under a call both keep their relative layout. Lines
+#' inside multi-line strings are left untouched.
 #'
 #' @param files Paths to plan files, e.g.
 #'   \code{list.files("R/tar_plans", full.names = TRUE)}.
@@ -72,7 +74,7 @@ target_commands_one <- function(file) {
     data.frame(
       name = utils::getParseText(pd, name_id),
       command = dedent(utils::getParseText(pd, cmd_id),
-                       indent = sub("\\S.*$", "", src[cmd_row$line1]),
+                       cap = chars_before_col(src[cmd_row$line1], cmd_row$col1),
                        keep = keep),
       file = file,
       line = cmd_row$line1
@@ -105,29 +107,53 @@ call_args <- function(kids) {
   data.frame(id = ids, name = nms)
 }
 
+# Number of characters before parse-data column `col` on `line`. R's parser
+# counts a tab as advancing to the next multiple of 8, so columns and
+# characters differ on tab-indented lines.
+chars_before_col <- function(line, col) {
+  chars <- strsplit(line, "")[[1]]
+  column <- 0L
+  for (i in seq_along(chars)) {
+    if (column + 1L >= col) {
+      return(i - 1L)
+    }
+    column <- if (chars[i] == "\t") (column %/% 8L + 1L) * 8L else column + 1L
+  }
+  length(chars)
+}
+
 # Remove the indentation the command had in its plan file. The parse text
-# of the first line has none; later lines carry the indentation of the
-# source line the command starts on (`indent`, the literal whitespace, so
-# tabs work), and that is what is stripped. Deeper indentation, such as an
-# argument aligned under its call, is kept. Lines flagged in `keep` are
-# inside a multi-line string and are left exactly as written (#108).
-dedent <- function(text, indent, keep = logical(0)) {
+# of the first line has none; later lines carry their source indentation.
+# Strip the whitespace they share, but never more characters than stood
+# before the command on its first line (`cap`): that keeps a body inside
+# `{` relative to the line, and an argument aligned under its call still
+# aligned (#110). Leading whitespace is compared as literal characters, so
+# tabs work. Lines flagged in `keep` are inside a multi-line string and are
+# left exactly as written (#108); other whitespace-only lines become empty.
+dedent <- function(text, cap, keep = logical(0)) {
   lines <- strsplit(text, "\n", fixed = TRUE)[[1]]
-  if (length(lines) < 2 || !nzchar(indent)) {
+  if (length(lines) < 2) {
     return(text)
   }
   rest <- lines[-1]
   keep <- rep_len(c(keep, logical(length(rest))), length(rest))
-  ind <- strsplit(indent, "")[[1]]
-  rest[!keep] <- vapply(rest[!keep], function(line) {
-    chars <- strsplit(line, "")[[1]]
-    n <- 0L
-    while (n < length(ind) && n < length(chars) && chars[n + 1] == ind[n + 1]) {
-      n <- n + 1L
-    }
-    substring(line, n + 1)
-  }, character(1), USE.NAMES = FALSE)
+  code <- !keep & grepl("\\S", rest)
+  lead <- sub("^([ \t]*).*$", "\\1", rest[code])
+  common <- if (length(lead) > 0) Reduce(common_prefix, lead) else ""
+  n <- min(nchar(common), cap)
+  rest[code] <- substring(rest[code], n + 1)
+  rest[!keep & !grepl("\\S", rest)] <- ""
   paste(c(lines[1], rest), collapse = "\n")
+}
+
+common_prefix <- function(a, b) {
+  x <- strsplit(a, "")[[1]]
+  y <- strsplit(b, "")[[1]]
+  n <- 0L
+  while (n < min(length(x), length(y)) && x[n + 1] == y[n + 1]) {
+    n <- n + 1L
+  }
+  substr(a, 1, n)
 }
 
 #' Markdown blocks showing the code of pipeline targets
