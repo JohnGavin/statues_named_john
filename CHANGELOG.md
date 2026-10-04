@@ -3,6 +3,24 @@
 Session log: what was done, what failed and why, measurable changes, and
 known limitations. Newest first.
 
+## 2026-10-04 (session end: roborev 13908 on #112)
+
+### Known Limitations
+- roborev 13908 on #112 failed. Finding 1, confirmed against the code: `source`
+  is NA for every record (`standardize_statue_data.R:55`: `mutate(source = source)`
+  reads the NA column added by `ensure_standard_columns()`, not the argument).
+  De-duplication therefore ignores the glher > wikidata > osm preference, and
+  the "By source" counts (osm 2123 / glher 160 / wikidata 18) reflect bind
+  order. Pre-existing; #112 only worked around it in `memorial_map_plot`.
+  Tracked in #114.
+- Findings 2-6 (Top Names captions describe name-token counts as memorial
+  counts; incomplete John variants; hard-coded source list; zoom fires from
+  Code tabs; duplicate `inst/qmd/*_files` committed) and a fixed-width
+  interactive map: #115.
+- Live check of the deployed dashboard: the plain URL served the old page for
+  up to 10 minutes after deploy (CDN `max-age=600`); `gh-pages` and a
+  cache-busted fetch had the dashboard.
+
 ## 2026-10-04 (vignette → Quarto dashboard: pages and tabsets, no TOC)
 
 ### Completed
