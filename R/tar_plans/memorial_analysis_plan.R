@@ -148,10 +148,13 @@ memorial_analysis_plan <- list(
         dplyr::filter(!is.na(lat), !is.na(lon)) %>%
         sf::st_as_sf(coords = c("lon", "lat"), crs = 4326)
         
+      # source_name, not source: after combining, `source` is NA for every
+      # row, so the map was one grey colour
       ggplot() +
-        geom_sf(data = data_sf, aes(color = source), size = 2, alpha = 0.7) +
-        labs(title = "Memorials in London by Source") +
-        theme_minimal()
+        geom_sf(data = data_sf, aes(color = source_name), size = 2, alpha = 0.7) +
+        labs(title = "Memorials in London by Source", color = "Source") +
+        theme_minimal() +
+        theme(legend.position = "bottom")
     },
     format = "rds"
   ),
