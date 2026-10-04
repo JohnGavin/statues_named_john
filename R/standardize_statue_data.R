@@ -49,10 +49,12 @@ standardize_statue_data <- function(data, source) {
   # Ensure all required columns exist
   standardized <- ensure_standard_columns(standardized)
 
-  # Add metadata
+  # Add metadata. `.env$source` is the argument: a bare `source` would mean
+  # the NA column ensure_standard_columns() just added, which left every
+  # row's source NA and de-duplication unable to apply its preference (#114).
   standardized <- standardized %>%
     dplyr::mutate(
-      source = source,
+      source = .env$source,
       last_updated = Sys.Date()
     )
 
