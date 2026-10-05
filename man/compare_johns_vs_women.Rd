@@ -22,7 +22,10 @@ single project setting \code{get_param("classification_threshold")}.}
 }
 \value{
 A list with comparison results:
-  - total_statues, john_statues, woman_statues, john_percent, woman_percent,
+  - total_statues: identifiable statues (with a name or subject), the
+    denominator of every share; unnamed_statues: records with neither,
+    which are not counted (#117)
+  - john_statues, woman_statues, john_percent, woman_percent,
     claim_validated, message. \code{woman_statues} counts every statue
     that depicts a woman: \code{woman_only_statues} (only women) plus
     \code{mixed_statues} (a woman together with a man, e.g. "Queen

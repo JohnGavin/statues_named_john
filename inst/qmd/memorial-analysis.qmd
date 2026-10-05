@@ -125,7 +125,7 @@ if (dir.exists(store_path)) {
                            total_statues = NA_real_, john_statues = 0,
                            john_percent_label = "n/a", woman_statues = 0,
                            woman_only_statues = 0, mixed_statues = 0,
-                           woman_percent_label = "n/a", unknown_statues = 0,
+                           woman_percent_label = "n/a", unknown_statues = 0, unnamed_statues = 0,
                            unknown_percent_label = "n/a",
                            classification_threshold = "n/a",
                            wikidata_confidence = c(exact = "n/a", partial = "n/a"))
@@ -159,7 +159,7 @@ by_source <- if (nrow(all_memorials) > 0) table(all_memorials$source_name) else 
 #### Finding
 
 **Are there more statues of men named John than of women in London?**
-In this dataset of `r johns_comparison$total_statues` memorials: **`r johns_comparison$john_statues` Johns (`r johns_comparison$john_percent_label`)** vs **`r johns_comparison$woman_statues` statues of women (`r johns_comparison$woman_percent_label`)**.
+Of `r johns_comparison$total_statues` identifiable memorials: **`r johns_comparison$john_statues` Johns (`r johns_comparison$john_percent_label`)** vs **`r johns_comparison$woman_statues` statues of women (`r johns_comparison$woman_percent_label`)**.
 The claim is **`r if (isTRUE(johns_comparison$claim_validated)) "supported" else "refuted"`** for London.
 `r johns_comparison$unknown_statues` memorials (`r johns_comparison$unknown_percent_label`) have no gender that clears the confidence threshold.
 
@@ -182,9 +182,9 @@ knitr::kable(summary_table, align = "lrr")
 ```
 
 **Caption:** How are London's memorials split by the gender of who they commemorate?
-One row per category, from `r johns_comparison$total_statues` memorials combined from Wikidata, OpenStreetMap and Historic England after de-duplication.
+One row per category, from memorials combined from Wikidata, OpenStreetMap and Historic England; records are merged only when they are close together and name the same subject.
 "Mixed" statues show a woman together with a man; the headline counts them as statues of women (`r johns_comparison$woman_only_statues` Female + `r johns_comparison$mixed_statues` Mixed = `r johns_comparison$woman_statues`).
-"Unknown" means no gender reached the confidence threshold (see Reference).
+"Unknown" means no gender reached the confidence threshold (see Reference). "Unnamed" records (`r johns_comparison$unnamed_statues`) have no name or subject at all, so they are listed but left out of every percentage; percentages are of the `r johns_comparison$total_statues` identifiable memorials.
 
 :::
 
@@ -211,7 +211,7 @@ category_plot
 
 **Caption:** How large is the gap between statues of men and of women?
 Bar heights are counts of memorials per inferred gender, labelled with count and share.
-Statues of women, including mixed ones, are `r johns_comparison$woman_percent_label` of the total.
+Statues of women, including mixed ones, are `r johns_comparison$woman_percent_label` of identifiable memorials; the Unnamed bar is shown but not counted in any share.
 The Unknown bar (`r johns_comparison$unknown_percent_label`) is the main uncertainty: if many of those are women, the gap narrows.
 
 :::
@@ -332,7 +332,7 @@ Our London data: **`r johns_comparison$message`**
 - **Men named John:** `r johns_comparison$john_statues` (`r johns_comparison$john_percent_label`)
 - **Women:** `r johns_comparison$woman_statues` (`r johns_comparison$woman_percent_label`), of which `r johns_comparison$woman_only_statues` depict only women and `r johns_comparison$mixed_statues` a woman together with a man
 
-Percentages are of all `r johns_comparison$total_statues` memorials in the dataset.
+Percentages are of the `r johns_comparison$total_statues` identifiable memorials; `r johns_comparison$unnamed_statues` records with no name or subject are not counted.
 The campaign's claim is UK-wide; this dataset covers London only.
 
 #### Overlap

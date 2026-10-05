@@ -31,15 +31,18 @@ compare_johns_vs_women(
 
 ## Value
 
-A list with comparison results: - total_statues, john_statues,
-woman_statues, john_percent, woman_percent, claim_validated, message.
-`woman_statues` counts every statue that depicts a woman:
-`woman_only_statues` (only women) plus `mixed_statues` (a woman together
-with a man, e.g. "Queen Victoria and Prince Albert"). - unknown_statues,
-unknown_percent: statues whose gender could not be confidently
-classified (see classify_gender_from_subject()) - john_percent_label,
-woman_percent_label, unknown_percent_label: whole-percent display text
-from format_percent(). The numeric \*\_percent fields keep 2 decimal
-places. - gender_method: which classification sources were used, in
-priority order (Wikidata P21, title/term overrides, then the genderdata
-lookup cascade when the gender and genderdata packages are available)
+A list with comparison results: - total_statues: identifiable statues
+(with a name or subject), the denominator of every share;
+unnamed_statues: records with neither, which are not counted (#117) -
+john_statues, woman_statues, john_percent, woman_percent,
+claim_validated, message. `woman_statues` counts every statue that
+depicts a woman: `woman_only_statues` (only women) plus `mixed_statues`
+(a woman together with a man, e.g. "Queen Victoria and Prince
+Albert"). - unknown_statues, unknown_percent: statues whose gender could
+not be confidently classified (see classify_gender_from_subject()) -
+john_percent_label, woman_percent_label, unknown_percent_label:
+whole-percent display text from format_percent(). The numeric
+\*\_percent fields keep 2 decimal places. - gender_method: which
+classification sources were used, in priority order (Wikidata P21,
+title/term overrides, then the genderdata lookup cascade when the gender
+and genderdata packages are available)

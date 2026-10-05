@@ -3,6 +3,59 @@
 Session log: what was done, what failed and why, measurable changes, and
 known limitations. Newest first.
 
+## 2026-10-04 (#114 source NA, #117 de-duplication, unnamed records)
+
+### Completed
+- **#114:** `standardize_statue_data()` set `source = source`, which read the
+  NA column `ensure_standard_columns()` had just added; now `.env$source`.
+  `source` was NA for all rows, so de-duplication never applied its
+  glher > wikidata > osm preference and the interactive map had one colour.
+- **#117:** `combine_statue_sources()` merged everything within 50m of a seed
+  record, whatever it commemorated. Groups reached 165 records, and some
+  records were counted in two groups. It now merges only pairs within 50m
+  whose subjects match (`same_subject()`: `extract_subject()`, generic and
+  title words dropped, one word set inside the other or at least half
+  shared), as connected components. The no-duplicates case no longer
+  errors.
+- **Unnamed records:** 1,696 OSM records have no name, subject or stated
+  gender. They are a new "Unnamed" category: kept in the data and on the
+  map, labelled "not counted", and left out of every share. The headline
+  total is identifiable memorials (user's choice).
+
+### Accuracy / Metrics (store snapshot `_targets.bak_20261004_pre_114`, scratchpad)
+| | before | after |
+|---|---|---|
+| raw records | 4,254 | 4,254 |
+| memorials | 2,301 | 4,060 (2,364 identifiable + 1,696 unnamed) |
+| merged groups (largest) | 569 (165) | 126 (21) |
+| Johns | 76 (3%) | 102 (4%) |
+| statues of women | 239 (10%) | 284 (12%) |
+| unknown | 845 (37%) | 557 (24% of identifiable) |
+
+- Reconciled:
+  - Johns and women rose because distinct statues are no longer swallowed
+    by a neighbour (Florence Nightingale, Mary Seacole and Gracie Fields
+    are now counted).
+  - The largest remaining group (21) is one memorial: OSM, GLHER and one
+    Wikidata item repeated 18 times by the SPARQL rows.
+  - Repeated subjects left unmerged (Nightingale, Seacole) are 945m to
+    3.5km apart and include blue plaques, so they are distinct objects.
+- With only #114 applied, the headline moved arbitrarily (women 239 → 230),
+  because the preference picked a different statue in the wrong merges.
+  So the two fixes are released together.
+- Tests: new `test-standardize_source.R`, `test-dedup_subject.R` and
+  `test-unnamed.R` each failed first. Full suite
+  `[ FAIL 0 | WARN 3 | SKIP 0 | PASS 279 ]`.
+
+### Known Limitations
+- The data includes blue plaques and other plaques as "memorials"; whether
+  they belong in a statue count is not addressed here.
+- Johns are counted from name tokens, women from each statue's
+  classification, so a statue naming two Johns counts twice. The caption's
+  "Jon and Jean" list is incomplete (#115).
+- The summary table now has 7 rows; on short windows the last row needs a
+  scroll inside its card.
+
 ## 2026-10-04 (session end: roborev 13908 on #112)
 
 ### Known Limitations
