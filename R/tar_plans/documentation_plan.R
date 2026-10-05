@@ -123,6 +123,9 @@ documentation_plan <- list(
       if (!all(copied)) {
         cli::cli_abort("Could not copy {.path {figures_src}} to {.path {target_vignettes_dir}}.")
       }
+      # Remove the render's copy, as for the HTML above, so the assets are
+      # not kept (and committed) twice (#115)
+      unlink(figures_src, recursive = TRUE, force = TRUE)
 
       # Return path to generated HTML (now in vignettes/)
       normalizePath(destination_file)

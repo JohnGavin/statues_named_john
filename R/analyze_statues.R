@@ -129,7 +129,8 @@ extract_first_names <- function(text) {
       # Allow specific single names if we want, but for "Johnson and Boswell", "Johnson" is likely surname.
       # EXCEPT: "Cher", "Madonna".
       # For this specific "John" task, we are safer ignoring singletons unless they match our target "John" list.
-      if (stringr::str_detect(word, "(?i)^(john|jon|jean|jonathan|jonny|mary|elizabeth|victoria|anne)$")) {
+      single_ok <- c(tolower(john_variants()), "mary", "elizabeth", "victoria", "anne")
+      if (tolower(word) %in% single_ok) {
         first_names <- c(first_names, word)
       }
     }
@@ -428,6 +429,21 @@ classify_gender_from_subject <- function(subjects, names = NULL, gender_mapping 
   classified
 }
 
+#' First names counted as "John"
+#'
+#' @description
+#' The single list of first names counted as a John in
+#' [compare_johns_vs_women()]. Everything that names the variants (the
+#' headline message, the dashboard) reads it from here (#115).
+#'
+#' @return Character vector of first names.
+#' @export
+#' @examples
+#' john_variants()
+john_variants <- function() {
+  c("John", "Jon", "Jonathan", "Jean", "Jonny")
+}
+
 #' Compare John Statues vs Women Statues
 #'
 #' @description
@@ -471,7 +487,7 @@ compare_johns_vs_women <- function(statue_data, person_lookup = NULL,
 
   # Count Johns
   johns <- all_names %>%
-    dplyr::filter(stringr::str_detect(extracted_names, "(?i)^(john|jon|jonathan|jean|jonny)$")) %>%
+    dplyr::filter(tolower(extracted_names) %in% tolower(john_variants())) %>%
     nrow()
 
   # Count statues of women (row-level classification). The claim is about
@@ -524,9 +540,11 @@ compare_johns_vs_women <- function(statue_data, person_lookup = NULL,
     ),
     classification_threshold = threshold,
     wikidata_confidence = wikidata_confidence(),
+    john_variants = john_variants(),
     message = sprintf(
-      "Found %d statues named John/Jon/Jean (%s) vs %d women statues (%s%s). %d statues (%s) have unknown gender. Shares are of %d identifiable statues; %d records with no name or subject are not counted.",
-      johns, format_percent(johns, total), women, format_percent(women, total),
+      "Found %d statues named %s (%s) vs %d women statues (%s%s). %d statues (%s) have unknown gender. Shares are of %d identifiable statues; %d records with no name or subject are not counted.",
+      johns, paste(john_variants(), collapse = "/"), format_percent(johns, total),
+      women, format_percent(women, total),
       if (mixed > 0) sprintf(", including %d of a woman with a man", mixed) else "",
       unknown_statues, format_percent(unknown_statues, total),
       total, unnamed

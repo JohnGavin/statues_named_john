@@ -24,3 +24,6 @@
 
 # Pre-built vignettes (these SHOULD be committed)
 # inst/doc/*.html  # DO NOT ignore - we want to commit these!.local-shell
+
+# Quarto render byproducts; the pipeline copies them to vignettes/ (#115)
+/inst/qmd/*_files/

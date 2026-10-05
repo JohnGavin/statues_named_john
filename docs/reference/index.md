@@ -54,6 +54,8 @@
   : Get subjects by gender
 - [`is_man_named_john()`](https://johngavin.github.io/statues_named_john/reference/is_man_named_john.md)
   : Check if a subject is a "Man named John"
+- [`john_variants()`](https://johngavin.github.io/statues_named_john/reference/john_variants.md)
+  : First names counted as "John"
 - [`join_and_clean_data()`](https://johngavin.github.io/statues_named_john/reference/join_and_clean_data.md)
   : Normalize and Merge Data Sources
 - [`lookup_wikidata_people()`](https://johngavin.github.io/statues_named_john/reference/lookup_wikidata_people.md)

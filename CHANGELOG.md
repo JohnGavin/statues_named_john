@@ -3,6 +3,40 @@
 Session log: what was done, what failed and why, measurable changes, and
 known limitations. Newest first.
 
+## 2026-10-05 (#115 dashboard polish)
+
+### Completed
+- **Top Names captions:** they claimed counts were memorials and percentages
+  were of statues. They now say counts are first-name occurrences (a
+  memorial can name several people) and percentages are of all first names
+  in that group.
+- **John variants have one home:** new exported `john_variants()` (John,
+  Jon, Jonathan, Jean, Jonny). The John count, the first-name whitelist,
+  the headline message (`john_variants` is now in `johns_comparison`) and
+  the Male caption all read it; the caption used to say "Jon and Jean" only.
+- **Source list computed:** the Gender Summary caption lists the statue
+  sources whose `source_status` is "ok", instead of always naming all three.
+- **Click-to-zoom:** it checked the whole card, including hidden tabs, so a
+  click in a Code tab enlarged the card. It now checks the visible pane.
+- **Duplicate assets:** the vignette target deletes `inst/qmd/*_files` after
+  copying it to `vignettes/`. 54 committed duplicate files untracked and
+  the path ignored.
+- **Map width:** the leaflet widget fills its card (it was ~800px).
+
+### Verification
+- `test-john_variants.R` (every variant counted, "Johnson" not; result and
+  message list `john_variants()`; snapshot of the list) failed before
+  `john_variants()` existed. Full suite `[ FAIL 0 | WARN 3 | SKIP 0 | PASS 283 ]`.
+- Click probe in headless Chrome (real handler, scratch copy). On `main`:
+  Code-tab click enlarges = true (the bug), chart click = true. On this
+  branch: Code-tab click = false, chart click = true. The first probe
+  version watched the wrong card and reported false for both; it was fixed
+  before being trusted.
+- Render: 0 error patterns. Captions read "combined from Wikidata,
+  OpenStreetMap, Historic England (GLHER)" and "also counts Jon, Jonathan,
+  Jean, Jonny". Headline unchanged (102 vs 284). The map-page screenshot
+  shows a full-width map.
+
 ## 2026-10-04 (#114 source NA, #117 de-duplication, unnamed records)
 
 ### Completed
